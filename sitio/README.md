@@ -1,4 +1,6 @@
-# Sitio web de Arroyo Guzmán
+# Prototipo estático del sitio
+
+> La versión oficial del sitio es la **app de Next.js** en la raíz del repositorio (`app/`, `components/`, `lib/`). Esta carpeta conserva el prototipo en un solo archivo HTML.
 
 Página única construida con el sistema de diseño de `design-system/`. Vista previa publicada: https://claude.ai/artifact/Jk3s3XRUhyNANvpyRRNBiX
 
