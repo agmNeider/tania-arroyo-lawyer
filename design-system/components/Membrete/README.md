@@ -13,5 +13,5 @@ Hoja membreteada tamaño carta para memoriales, cartas y cotizaciones, más la f
 
 ## Firma de correo
 
-- Sello AG de 44 px, nombre completo en 600, cargo en `pino`, contacto en `tinta-suave` con números tabulares.
+- Monograma plumilla de 44 px, nombre completo en 600, cargo en `pino`, contacto en `tinta-suave` con números tabulares.
 - Cierre con la nota de confidencialidad en 11 px. Sin frases motivacionales ni íconos de redes en color.
