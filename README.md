@@ -15,6 +15,10 @@ Sistema de diseño publicado (vista navegable): https://claude.ai/artifact/6NcsJ
 - `design-system/components/`: plantillas en HTML para Instagram (feed e historias), tarjeta profesional, membrete, firma de correo y elementos web.
 - `design-system/_herramientas/`: scripts en Python (fontTools, uharfbuzz, shapely) que generan los logos con la rr enlazada, los tokens y las plantillas.
 
+## Sitio web
+
+`sitio/`: página única con áreas, procesos típicos, casos, guía de plazos, agenda de citas y contacto. Vista previa: https://claude.ai/artifact/Jk3s3XRUhyNANvpyRRNBiX. Instrucciones en `sitio/README.md`.
+
 ## Skill para Claude
 
 `.claude/skills/arroyo-guzman-marca/SKILL.md` enseña a Claude a usar este sistema: reglas de marca, tokens, voz, cómo hacer cada pieza y cómo regenerar los archivos. Claude Code la carga sola al trabajar en este repositorio.

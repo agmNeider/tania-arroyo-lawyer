@@ -94,7 +94,7 @@ Parte siempre de la plantilla de la pieza en `components/` y lee su `README.md`:
 - **Historia (1080 × 1920) y destacados:** `components/StoryIG/`. Deja libres 220 px arriba y 260 px abajo.
 - **Tarjeta profesional (85 × 55 mm):** `components/TarjetaProfesional/`. Frente en `marca-pino` con el logotipo apilado. Dorso en `marca-papel` con el nombre, el T.P., los contactos y el monograma "ag.". 3 mm de sangrado.
 - **Membrete, memoriales y firma de correo:** `components/Membrete/`. Carta, márgenes de 25 mm y asunto con el radicado completo de 23 dígitos. Existe versión sin color para despachos que la exijan.
-- **Web:** carga `design-system/tokens.css` y usa `components/Boton/` y `components/EtiquetaArea/`. Procesal civil es la única etiqueta de área en `pino`.
+- **Web:** el sitio oficial está en `sitio/` (edita `sitio/plantilla.html` y ejecuta `python3 sitio/construir.py`; lee `sitio/README.md`). Para otras páginas, carga `design-system/tokens.css` y usa `components/Boton/` y `components/EtiquetaArea/`. Procesal civil es la única etiqueta de área en `marca-pino`. Los casos resueltos del sitio son de ejemplo hasta que haya casos reales autorizados.
 - **Avatar, favicon e ícono de app:** `assets/Logos/ag-avatar-circulo.svg`, `ag-sello-pino.svg` y `ag-sello-lila.svg`.
 
 Íconos: usa solo los del grupo `Iconos` (trazo de 1,75 px en grilla de 24, esquinas rectas). Si falta uno, dibújalo con las mismas reglas y guárdalo ahí.
