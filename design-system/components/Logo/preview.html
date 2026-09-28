@@ -1,0 +1,46 @@
+<!-- @dsCard group="Marca" height=380 subtitle="Monograma TA: la viga de la balanza sobre la A" -->
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><title>Logo</title>
+<style>
+  html,body{margin:0}
+  body{background:var(--papel);color:var(--tinta);font-family:var(--font-sans);-webkit-font-smoothing:antialiased;padding:20px}
+  *{box-sizing:border-box}
+  .mk path{fill:currentColor}
+  .ic{width:20px;height:20px;flex:none}
+  .lbl{font-size:11px;line-height:14px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--tinta-suave);margin:0 0 8px}
+  .row{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start}
+  .ab{position:relative;overflow:hidden;flex:none}
+  .ab>.in{position:absolute;top:0;left:0;transform-origin:0 0}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+  .tile{border:1px solid var(--linea);border-radius:var(--radius-md);padding:24px 24px 40px;min-height:170px;display:flex;align-items:center;justify-content:center;position:relative}
+  .tile .lbl{position:absolute;left:12px;bottom:4px}
+  .t-papel{background:var(--marca-papel);color:var(--marca-pino)}
+  .t-pino{background:var(--marca-pino);color:var(--marca-lila);border-color:var(--marca-pino)}
+  .t-lila{background:var(--marca-lila);color:var(--marca-tinta);border-color:var(--marca-lila)}
+  .t-pino .lbl{color:var(--marca-papel)} .t-lila .lbl,.t-papel .lbl{color:var(--marca-gris)}
+  .lock{display:flex;align-items:center;gap:16px}
+  .lock .mk{width:56px;height:56px}
+  .nm{font-size:27px;line-height:28px;font-weight:600;letter-spacing:-.012em;margin:0}
+  .sub{font-size:9px;line-height:12px;font-weight:500;letter-spacing:.14em;white-space:nowrap;margin:6px 0 0;text-transform:uppercase}
+  .t-papel .nm{color:var(--marca-tinta)} .t-pino .nm{color:var(--marca-papel)} .t-lila .nm{color:var(--marca-tinta)}
+  .vert{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
+  .vert .mk{width:64px;height:64px}
+  .clear{position:relative;padding:18px;outline:1px dashed var(--marca-lila);outline-offset:0}
+  .sizes{display:flex;align-items:flex-end;gap:20px}
+</style>
+</head>
+<body>
+
+<div class="grid">
+  <div class="tile t-papel"><div class="lock"><svg class="mk"  viewBox="0 0 64 64" aria-hidden="true"><path d="M6 8 L58 8 L58 14 L6 14Z M28.5 14 L35.5 14 L53.5 57 L46 57 L32 23.5 L18 57 L10.5 57Z M21 40.5 L43 40.5 L43 46 L21 46Z"/></svg><div><p class="nm">Tania Arroyo</p><p class="sub">Abogada · Procesalista civil</p></div></div><p class="lbl">Horizontal · principal</p></div>
+  <div class="tile t-pino"><div class="lock"><svg class="mk"  viewBox="0 0 64 64" aria-hidden="true"><path d="M6 8 L58 8 L58 14 L6 14Z M28.5 14 L35.5 14 L53.5 57 L46 57 L32 23.5 L18 57 L10.5 57Z M21 40.5 L43 40.5 L43 46 L21 46Z"/></svg><div><p class="nm">Tania Arroyo</p><p class="sub">Abogada · Procesalista civil</p></div></div><p class="lbl">Horizontal · sobre pino</p></div>
+  <div class="tile t-papel"><div class="vert"><svg class="mk"  viewBox="0 0 64 64" aria-hidden="true"><path d="M6 8 L58 8 L58 14 L6 14Z M28.5 14 L35.5 14 L53.5 57 L46 57 L32 23.5 L18 57 L10.5 57Z M21 40.5 L43 40.5 L43 46 L21 46Z"/></svg><div><p class="nm">Tania Arroyo</p><p class="sub">Abogada</p></div></div><p class="lbl">Vertical</p></div>
+  <div class="tile t-lila"><div class="vert"><svg class="mk"  viewBox="0 0 64 64" aria-hidden="true"><path d="M6 8 L58 8 L58 14 L6 14Z M28.5 14 L35.5 14 L53.5 57 L46 57 L32 23.5 L18 57 L10.5 57Z M21 40.5 L43 40.5 L43 46 L21 46Z"/></svg><p class="sub" style="margin:0">Abogada</p></div><p class="lbl">Monograma sobre lila</p></div>
+  <div class="tile t-papel"><div class="clear"><svg class="mk" style="width:64px;height:64px;display:block" viewBox="0 0 64 64" aria-hidden="true"><path d="M6 8 L58 8 L58 14 L6 14Z M28.5 14 L35.5 14 L53.5 57 L46 57 L32 23.5 L18 57 L10.5 57Z M21 40.5 L43 40.5 L43 46 L21 46Z"/></svg></div><p class="lbl">Área de respeto = alto de la viga</p></div>
+  <div class="tile t-papel"><div class="sizes"><span style="width:48px;height:48px;display:block"><svg class="mk" style="width:48px;height:48px"  viewBox="0 0 64 64" aria-hidden="true"><path d="M6 8 L58 8 L58 14 L6 14Z M28.5 14 L35.5 14 L53.5 57 L46 57 L32 23.5 L18 57 L10.5 57Z M21 40.5 L43 40.5 L43 46 L21 46Z"/></svg></span><span style="width:24px;height:24px;display:block"><svg class="mk" style="width:24px;height:24px"  viewBox="0 0 64 64" aria-hidden="true"><path d="M6 8 L58 8 L58 14 L6 14Z M28.5 14 L35.5 14 L53.5 57 L46 57 L32 23.5 L18 57 L10.5 57Z M21 40.5 L43 40.5 L43 46 L21 46Z"/></svg></span><span style="width:16px;height:16px;display:block"><svg class="mk" style="width:16px;height:16px"  viewBox="0 0 64 64" aria-hidden="true"><path d="M6 8 L58 8 L58 14 L6 14Z M28.5 14 L35.5 14 L53.5 57 L46 57 L32 23.5 L18 57 L10.5 57Z M21 40.5 L43 40.5 L43 46 L21 46Z"/></svg></span></div><p class="lbl">Tamaño mínimo 16 px · 6 mm</p></div>
+</div>
+
+</body>
+</html>

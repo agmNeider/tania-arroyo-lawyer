@@ -1,0 +1,33 @@
+<!-- @dsCard group="Marca" height=170 subtitle="El recurso gráfico propio: los días hábiles de un término" -->
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><title>Barra de términos</title>
+<style>
+  html,body{margin:0}
+  body{background:var(--papel);color:var(--tinta);font-family:var(--font-sans);-webkit-font-smoothing:antialiased;padding:20px}
+  *{box-sizing:border-box}
+  .mk path{fill:currentColor}
+  .ic{width:20px;height:20px;flex:none}
+  .lbl{font-size:11px;line-height:14px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--tinta-suave);margin:0 0 8px}
+  .row{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start}
+  .ab{position:relative;overflow:hidden;flex:none}
+  .ab>.in{position:absolute;top:0;left:0;transform-origin:0 0}
+
+  .tb{display:grid;grid-template-columns:repeat(10,var(--space-6));gap:var(--space-2)}
+  .tb i{display:block;height:var(--space-6);border-radius:var(--radius-sm);border:1.5px solid var(--pino)}
+  .tb i.hecho{background:var(--pino)}
+  .tb i.hoy{background:var(--lila);border-color:var(--lila)}
+  .cap{display:flex;justify-content:space-between;max-width:312px;font-size:13px;line-height:18px;color:var(--tinta-suave);margin-top:10px}
+  .fig{font-variant-numeric:tabular-nums;font-size:40px;line-height:44px;font-weight:600;letter-spacing:-.02em;margin:0 0 4px}
+  .wrap{display:flex;flex-wrap:wrap;gap:40px;align-items:flex-end}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div><p class="lbl">Contestación de demanda · proceso verbal</p><p class="fig">Día 14 de 20</p><div class="tb"><i class="hecho"></i><i class="hecho"></i><i class="hecho"></i><i class="hecho"></i><i class="hecho"></i><i class="hecho"></i><i class="hecho"></i><i class="hecho"></i><i class="hecho"></i><i class="hecho"></i><i class="hecho"></i><i class="hecho"></i><i class="hecho"></i><i class="hoy"></i><i class="libre"></i><i class="libre"></i><i class="libre"></i><i class="libre"></i><i class="libre"></i><i class="libre"></i></div><div class="cap"><span>Notificación</span><span>Vence el término</span></div></div>
+  <div><p class="lbl">Recurso de apelación · auto</p><p class="fig">Día 2 de 3</p><div class="tb" style="grid-template-columns:repeat(3,var(--space-6))"><i class="hecho"></i><i class="hoy"></i><i class="libre"></i></div></div>
+</div>
+
+</body>
+</html>

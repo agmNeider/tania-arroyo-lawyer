@@ -1,0 +1,48 @@
+<!-- @dsCard height=320 -->
+<!doctype html>
+<html lang="es">
+<head><meta charset="utf-8"><title>Tania Arroyo</title>
+<style>
+  html,body{margin:0}
+  body{background:var(--papel);color:var(--tinta);font-family:var(--font-sans);-webkit-font-smoothing:antialiased;padding:20px}
+  *{box-sizing:border-box}
+  .mk path{fill:currentColor}
+  .ic{width:20px;height:20px;flex:none}
+  .lbl{font-size:11px;line-height:14px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--tinta-suave);margin:0 0 8px}
+  .row{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start}
+  .ab{position:relative;overflow:hidden;flex:none}
+  .ab>.in{position:absolute;top:0;left:0;transform-origin:0 0}
+
+  body{padding:0;overflow:hidden}
+  .cover{position:relative;width:960px;height:320px;overflow:hidden;background:var(--papel)}
+  .art{position:absolute;top:0;left:480px;width:480px;height:320px}
+  .art svg{display:block;width:480px;height:320px}
+  .pino{fill:var(--pino)} .tinta{fill:var(--marca-bosque)} .lila{fill:var(--lila)} .menta{fill:var(--menta)} .mmenta{fill:var(--marca-menta)}
+  .blk{rx:var(--radius-md)}
+  .cel{rx:var(--radius-sm)}
+  .cel.vacio{fill:none;stroke:var(--menta);stroke-width:1.5}
+  .cel.lleno{fill:var(--lila)}
+  .cel.hecha{fill:var(--menta)}
+  .mkc{fill:var(--marca-lila)}
+  .words{position:absolute;left:48px;bottom:40px;max-width:440px}
+  .name{margin:0;font-family:var(--font-sans);font-size:108px;line-height:.95;font-weight:600;letter-spacing:-.025em;color:var(--tinta)}
+  .tag{margin:12px 0 0 4px;font-size:14px;line-height:20px;color:var(--tinta-suave)}
+</style>
+</head>
+<body>
+<div class="cover"><div class="art" aria-hidden="true"><svg viewBox="0 0 480 320" width="480" height="320">
+<!--
+  blocks      pino 216x288 slab bled off the top (the brand, largest) · marca-bosque 160x160 · lila 160x96 (youth accent) · menta 112x56 tint — about 40% of 960x320
+  arrangement one tall pino slab with satellites stacked right, bottoms on a line space-6 above the edge, space-4 gutters
+  pattern     the barra de terminos: 20 business-day cells (5 per week x 4) at a space-8 pitch, 13 done in menta, today in lila, the rest outlined in menta, cut into the slab; chosen because the README says every piece is about a term met on time
+  scales      cells space-6 with space-2 gaps; gutters space-4; corners radius-md, cells radius-sm
+-->
+<rect class="pino blk" x="16" y="-16" width="216" height="312" rx="10"/>
+<rect class="cel hecha" x="40" y="64" width="24" height="24" rx="4"/><rect class="cel hecha" x="72" y="64" width="24" height="24" rx="4"/><rect class="cel hecha" x="104" y="64" width="24" height="24" rx="4"/><rect class="cel hecha" x="136" y="64" width="24" height="24" rx="4"/><rect class="cel hecha" x="168" y="64" width="24" height="24" rx="4"/><rect class="cel hecha" x="40" y="96" width="24" height="24" rx="4"/><rect class="cel hecha" x="72" y="96" width="24" height="24" rx="4"/><rect class="cel hecha" x="104" y="96" width="24" height="24" rx="4"/><rect class="cel hecha" x="136" y="96" width="24" height="24" rx="4"/><rect class="cel hecha" x="168" y="96" width="24" height="24" rx="4"/><rect class="cel hecha" x="40" y="128" width="24" height="24" rx="4"/><rect class="cel hecha" x="72" y="128" width="24" height="24" rx="4"/><rect class="cel hecha" x="104" y="128" width="24" height="24" rx="4"/><rect class="cel lleno" x="136" y="128" width="24" height="24" rx="4"/><rect class="cel vacio" x="168" y="128" width="24" height="24" rx="4"/><rect class="cel vacio" x="40" y="160" width="24" height="24" rx="4"/><rect class="cel vacio" x="72" y="160" width="24" height="24" rx="4"/><rect class="cel vacio" x="104" y="160" width="24" height="24" rx="4"/><rect class="cel vacio" x="136" y="160" width="24" height="24" rx="4"/><rect class="cel vacio" x="168" y="160" width="24" height="24" rx="4"/>
+<rect class="tinta blk" x="248" y="136" width="160" height="160" rx="10"/>
+<g transform="translate(292 180) scale(1.125)"><path class="mkc" d="M6 8 L58 8 L58 14 L6 14Z M28.5 14 L35.5 14 L53.5 57 L46 57 L32 23.5 L18 57 L10.5 57Z M21 40.5 L43 40.5 L43 46 L21 46Z"/></g>
+<rect class="lila blk" x="248" y="24" width="160" height="96" rx="10"/>
+<rect class="mmenta blk" x="424" y="240" width="112" height="56" rx="10"/>
+</svg></div><div class="words"><h1 class="name">Tania <br>Arroyo</h1><p class="tag">Abogada procesalista civil. Cada término, cumplido.</p></div></div>
+</body>
+</html>
