@@ -12,4 +12,4 @@ Tarjeta de presentación de 85 × 55 mm a dos caras: frente en `marca-pino` con 
 - Dorso: tinta `marca-tinta` y `marca-pino` sobre papel natural blanco.
 - Tipografía: Open Sans; nombre en 600, datos en 400.
 - Las cinco casillas del frente son la barra de términos en miniatura: cuatro cumplidas y una por venir.
-- Dorso: el monograma AG arriba a la derecha; si el presupuesto lo permite, en relieve seco.
+- Dorso: el monograma ag. arriba a la derecha; si el presupuesto lo permite, en relieve seco.

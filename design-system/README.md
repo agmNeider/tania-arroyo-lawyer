@@ -24,7 +24,7 @@ Ejemplos reales del sistema:
 ## Color
 
 - La base es `pino` sobre `papel`. `tinta` para el texto y `tinta-suave` para lo secundario.
-- `lila` es el acento joven: rellenos, el sello AG sobre verde, el descriptor del logotipo, la casilla de hoy en la barra de términos, subrayados de enlaces. Nunca lo use como color de texto sobre `papel`.
+- `lila` es el acento joven: rellenos, el punto del monograma ag. sobre verde, el descriptor del logotipo, la casilla de hoy en la barra de términos, subrayados de enlaces. Nunca lo use como color de texto sobre `papel`.
 - `menta` y `lila-suave` son fondos de relieve para bloques secundarios; sobre ellos el texto va en `tinta`.
 - Los estados `cumplido` y `plazo` siempre llevan palabra. Nunca comunique un estado solo con color.
 - **Piezas fijas.** Instagram, tarjeta, membrete, sello y avatar usan solo los tokens `marca-*`, que no cambian con el tema oscuro del teléfono. La interfaz web usa los tokens con tema (`pino`, `papel`, `tinta`…).
@@ -43,7 +43,7 @@ Una sola familia: **Open Sans** (Google Fonts, licencia libre OFL), en 400, 500,
 
 ## Logo
 
-Logotipo tipográfico **Arroyo Guzmán** en Open Sans 500, en caja baja con mayúsculas iniciales y espaciado apretado. Su rasgo propio es la **rr enlazada**: el brazo de la primera r sigue recto hasta la segunda, como la ff compartida de Clifford Chance. Donde el nombre no cabe se usa el **monograma AG**: la A entra en la curva de la G y una sola línea recta cruza las dos letras, como el fiel de una balanza. Son dos apellidos que se leen como una sola firma. Vea la tarjeta **Logo** para las versiones, el área de respeto y los usos prohibidos. Los archivos están en el grupo de assets `Logos`, con el texto en curvas: nunca reescriba el logotipo con la fuente.
+Logotipo tipográfico **Arroyo Guzmán** en Open Sans 500, en caja baja con mayúsculas iniciales y espaciado apretado. Su rasgo propio es la **rr enlazada**: el brazo de la primera r sigue recto hasta la segunda, como la ff compartida de Clifford Chance. Donde el nombre no cabe se usa el **monograma ag.**: las iniciales en minúsculas seguidas de un punto cuadrado en `marca-lila`, que es la última casilla de la barra de términos. Dice "término cumplido" sin decirlo. Vea la tarjeta **Logo** para las versiones, el área de respeto y los usos prohibidos. Los archivos están en el grupo de assets `Logos`, con el texto en curvas: nunca reescriba el logotipo con la fuente.
 
 ## La barra de términos
 

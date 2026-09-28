@@ -64,25 +64,23 @@ seal('ag-avatar-circulo.svg',C['pino'],C['lila'],256)
 json.dump(marks,open(HERE+'/marks.json','w'))
 print(sorted(os.listdir(OUT)))
 
-# ---- fused AG monogram: the A sits inside the G's bowl and one straight line runs through both letters (the balance's beam)
-import fuse
-def _norm(g):
-    b=g.bounds; sn=100/UPM
-    return mini_svg(fuse.place(g,sn,(b[2]-b[0])*sn/2,(b[3]-b[1])*sn/2)), round((b[2]-b[0])*sn,2), round((b[3]-b[1])*sn,2)
-mini_svg=fuse.svgpath
-for key,g in [('ag',fuse.level('600',0.40,True)),('ag_fusion',fuse.deep('600',0.40)),('ag_nivel',fuse.level('600',0.40,False))]:
-    d_,w_,h_=_norm(g); marks[key]={'d':d_,'w':w_,'h':h_}
-nib_d,Wn,Hn=marks['ag']['d'],marks['ag']['w'],marks['ag']['h']
-for nm,fill in [('ag-monograma-pino.svg',C['pino']),('ag-monograma-papel.svg',C['papel'])]:
-    open(OUT+'/'+nm,'w').write(svg(Wn,Hn,P(nib_d,fill)))
-def seal_sq(nm,bg,fg,r,k=0.58):
+# ---- monogram "ag." : lowercase a and g side by side, followed by a square full stop (the barra de términos' last cell: term met)
+import lowdet
+from shapely import affinity as _af
+letters,dot=lowdet.punto()
+_b=letters.union(dot).bounds; sn=100/UPM
+def _n(g): return lowdet.svgpath(_af.translate(_af.scale(g,sn,-sn,origin=(0,0)),-_b[0]*sn,_b[3]*sn))
+ld,dd=_n(letters),_n(dot); Wn=round((_b[2]-_b[0])*sn,2); Hn=round((_b[3]-_b[1])*sn,2)
+marks['ag']={'d':ld,'dot':dd,'w':Wn,'h':Hn}
+for k in ('ag_fusion','ag_nivel','sello'): marks.pop(k,None)
+def two(fg,dotc): return P(ld,fg)+P(dd,dotc)
+open(OUT+'/ag-monograma-pino.svg','w').write(svg(Wn,Hn,two(C['pino'],C['pino'])))
+open(OUT+'/ag-monograma-papel.svg','w').write(svg(Wn,Hn,two(C['papel'],C['lila'])))
+def seal_sq(nm,bg,fg,dotc,r,k=0.56):
     k=512*k/Wn; ox=(512-Wn*k)/2; oy=(512-Hn*k)/2
-    open(OUT+'/'+nm,'w').write(svg(512,512,'<rect width="512" height="512" rx="%d" fill="%s"/><g transform="translate(%.2f %.2f) scale(%.4f)">%s</g>'%(r,bg,ox,oy,k,P(nib_d,fg))))
-seal_sq('ag-sello-pino.svg',C['pino'],C['lila'],112)
-seal_sq('ag-sello-lila.svg',C['lila'],C['tinta'],112)
-seal_sq('ag-avatar-circulo.svg',C['pino'],C['lila'],256,0.52)
-for f in ('ag-sello-notarial-pino.svg',):
-    p=OUT+'/'+f
-    if os.path.exists(p): os.remove(p)
+    open(OUT+'/'+nm,'w').write(svg(512,512,'<rect width="512" height="512" rx="%d" fill="%s"/><g transform="translate(%.2f %.2f) scale(%.4f)">%s</g>'%(r,bg,ox,oy,k,two(fg,dotc))))
+seal_sq('ag-sello-pino.svg',C['pino'],C['papel'],C['lila'],112)
+seal_sq('ag-sello-lila.svg',C['lila'],C['tinta'],C['pino'],112)
+seal_sq('ag-avatar-circulo.svg',C['pino'],C['papel'],C['lila'],256,0.50)
 json.dump(marks,open(HERE+'/marks.json','w'))
-print('fused ok')
+print('ag. ok')

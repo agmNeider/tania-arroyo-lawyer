@@ -12,11 +12,10 @@ def _svg(key, cls, label):
     return '<svg class="%s" viewBox="0 0 %s %s" role="img" aria-label="%s"><path d="%s"/></svg>' % (cls, m['w'], m['h'], label, m['d'])
 
 def mark(cls='mk'):
-    """AG monogram: the A inside the G, one straight line through both (the balance beam)."""
-    return _svg('ag', cls, 'AG')
-
-def alt(key, cls='mk'):
-    return _svg(key, cls, 'AG')
+    """Monogram "ag.": lowercase a and g, then a square full stop (the last cell of the barra de términos: term met).
+    Letters take currentColor; the stop takes --mk-dot (defaults to currentColor)."""
+    m = MARKS['ag']
+    return '<svg class="%s" viewBox="0 0 %s %s" role="img" aria-label="ag"><path d="%s"/><path class="pt" d="%s"/></svg>' % (cls, m['w'], m['h'], m['d'], m['dot'])
 
 def wordmark(cls='wm'):
     """One-line logotype Arroyo Guzmán with the joined rr."""
@@ -36,6 +35,7 @@ BASE = """
   body{background:var(--papel);color:var(--tinta);font-family:var(--font-sans);-webkit-font-smoothing:antialiased;padding:20px}
   *{box-sizing:border-box}
   .mk path,.wm path{fill:currentColor}
+  .mk path.pt{fill:var(--mk-dot,currentColor)}
   .wm{display:block;height:auto}
   .ic{width:20px;height:20px;flex:none}
   .lbl{font-size:11px;line-height:14px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--tinta-suave);margin:0 0 8px}
@@ -81,16 +81,16 @@ logo_css = """
   .zoom svg{width:100%}
   .ag{display:flex;gap:14px;align-items:center}
   .seal{width:72px;height:72px;border-radius:22%;display:flex;align-items:center;justify-content:center}
-  .seal .mk{width:62%}
-  .seal.p{background:var(--marca-pino);color:var(--marca-lila)} .seal.l{background:var(--marca-lila);color:var(--marca-tinta)}
+  .seal .mk{width:60%}
+  .seal.p{background:var(--marca-pino);color:var(--marca-papel);--mk-dot:var(--marca-lila)} .seal.l{background:var(--marca-lila);color:var(--marca-tinta);--mk-dot:var(--marca-pino)}
   .seal.pl{background:var(--marca-papel);color:var(--marca-pino);box-shadow:inset 0 0 0 1px var(--linea)}
-  .nibz{display:flex;align-items:center;gap:20px;color:var(--marca-lila)}
-  .nibz .mk{width:110px;flex:none}
+  .nibz{display:flex;align-items:center;gap:20px;color:var(--marca-papel);--mk-dot:var(--marca-lila)}
+  .nibz .mk{width:84px;flex:none}
   .notes{margin:0;padding:0;list-style:none;font-size:12px;line-height:18px;color:var(--marca-papel);display:flex;flex-direction:column;gap:8px}
-  .avt{width:120px;height:120px;border-radius:50%;background:var(--marca-pino);color:var(--marca-lila);display:flex;align-items:center;justify-content:center}
-  .avt .mk{width:54%}
+  .avt{width:120px;height:120px;border-radius:50%;background:var(--marca-pino);color:var(--marca-papel);--mk-dot:var(--marca-lila);display:flex;align-items:center;justify-content:center}
+  .avt .mk{width:52%}
   .alt{display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--marca-pino);font-size:11px;line-height:14px}
-  .alt .mk{width:72px}
+  .alt{justify-content:flex-end;height:60px}
   .alt span{color:var(--marca-gris)}
   .clear{outline:1px dashed var(--marca-lila);padding:14px}
 """
@@ -100,9 +100,9 @@ logo_body = """
   <div class="tile t-pino">%(w2)s<p class="sub">Abogada · Procesalista civil</p><p class="lbl">Sobre pino</p></div>
   <div class="tile t-papel">%(st)s<p class="lbl">Apilado</p></div>
   <div class="tile t-papel"><div class="zoom">%(zoom)s</div><p class="lbl">Detalle: la rr enlazada</p></div>
-  <div class="tile t-papel"><div class="ag"><div class="seal p">%(m)s</div><div class="seal l">%(m)s</div><div class="seal pl">%(m)s</div></div><p class="lbl">Monograma AG · ícono, favicon, avatar</p></div>
-  <div class="tile t-pino"><div class="nibz">%(mz)s<ul class="notes"><li>La A entra en la G: dos apellidos, una firma</li><li>Una sola línea recta cruza las dos letras: el fiel de la balanza</li></ul></div><p class="lbl">Detalle del monograma</p></div>
-  <div class="tile t-papel" style="grid-column:span 2"><div class="ag" style="gap:28px"><div class="avt">%(m)s</div><div class="alt">%(a1)s<span>Fusión sin línea</span></div><div class="alt">%(a2)s<span>Barras a nivel</span></div></div><p class="lbl">Avatar circular · otras dos opciones de fusión</p></div>
+  <div class="tile t-papel"><div class="ag"><div class="seal p">%(m)s</div><div class="seal l">%(m)s</div><div class="seal pl">%(m)s</div></div><p class="lbl">Monograma ag. · ícono, favicon, avatar</p></div>
+  <div class="tile t-pino"><div class="nibz">%(mz)s<ul class="notes"><li>Las iniciales de los dos apellidos, en minúsculas</li><li>El punto cuadrado es la última casilla de la barra de términos: término cumplido</li></ul></div><p class="lbl">Detalle del monograma</p></div>
+  <div class="tile t-papel" style="grid-column:span 2"><div class="ag" style="gap:28px"><div class="avt">%(m)s</div><div class="alt">%(s1)s<span>32 px</span></div><div class="alt">%(s2)s<span>20 px</span></div><div class="alt">%(s3)s<span>16 px</span></div></div><p class="lbl">Avatar circular · tamaños mínimos</p></div>
   <div class="tile t-papel"><div class="clear">%(w3)s</div><p class="lbl">Área de respeto = alto de la o</p></div>
 </div>
 """ % {'w1': wordmark('wm').replace('class="wm"', 'class="wm" style="width:210px"'),
@@ -111,9 +111,9 @@ logo_body = """
        'zoom': '<svg class="wm" viewBox="0 0 %s %s" style="width:220px;color:var(--marca-tinta)" aria-hidden="true"><path d="%s"/></svg>' % (MARKS['wordmark']['w'] * 0.335, MARKS['wordmark']['h'], MARKS['wordmark']['d']),
        'm': mark(),
        'mz': mark(),
-       'a1': alt('ag_fusion'), 'a2': alt('ag_nivel'),
+       's1': mark().replace('class="mk"', 'class="mk" style="width:32px"'), 's2': mark().replace('class="mk"', 'class="mk" style="width:20px"'), 's3': mark().replace('class="mk"', 'class="mk" style="width:16px"'),
        'w3': wordmark('wm').replace('class="wm"', 'class="wm" style="width:170px;color:var(--marca-pino)"')}
-write('Logo', doc('<!-- @dsCard group="Marca" height=640 subtitle="Logotipo con rr enlazada y monograma AG fusionado" -->', 'Logo', logo_css, logo_body), """
+write('Logo', doc('<!-- @dsCard group="Marca" height=640 subtitle="Logotipo con rr enlazada y monograma ag. con punto de término cumplido" -->', 'Logo', logo_css, logo_body), """
 # Logo
 
 Logotipo tipográfico "Arroyo Guzmán" en Open Sans 500 con espaciado de -0,03 em. Su rasgo propio es la **rr enlazada**: el brazo de la primera r corre recto hasta el asta de la segunda, igual que la ff compartida del logotipo de Clifford Chance.
@@ -125,14 +125,14 @@ Logotipo tipográfico "Arroyo Guzmán" en Open Sans 500 con espaciado de -0,03 e
 - **Logotipo** (`ag-logotipo-pino.svg`, `-tinta`, `-papel`): la principal, en una línea. Sitio web, membrete, portadas y esquina de las publicaciones.
 - **Con descriptor** (`ag-firma-pino.svg`, `ag-firma-papel.svg`): con "Abogada · Procesalista civil" debajo en 600 y mayúsculas espaciadas. Tarjeta, membrete y firma de correo.
 - **Apilado** (`ag-apilado-pino.svg`, `ag-apilado-papel.svg`): "Arroyo" sobre "Guzmán", alineado a la izquierda. Frente de la tarjeta, historias, formatos cuadrados.
-- **Monograma AG** (`ag-monograma-pino.svg`, `ag-monograma-papel.svg`, `ag-sello-pino.svg`, `ag-sello-lila.svg`, `ag-avatar-circulo.svg`): la A entra en la curva de la G y una sola línea recta cruza las dos letras, desde la pierna izquierda de la A hasta el asta de la G. Es el guiño al derecho: el fiel de la balanza, la línea que queda a nivel. Úselo donde el logotipo no cabe: avatar de redes, favicon, ícono de app, esquinas, firma de correo y dorso de la tarjeta.
+- **Monograma ag.** (`ag-monograma-pino.svg`, `ag-monograma-papel.svg`, `ag-sello-pino.svg`, `ag-sello-lila.svg`, `ag-avatar-circulo.svg`): las iniciales en minúsculas, una al lado de la otra, en Open Sans 600, seguidas de un punto cuadrado. El punto es la última casilla de la barra de términos: el término, cumplido. Sobre verde, letras en `marca-papel` y punto en `marca-lila`; sobre lila, letras `marca-tinta` y punto `marca-pino`; sobre papel, todo en `marca-pino`. Úselo donde el logotipo no cabe: avatar de redes, favicon, ícono de app, firma de correo y dorso de la tarjeta. Mínimo 16 px.
 
 ## Reglas
 
 - Área de respeto: el alto de la "o" por los cuatro lados.
-- Tamaño mínimo del logotipo: 110 px o 30 mm de ancho. Por debajo de eso, use el monograma AG (mínimo 16 px).
+- Tamaño mínimo del logotipo: 110 px o 30 mm de ancho. Por debajo de eso, use el monograma ag. (mínimo 16 px).
 - Combinaciones: `marca-tinta` o `marca-pino` sobre `marca-papel`; `marca-papel` sobre `marca-pino` o `marca-bosque`; `marca-tinta` sobre `marca-lila`. El descriptor puede ir en `marca-lila` sobre verde.
-- No: separar la rr, separar la A de la G, cortar o inclinar la línea del monograma, cambiar la fuente, poner el nombre en mayúsculas, en negrita o en itálica, estirarlo ni añadir sombras.
+- No: separar la rr, redondear el punto del monograma o ponerlo en otro color que no sea `marca-lila` o el de las letras, escribir el monograma en mayúsculas, cambiar la fuente, poner el nombre en mayúsculas, en negrita o en itálica, estirarlo ni añadir sombras.
 """)
 
 # ---------------------------------------------------------------- Boton
@@ -362,7 +362,7 @@ tp_css = """
   .bk .tp{font-size:20px;line-height:26px;color:var(--marca-gris);margin:6px 0 0}
   .bk .ct{margin-top:auto;display:grid;grid-template-columns:auto 1fr;gap:10px 28px;font-size:25px;line-height:34px}
   .bk .ct span:nth-child(odd){font-size:17px;letter-spacing:.16em;text-transform:uppercase;color:var(--marca-gris);font-weight:500;line-height:34px}
-  .bk .corner{position:absolute;right:72px;top:72px;width:130px;color:var(--marca-pino)}
+  .bk .corner{position:absolute;right:72px;top:72px;width:120px;color:var(--marca-pino)}
   .bk .ar{position:absolute;right:72px;bottom:72px;display:flex;gap:14px;color:var(--marca-pino)}
   .bk .ar .ic{width:34px;height:34px}
   .shadow{box-shadow:var(--sombra-tarjeta);border-radius:6px}
@@ -388,7 +388,7 @@ Tarjeta de presentación de 85 × 55 mm a dos caras: frente en `marca-pino` con 
 - Dorso: tinta `marca-tinta` y `marca-pino` sobre papel natural blanco.
 - Tipografía: Open Sans; nombre en 600, datos en 400.
 - Las cinco casillas del frente son la barra de términos en miniatura: cuatro cumplidas y una por venir.
-- Dorso: el monograma AG arriba a la derecha; si el presupuesto lo permite, en relieve seco.
+- Dorso: el monograma ag. arriba a la derecha; si el presupuesto lo permite, en relieve seco.
 """)
 
 # ---------------------------------------------------------------- Membrete + FirmaCorreo
@@ -406,8 +406,8 @@ mb_css = """
   .bd .ln{height:9px;background:rgba(14,33,31,.08);border-radius:2px;margin:0 0 12px}
   .ft{margin-top:auto;display:flex;justify-content:space-between;font-size:10px;line-height:14px;color:var(--marca-gris);padding-top:14px;border-top:1px solid rgba(14,33,31,.15)}
   .sig{background:var(--superficie);border:1px solid var(--linea);border-radius:var(--radius-md);padding:20px 24px;display:flex;gap:16px;align-items:flex-start;max-width:440px}
-  .sig .seal{width:44px;height:44px;border-radius:22%;background:var(--marca-pino);color:var(--marca-lila);display:flex;align-items:center;justify-content:center;flex:none}
-  .sig .seal .mk{width:62%}
+  .sig .seal{width:44px;height:44px;border-radius:22%;background:var(--marca-pino);color:var(--marca-papel);--mk-dot:var(--marca-lila);display:flex;align-items:center;justify-content:center;flex:none}
+  .sig .seal .mk{width:64%}
   .sig p{margin:0;font-size:14px;line-height:20px}
   .sig .n{font-weight:600;font-size:16px}
   .sig .r{color:var(--pino);font-weight:500}
@@ -441,7 +441,7 @@ Hoja membreteada tamaño carta para memoriales, cartas y cotizaciones, más la f
 
 ## Firma de correo
 
-- Monograma AG de 44 px, nombre completo en 600, cargo en `pino`, contacto en `tinta-suave` con números tabulares.
+- Monograma ag. de 44 px, nombre completo en 600, cargo en `pino`, contacto en `tinta-suave` con números tabulares.
 - Cierre con la nota de confidencialidad en 11 px. Sin frases motivacionales ni íconos de redes en color.
 """)
 
@@ -457,7 +457,7 @@ cover_css = """
   .cel.vacio{fill:none;stroke:var(--menta);stroke-width:1.5}
   .cel.lleno{fill:var(--lila)}
   .cel.hecha{fill:var(--menta)}
-  .mkc{fill:var(--marca-lila)}
+  .mkc{fill:var(--marca-papel)} .mkd{fill:var(--marca-lila)}
   .words{position:absolute;left:48px;bottom:40px;max-width:440px}
   .name{margin:0;font-size:100px;line-height:1;color:var(--tinta)}
   .tag{margin:18px 0 0 4px;font-size:14px;line-height:20px;color:var(--tinta-suave)}
@@ -479,10 +479,10 @@ cover_svg = """<svg viewBox="0 0 480 320" width="480" height="320">
 <rect class="pino blk" x="16" y="-16" width="216" height="312" rx="10"/>
 %s
 <rect class="tinta blk" x="248" y="136" width="160" height="160" rx="10"/>
-<g transform="translate(%.2f %.2f) scale(%.4f)"><path class="mkc" d="%s"/></g>
+<g transform="translate(%.2f %.2f) scale(%.4f)"><path class="mkc" d="%s"/><path class="mkd" d="%s"/></g>
 <rect class="lila blk" x="248" y="24" width="160" height="96" rx="10"/>
 <rect class="mmenta blk" x="424" y="240" width="112" height="56" rx="10"/>
-</svg>""" % (''.join(cells), 248 + (160 - MARKS['ag']['w'] * 0.9) / 2, 136 + (160 - MARKS['ag']['h'] * 0.9) / 2, 0.9, MARK_D)
+</svg>""" % (''.join(cells), 248 + (160 - MARKS['ag']['w'] * 1.0) / 2, 136 + (160 - MARKS['ag']['h'] * 1.0) / 2, 1.0, MARK_D, MARKS['ag']['dot'])
 cover_body = '<div class="cover"><div class="art" aria-hidden="true">%s</div><div class="words"><h1 class="name">%s</h1><p class="tag">Abogada procesalista civil. Cada término, cumplido.</p></div></div>' % (cover_svg, stacked('wm').replace('class="wm"', 'class="wm" style="width:360px"'))
 cover_body = cover_body.replace('<br>', ' <br>')
 open(P + '/components/Cover/preview.html', 'w').write(doc('<!-- @dsCard height=320 -->', 'Arroyo Guzmán', cover_css, cover_body)) if os.path.isdir(P + '/components/Cover') else None

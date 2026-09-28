@@ -4,7 +4,7 @@ def c(n,l,d,u): return {"name":n,"value":{"light":l,"dark":d},"usage":u}
 colors=[
  c("pino","#17433D","#7CC2B1","Color de marca. Logotipo, botones primarios, fondos de piezas de IG y frente de la tarjeta. En claro lleva texto `on-pino`; en oscuro se aclara y lleva texto oscuro `on-pino`."),
  c("on-pino","#FFFFFF","#0D1917","Texto e íconos sobre `pino` (11:1 en claro, 8,7:1 en oscuro)."),
- c("lila","#B9A6F2","#C4B4F6","Acento de juventud en la interfaz: la casilla de hoy en la barra de términos, subrayados y fondos con texto `on-lila`. Nunca texto sobre `papel`. Para el sello AG o el descriptor sobre verde use `marca-lila` sobre `marca-pino`."),
+ c("lila","#B9A6F2","#C4B4F6","Acento de juventud en la interfaz: la casilla de hoy en la barra de términos, subrayados y fondos con texto `on-lila`. Nunca texto sobre `papel`. Para el punto del monograma o el descriptor sobre verde use `marca-lila` sobre `marca-pino`."),
  c("on-lila","#0E211F","#0E211F","Texto sobre `lila` y `lila-suave` claro (7,8:1 en claro, 8,9:1 en oscuro)."),
  c("lila-suave","#ECE6FC","#2A2442","Fondo de relieve: publicaciones de tip, destacados, notas al margen. Texto `tinta`."),
  c("menta","#DCEBE5","#1B332E","Tinte de `pino` para bloques secundarios y filas alternas. Texto `tinta`."),
@@ -18,7 +18,7 @@ colors=[
  c("foco","#5B3FC4","#C4B4F6","Anillo de foco sólido de 2px en web: 6,5:1 o más sobre `papel` y `superficie`. Sobre un fondo `pino` el anillo usa `on-pino`."),
  c("marca-pino","#17433D","#17433D","FIJO en ambos temas. Piezas de marca que no cambian con la pantalla: logotipo, publicaciones de IG, tarjeta, sello, avatar."),
  c("marca-bosque","#0F2E2A","#0F2E2A","FIJO. Fondo más profundo de historias de IG y del frente alterno de la tarjeta."),
- c("marca-lila","#B9A6F2","#B9A6F2","FIJO. Sello AG y descriptor del logotipo sobre `marca-pino` o `marca-bosque` (5,1:1 y 6,8:1) y fondos de piezas con texto `marca-tinta`."),
+ c("marca-lila","#B9A6F2","#B9A6F2","FIJO. Punto del monograma ag. y descriptor del logotipo sobre `marca-pino` o `marca-bosque` (5,1:1 y 6,8:1) y fondos de piezas con texto `marca-tinta`."),
  c("marca-lila-suave","#ECE6FC","#ECE6FC","FIJO. Fondo de publicaciones de tip y portadas de destacados; texto `marca-tinta`."),
  c("marca-menta","#DCEBE5","#DCEBE5","FIJO. Fondo alterno de carruseles; texto `marca-tinta`."),
  c("marca-papel","#F4F5F2","#F4F5F2","FIJO. Papel de impresos e IG; también texto claro sobre `marca-pino` (10:1) y `marca-bosque` (13:1)."),
@@ -63,7 +63,7 @@ tokens={"name":"Arroyo Guzmán","version":1,
    {"name":"space-18","value":"72px","usage":"Margen de seguridad de publicaciones IG (a 1080 px)."}]},
  "radius":{"tokens":[{"name":"radius-sm","value":"4px","usage":"Etiquetas de área y casillas de la barra de términos."},
    {"name":"radius-md","value":"10px","usage":"Botones, campos y tarjetas."},
-   {"name":"radius-lg","value":"22%","usage":"Ícono de app y sello AG (proporción del lado)."},
+   {"name":"radius-lg","value":"22%","usage":"Ícono de app y sello del monograma (proporción del lado)."},
    {"name":"radius-pill","value":"999px","usage":"Solo indicadores de estado (Cumplido, Vence pronto)."}]},
  "shadow":{"tokens":[{"name":"sombra-tarjeta","value":{"light":"0 1px 2px rgba(14,33,31,0.08), 0 8px 24px rgba(14,33,31,0.08)","dark":"0 1px 2px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.35)"},"usage":"Única sombra del sistema: tarjeta profesional en mockups y tarjetas flotantes en web. La jerarquía se hace con filetes, no con sombras."}]}
 }

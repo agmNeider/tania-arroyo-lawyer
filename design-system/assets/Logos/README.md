@@ -4,6 +4,6 @@ Logos de Arroyo Guzmán en SVG, con el texto en curvas y la rr enlazada ya dibuj
 - `ag-logotipo-papel.svg`: en `marca-papel` (#F4F5F2), sobre `marca-pino` o `marca-bosque`.
 - `ag-firma-pino.svg`: logotipo en `marca-tinta` con el descriptor "Abogada · Procesalista civil" en `marca-pino`, sobre claro. `ag-firma-papel.svg`: logotipo `marca-papel` y descriptor `marca-lila`, sobre verde.
 - `ag-apilado-pino.svg` / `ag-apilado-papel.svg`: "Arroyo" sobre "Guzmán", para formatos cuadrados o verticales.
-- `ag-monograma-pino.svg`, `ag-monograma-papel.svg`: monograma AG fusionado (la A dentro de la G, una línea recta que cruza ambas), sin fondo.
-- `ag-sello-pino.svg` (lila sobre pino), `ag-sello-lila.svg` (tinta sobre lila): ícono de app y favicon, esquinas de 22 %.
-- `ag-avatar-circulo.svg`: monograma lila sobre un círculo pino, para la foto de perfil de Instagram, WhatsApp y LinkedIn.
+- `ag-monograma-pino.svg`: monograma "ag." todo en `marca-pino`, sin fondo, para fondos claros. `ag-monograma-papel.svg`: letras `marca-papel` y punto `marca-lila`, sin fondo, para fondos verdes.
+- `ag-sello-pino.svg` (letras papel y punto lila sobre pino), `ag-sello-lila.svg` (letras tinta y punto pino sobre lila): ícono de app y favicon, esquinas de 22 %.
+- `ag-avatar-circulo.svg`: letras papel y punto lila sobre un círculo pino, para la foto de perfil de Instagram, WhatsApp y LinkedIn.
