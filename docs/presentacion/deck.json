@@ -1,0 +1,18 @@
+{
+  "v": 4,
+  "createdOnFiles": { "v": 1, "at": "2026-09-28T23:45:00Z" },
+  "title": "Arroyo Guzmán · Marca y sitio web",
+  "cover": "portada",
+  "order": ["portada", "agenda", "idea", "referentes", "logotipo", "monograma", "color", "tipografia", "recursos", "voz", "instagram", "aplicaciones", "sitio", "sitio-portada", "sitio-estructura", "sitio-procesos", "sitio-casos", "sitio-agenda", "sitio-movil", "sitio-tecnico", "cierre"],
+  "sections": {
+    "marca": { "description": "Quién es Arroyo Guzmán, su idea central y lo que aprendimos de las grandes firmas", "start": "portada" },
+    "sistema": { "description": "Logotipo, monograma, color, tipografía, recursos gráficos, voz y aplicaciones", "start": "logotipo" },
+    "web": { "description": "El sitio web: estructura, contenido, agenda de citas, móvil y puesta en marcha", "start": "sitio" }
+  },
+  "faces": {
+    "open-sans": { "family": "Open Sans", "href": "https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" }
+  },
+  "designSystems": [
+    { "title": "Arroyo Guzmán", "namespace": "arroyo-guzman", "artifact": "https://claude.ai/artifact/6NcsJ5hDbYVhGsdj9qQMRf", "version": null, "copiedAt": "2026-09-28T23:45:00Z" }
+  ]
+}
