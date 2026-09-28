@@ -64,25 +64,25 @@ seal('ag-avatar-circulo.svg',C['pino'],C['lila'],256)
 json.dump(marks,open(HERE+'/marks.json','w'))
 print(sorted(os.listdir(OUT)))
 
-# ---- mini marks with a legal nod: the A as a fountain-pen nib, and a notarial seal
-import mini
-from shapely import affinity as _aff
-nib=mini.mono2('600'); nb=nib.bounds
-sn=100/UPM
-nib_d=mini.svgpath(mini.place(nib,sn,(nb[2]-nb[0])*sn/2,(nb[3]-nb[1])*sn/2))
-Wn=round((nb[2]-nb[0])*sn,2); Hn=round((nb[3]-nb[1])*sn,2)
-marks['ag']={'d':nib_d,'w':Wn,'h':Hn}
+# ---- fused AG monogram: the A sits inside the G's bowl and one straight line runs through both letters (the balance's beam)
+import fuse
+def _norm(g):
+    b=g.bounds; sn=100/UPM
+    return mini_svg(fuse.place(g,sn,(b[2]-b[0])*sn/2,(b[3]-b[1])*sn/2)), round((b[2]-b[0])*sn,2), round((b[3]-b[1])*sn,2)
+mini_svg=fuse.svgpath
+for key,g in [('ag',fuse.level('600',0.40,True)),('ag_fusion',fuse.deep('600',0.40)),('ag_nivel',fuse.level('600',0.40,False))]:
+    d_,w_,h_=_norm(g); marks[key]={'d':d_,'w':w_,'h':h_}
+nib_d,Wn,Hn=marks['ag']['d'],marks['ag']['w'],marks['ag']['h']
 for nm,fill in [('ag-monograma-pino.svg',C['pino']),('ag-monograma-papel.svg',C['papel'])]:
     open(OUT+'/'+nm,'w').write(svg(Wn,Hn,P(nib_d,fill)))
-def seal_sq(nm,bg,fg,r):
-    k=512*0.60/Wn; ox=(512-Wn*k)/2; oy=(512-Hn*k)/2
+def seal_sq(nm,bg,fg,r,k=0.58):
+    k=512*k/Wn; ox=(512-Wn*k)/2; oy=(512-Hn*k)/2
     open(OUT+'/'+nm,'w').write(svg(512,512,'<rect width="512" height="512" rx="%d" fill="%s"/><g transform="translate(%.2f %.2f) scale(%.4f)">%s</g>'%(r,bg,ox,oy,k,P(nib_d,fg))))
 seal_sq('ag-sello-pino.svg',C['pino'],C['lila'],112)
 seal_sq('ag-sello-lila.svg',C['lila'],C['tinta'],112)
-ring,mm=mini.seal2(256)
-sd=mini.svgpath(ring)+' '+mini.svgpath(mm)
-marks['sello']={'d':sd,'w':512,'h':512}
-open(OUT+'/ag-avatar-circulo.svg','w').write(svg(512,512,'<circle cx="256" cy="256" r="256" fill="%s"/>%s'%(C['pino'],P(sd,C['lila']))))
-open(OUT+'/ag-sello-notarial-pino.svg','w').write(svg(512,512,P(sd,C['pino'])))
+seal_sq('ag-avatar-circulo.svg',C['pino'],C['lila'],256,0.52)
+for f in ('ag-sello-notarial-pino.svg',):
+    p=OUT+'/'+f
+    if os.path.exists(p): os.remove(p)
 json.dump(marks,open(HERE+'/marks.json','w'))
-print('mini ok')
+print('fused ok')

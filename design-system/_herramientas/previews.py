@@ -12,12 +12,11 @@ def _svg(key, cls, label):
     return '<svg class="%s" viewBox="0 0 %s %s" role="img" aria-label="%s"><path d="%s"/></svg>' % (cls, m['w'], m['h'], label, m['d'])
 
 def mark(cls='mk'):
-    """AG short mark: the A drawn as a fountain-pen nib (slit + breather hole)."""
+    """AG monogram: the A inside the G, one straight line through both (the balance beam)."""
     return _svg('ag', cls, 'AG')
 
-def seal(cls='mk'):
-    """Notarial seal: legend ring + nib monogram."""
-    return _svg('sello', cls, 'Sello Arroyo Guzmán, abogada')
+def alt(key, cls='mk'):
+    return _svg(key, cls, 'AG')
 
 def wordmark(cls='wm'):
     """One-line logotype Arroyo Guzmán with the joined rr."""
@@ -87,10 +86,12 @@ logo_css = """
   .seal.pl{background:var(--marca-papel);color:var(--marca-pino);box-shadow:inset 0 0 0 1px var(--linea)}
   .nibz{display:flex;align-items:center;gap:20px;color:var(--marca-lila)}
   .nibz .mk{width:110px;flex:none}
-  .notes{margin:0;padding:0;list-style:none;font-size:12px;line-height:18px;color:var(--marca-papel)}
-  .notar{width:150px;height:150px;border-radius:50%;color:var(--marca-pino);display:flex}
-  .notar.p{background:var(--marca-pino);color:var(--marca-lila)}
-  .notar .mk{width:100%;height:100%}
+  .notes{margin:0;padding:0;list-style:none;font-size:12px;line-height:18px;color:var(--marca-papel);display:flex;flex-direction:column;gap:8px}
+  .avt{width:120px;height:120px;border-radius:50%;background:var(--marca-pino);color:var(--marca-lila);display:flex;align-items:center;justify-content:center}
+  .avt .mk{width:54%}
+  .alt{display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--marca-pino);font-size:11px;line-height:14px}
+  .alt .mk{width:72px}
+  .alt span{color:var(--marca-gris)}
   .clear{outline:1px dashed var(--marca-lila);padding:14px}
 """
 logo_body = """
@@ -99,9 +100,9 @@ logo_body = """
   <div class="tile t-pino">%(w2)s<p class="sub">Abogada · Procesalista civil</p><p class="lbl">Sobre pino</p></div>
   <div class="tile t-papel">%(st)s<p class="lbl">Apilado</p></div>
   <div class="tile t-papel"><div class="zoom">%(zoom)s</div><p class="lbl">Detalle: la rr enlazada</p></div>
-  <div class="tile t-papel"><div class="ag"><div class="seal p">%(m)s</div><div class="seal l">%(m)s</div><div class="seal pl">%(m)s</div></div><p class="lbl">Monograma AG · la A es una plumilla</p></div>
-  <div class="tile t-pino"><div class="nibz">%(mz)s<ul class="notes"><li>Punta = la firma</li><li>Ranura = el trazo</li><li>Orificio = el respiradero de la pluma</li></ul></div><p class="lbl">Detalle del monograma</p></div>
-  <div class="tile t-papel" style="grid-column:span 2"><div class="ag" style="gap:24px"><div class="notar p">%(sl)s</div><div class="notar">%(sl2)s</div></div><p class="lbl">Sello notarial · avatar y documentos</p></div>
+  <div class="tile t-papel"><div class="ag"><div class="seal p">%(m)s</div><div class="seal l">%(m)s</div><div class="seal pl">%(m)s</div></div><p class="lbl">Monograma AG · ícono, favicon, avatar</p></div>
+  <div class="tile t-pino"><div class="nibz">%(mz)s<ul class="notes"><li>La A entra en la G: dos apellidos, una firma</li><li>Una sola línea recta cruza las dos letras: el fiel de la balanza</li></ul></div><p class="lbl">Detalle del monograma</p></div>
+  <div class="tile t-papel" style="grid-column:span 2"><div class="ag" style="gap:28px"><div class="avt">%(m)s</div><div class="alt">%(a1)s<span>Fusión sin línea</span></div><div class="alt">%(a2)s<span>Barras a nivel</span></div></div><p class="lbl">Avatar circular · otras dos opciones de fusión</p></div>
   <div class="tile t-papel"><div class="clear">%(w3)s</div><p class="lbl">Área de respeto = alto de la o</p></div>
 </div>
 """ % {'w1': wordmark('wm').replace('class="wm"', 'class="wm" style="width:210px"'),
@@ -110,9 +111,9 @@ logo_body = """
        'zoom': '<svg class="wm" viewBox="0 0 %s %s" style="width:220px;color:var(--marca-tinta)" aria-hidden="true"><path d="%s"/></svg>' % (MARKS['wordmark']['w'] * 0.335, MARKS['wordmark']['h'], MARKS['wordmark']['d']),
        'm': mark(),
        'mz': mark(),
-       'sl': seal(), 'sl2': seal(),
+       'a1': alt('ag_fusion'), 'a2': alt('ag_nivel'),
        'w3': wordmark('wm').replace('class="wm"', 'class="wm" style="width:170px;color:var(--marca-pino)"')}
-write('Logo', doc('<!-- @dsCard group="Marca" height=640 subtitle="Logotipo con rr enlazada, monograma plumilla y sello notarial" -->', 'Logo', logo_css, logo_body), """
+write('Logo', doc('<!-- @dsCard group="Marca" height=640 subtitle="Logotipo con rr enlazada y monograma AG fusionado" -->', 'Logo', logo_css, logo_body), """
 # Logo
 
 Logotipo tipográfico "Arroyo Guzmán" en Open Sans 500 con espaciado de -0,03 em. Su rasgo propio es la **rr enlazada**: el brazo de la primera r corre recto hasta el asta de la segunda, igual que la ff compartida del logotipo de Clifford Chance.
@@ -124,15 +125,14 @@ Logotipo tipográfico "Arroyo Guzmán" en Open Sans 500 con espaciado de -0,03 e
 - **Logotipo** (`ag-logotipo-pino.svg`, `-tinta`, `-papel`): la principal, en una línea. Sitio web, membrete, portadas y esquina de las publicaciones.
 - **Con descriptor** (`ag-firma-pino.svg`, `ag-firma-papel.svg`): con "Abogada · Procesalista civil" debajo en 600 y mayúsculas espaciadas. Tarjeta, membrete y firma de correo.
 - **Apilado** (`ag-apilado-pino.svg`, `ag-apilado-papel.svg`): "Arroyo" sobre "Guzmán", alineado a la izquierda. Frente de la tarjeta, historias, formatos cuadrados.
-- **Monograma AG plumilla** (`ag-monograma-pino.svg`, `ag-monograma-papel.svg`, `ag-sello-pino.svg`, `ag-sello-lila.svg`): la A está dibujada como la punta de una pluma estilográfica, con la ranura que baja desde la punta y el orificio respiradero. Es el guiño al derecho: la firma del memorial, del contrato, del poder. Úselo donde el logotipo no cabe: favicon, ícono de app, esquinas, firma de correo.
-- **Sello notarial** (`ag-avatar-circulo.svg`, `ag-sello-notarial-pino.svg`): el monograma dentro de un doble anillo con la leyenda "ARROYO GUZMÁN · ABOGADA", como un sello seco. Foto de perfil de Instagram y WhatsApp, dorso de la tarjeta, sello de agua en documentos, sticker para sobres y carpetas. Mínimo 48 px o 18 mm (por debajo de eso la leyenda no se lee: use el monograma).
+- **Monograma AG** (`ag-monograma-pino.svg`, `ag-monograma-papel.svg`, `ag-sello-pino.svg`, `ag-sello-lila.svg`, `ag-avatar-circulo.svg`): la A entra en la curva de la G y una sola línea recta cruza las dos letras, desde la pierna izquierda de la A hasta el asta de la G. Es el guiño al derecho: el fiel de la balanza, la línea que queda a nivel. Úselo donde el logotipo no cabe: avatar de redes, favicon, ícono de app, esquinas, firma de correo y dorso de la tarjeta.
 
 ## Reglas
 
 - Área de respeto: el alto de la "o" por los cuatro lados.
 - Tamaño mínimo del logotipo: 110 px o 30 mm de ancho. Por debajo de eso, use el monograma AG (mínimo 16 px).
 - Combinaciones: `marca-tinta` o `marca-pino` sobre `marca-papel`; `marca-papel` sobre `marca-pino` o `marca-bosque`; `marca-tinta` sobre `marca-lila`. El descriptor puede ir en `marca-lila` sobre verde.
-- No: separar la rr, cerrar la ranura de la plumilla, cambiar la fuente, poner el nombre en mayúsculas, en negrita o en itálica, estirarlo ni añadir sombras.
+- No: separar la rr, separar la A de la G, cortar o inclinar la línea del monograma, cambiar la fuente, poner el nombre en mayúsculas, en negrita o en itálica, estirarlo ni añadir sombras.
 """)
 
 # ---------------------------------------------------------------- Boton
@@ -362,7 +362,7 @@ tp_css = """
   .bk .tp{font-size:20px;line-height:26px;color:var(--marca-gris);margin:6px 0 0}
   .bk .ct{margin-top:auto;display:grid;grid-template-columns:auto 1fr;gap:10px 28px;font-size:25px;line-height:34px}
   .bk .ct span:nth-child(odd){font-size:17px;letter-spacing:.16em;text-transform:uppercase;color:var(--marca-gris);font-weight:500;line-height:34px}
-  .bk .corner{position:absolute;right:64px;top:56px;width:190px;height:190px;color:var(--marca-pino)}
+  .bk .corner{position:absolute;right:72px;top:72px;width:130px;color:var(--marca-pino)}
   .bk .ar{position:absolute;right:72px;bottom:72px;display:flex;gap:14px;color:var(--marca-pino)}
   .bk .ar .ic{width:34px;height:34px}
   .shadow{box-shadow:var(--sombra-tarjeta);border-radius:6px}
@@ -371,7 +371,7 @@ front = '<div class="card fr"><div class="lg">%s</div><p class="ro">Abogada · P
 back = ('<div class="card bk">%s'
         '<p class="nm" style="margin-top:20px">Tania Arroyo Guzmán</p><p class="ro">Abogada · Procesalista civil</p><p class="tp">T.P. 000.000 del C. S. de la J.</p>'
         '<div class="ct"><span>Tel</span><span>+57 300 000 0000</span><span>Correo</span><span>hola@arroyoguzman.co</span><span>IG</span><span>@arroyoguzman.abogada</span></div>'
-        '<div class="ar">%s</div></div>') % (seal('mk corner'), ''.join(icon(k) for k in ['procesal', 'laboral', 'familia', 'sucesiones', 'contratos']))
+        '<div class="ar">%s</div></div>') % (mark('mk corner'), ''.join(icon(k) for k in ['procesal', 'laboral', 'familia', 'sucesiones', 'contratos']))
 tp_body = '<div class="row"><div><p class="lbl">Frente · 85 × 55 mm</p><div class="shadow">%s</div></div><div><p class="lbl">Dorso</p><div class="shadow">%s</div></div></div><p class="lbl" style="margin-top:14px">Datos de ejemplo: reemplace T.P., teléfono y correo reales antes de imprimir.</p>' % (ab(1020, 660, 0.34, front, ';border-radius:8px'), ab(1020, 660, 0.34, back, ';border-radius:8px'))
 write('TarjetaProfesional', doc('<!-- @dsCard group="Aplicaciones" height=300 -->', 'Tarjeta profesional', tp_css, tp_body), """
 # TarjetaProfesional
@@ -388,7 +388,7 @@ Tarjeta de presentación de 85 × 55 mm a dos caras: frente en `marca-pino` con 
 - Dorso: tinta `marca-tinta` y `marca-pino` sobre papel natural blanco.
 - Tipografía: Open Sans; nombre en 600, datos en 400.
 - Las cinco casillas del frente son la barra de términos en miniatura: cuatro cumplidas y una por venir.
-- Dorso: el sello notarial arriba a la derecha. Si se imprime con relieve seco, el sello queda como un sello de notaría real.
+- Dorso: el monograma AG arriba a la derecha; si el presupuesto lo permite, en relieve seco.
 """)
 
 # ---------------------------------------------------------------- Membrete + FirmaCorreo
@@ -441,7 +441,7 @@ Hoja membreteada tamaño carta para memoriales, cartas y cotizaciones, más la f
 
 ## Firma de correo
 
-- Monograma plumilla de 44 px, nombre completo en 600, cargo en `pino`, contacto en `tinta-suave` con números tabulares.
+- Monograma AG de 44 px, nombre completo en 600, cargo en `pino`, contacto en `tinta-suave` con números tabulares.
 - Cierre con la nota de confidencialidad en 11 px. Sin frases motivacionales ni íconos de redes en color.
 """)
 

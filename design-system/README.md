@@ -43,7 +43,7 @@ Una sola familia: **Open Sans** (Google Fonts, licencia libre OFL), en 400, 500,
 
 ## Logo
 
-Logotipo tipográfico **Arroyo Guzmán** en Open Sans 500, en caja baja con mayúsculas iniciales y espaciado apretado. Su rasgo propio es la **rr enlazada**: el brazo de la primera r sigue recto hasta la segunda, como la ff compartida de Clifford Chance. Donde el nombre no cabe se usa el **monograma AG plumilla**: la A está dibujada como la punta de una pluma estilográfica, con su ranura y su orificio, un guiño a la firma que cierra cada memorial y cada contrato. Para avatar, sobres y documentos existe además el **sello notarial**: el monograma dentro de un doble anillo con la leyenda "ARROYO GUZMÁN · ABOGADA". Vea la tarjeta **Logo** para las versiones, el área de respeto y los usos prohibidos. Los archivos están en el grupo de assets `Logos`, con el texto en curvas: nunca reescriba el logotipo con la fuente.
+Logotipo tipográfico **Arroyo Guzmán** en Open Sans 500, en caja baja con mayúsculas iniciales y espaciado apretado. Su rasgo propio es la **rr enlazada**: el brazo de la primera r sigue recto hasta la segunda, como la ff compartida de Clifford Chance. Donde el nombre no cabe se usa el **monograma AG**: la A entra en la curva de la G y una sola línea recta cruza las dos letras, como el fiel de una balanza. Son dos apellidos que se leen como una sola firma. Vea la tarjeta **Logo** para las versiones, el área de respeto y los usos prohibidos. Los archivos están en el grupo de assets `Logos`, con el texto en curvas: nunca reescriba el logotipo con la fuente.
 
 ## La barra de términos
 
