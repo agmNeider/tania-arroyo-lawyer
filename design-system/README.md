@@ -1,4 +1,4 @@
-Tania Arroyo es abogada independiente, especialista en derecho procesal civil, que atiende casos civiles, laborales, de familia, sucesiones y contratos. La marca tiene que verse joven y cercana sin perder lo que un cliente busca en un abogado: que responda, que cumpla los plazos y que le explique qué sigue. Su idea central es **"Cada término, cumplido."** Los términos procesales son el oficio de una procesalista, y la marca los vuelve imagen con la barra de términos.
+**Arroyo Guzmán** es la imagen legal de Tania Arroyo Guzmán, abogada independiente, especialista en derecho procesal civil, que atiende casos civiles, laborales, de familia, sucesiones y contratos. La marca tiene que verse joven y cercana sin perder lo que un cliente busca en un abogado: que responda, que cumpla los plazos y que le explique qué sigue. Su idea central es **"Cada término, cumplido."** Los términos procesales son el oficio de una procesalista, y la marca los vuelve imagen con la barra de términos.
 
 ## Esencia
 
@@ -24,7 +24,7 @@ Ejemplos reales del sistema:
 ## Color
 
 - La base es `pino` sobre `papel`. `tinta` para el texto y `tinta-suave` para lo secundario.
-- `lila` es el acento joven: rellenos, el monograma sobre verde, la casilla de hoy en la barra de términos, subrayados de enlaces. Nunca lo use como color de texto sobre `papel`.
+- `lila` es el acento joven: rellenos, el sello AG sobre verde, el descriptor del logotipo, la casilla de hoy en la barra de términos, subrayados de enlaces. Nunca lo use como color de texto sobre `papel`.
 - `menta` y `lila-suave` son fondos de relieve para bloques secundarios; sobre ellos el texto va en `tinta`.
 - Los estados `cumplido` y `plazo` siempre llevan palabra. Nunca comunique un estado solo con color.
 - **Piezas fijas.** Instagram, tarjeta, membrete, sello y avatar usan solo los tokens `marca-*`, que no cambian con el tema oscuro del teléfono. La interfaz web usa los tokens con tema (`pino`, `papel`, `tinta`…).
@@ -32,18 +32,18 @@ Ejemplos reales del sistema:
 
 ## Tipografía
 
-Una sola familia: **Schibsted Grotesk** (Google Fonts, licencia libre OFL), en 400, 500, 600, 700 e itálica 400. Es una grotesca diseñada para un grupo de medios periodísticos: se lee como prensa seria, y sus formas abiertas la hacen más fresca que Helvetica o Arial.
+Una sola familia: **Open Sans** (Google Fonts, licencia libre OFL), en 400, 500, 600, 700 e itálica 400. Es la sans serif humanista libre más cercana al logotipo que Clifford Chance estrenó en 2025: altura de x grande, "a" de dos pisos, "C" y "G" con remates cortados en ángulo y un espaciado apretado y parejo. El logotipo de Clifford Chance es un dibujo propietario y su sitio usa Helvetica Neue, que requiere licencia, así que Open Sans da ese mismo aire sin costo ni riesgo legal.
 
-- Titulares en 600 (web) y 700 (Instagram) con tracking negativo: `display`, `titulo-1`, `titulo-2`, `ig-titular`.
+- Titulares en 500 (display) y 600 con espaciado negativo de -0,015 a -0,03 em: `display`, `titulo-1`, `titulo-2`, `ig-titular`. Open Sans se ve floja con el espaciado por defecto en tamaños grandes: no quite el espaciado negativo.
 - Texto corrido en `cuerpo` a 400, con un máximo de 65 caracteres por línea.
 - Citas y frases en `cita` (itálica 400).
 - Antetítulos en `etiqueta` / `ig-etiqueta`: 500, en mayúsculas y con espaciado de +0,14 a +0,16 em.
 - Normas y radicados en `norma`. Números de teléfono y conteos con números tabulares.
-- Respaldo si no carga: "Helvetica Neue", Arial, sans-serif. En Word o Google Docs, instale la familia desde Google Fonts.
+- Respaldo si no carga: "Segoe UI", "Helvetica Neue", Arial, sans-serif. Open Sans ya viene en Google Docs; en Word, instálela desde Google Fonts.
 
 ## Logo
 
-Monograma TA: la barra de la T es la viga de una balanza y la A es el soporte que la sostiene. Es geométrico, sin adornos, y funciona desde 16 px. Vea la tarjeta **Logo** para las versiones, el área de respeto y los usos prohibidos. Los archivos están en el grupo de assets `Logos`, con el texto convertido a curvas.
+Logotipo tipográfico **Arroyo Guzmán** en Open Sans 500, en caja baja con mayúsculas iniciales y espaciado apretado. Su rasgo propio es la **rr enlazada**: el brazo de la primera r sigue recto hasta la segunda, como la ff compartida de Clifford Chance. Donde el nombre no cabe (avatar, favicon) se usa el sello **AG**. Vea la tarjeta **Logo** para las versiones, el área de respeto y los usos prohibidos. Los archivos están en el grupo de assets `Logos`, con el texto en curvas: nunca reescriba el logotipo con la fuente.
 
 ## La barra de términos
 
@@ -65,6 +65,6 @@ Retratos de Tania con luz natural, en su espacio de trabajo real, con fondos lis
 
 ## Accesibilidad
 
-- Todo texto cumple 4,5:1 sobre el fondo que su token nombra, en ambos temas. `tinta` sobre `papel` da 15:1; `on-pino` sobre `pino` da 11:1.
+- Todo el texto cumple 4,5:1 sobre el fondo que su token nombra, en ambos temas. `tinta` sobre `papel` da 15:1; `on-pino` sobre `pino` da 11:1.
 - Foco visible: anillo sólido de 2 px en `foco` con 2 px de separación.
 - En Instagram escriba el texto de la imagen también en el *caption* y en el texto alternativo.

@@ -1,77 +1,65 @@
-import uharfbuzz as hb, os
+# Logos for "Arroyo Guzmán": typographic wordmark in Open Sans 500 with the joined "rr"
+import os, json, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import wm2, uharfbuzz as hb
 from fontTools.ttLib import TTFont
 from fontTools.pens.svgPathPen import SVGPathPen
 from fontTools.pens.transformPen import TransformPen
-ROOT=os.path.dirname(os.path.abspath(__file__))+'/..'
-F=ROOT+'/fonts/SchibstedGrotesk-%s.ttf'
-OUT=ROOT+'/assets'
-os.makedirs(OUT+'/Logos',exist_ok=True)
-C={'pino':'#17433D','tinta':'#0E211F','lila':'#B9A6F2','papel':'#F4F5F2','blanco':'#FFFFFF'}
+HERE=os.path.dirname(os.path.abspath(__file__))
+ROOT=os.environ.get('DS_ROOT', HERE+'/..')
+OUT=ROOT+'/assets/Logos'; os.makedirs(OUT,exist_ok=True)
+C={'pino':'#17433D','tinta':'#0E211F','lila':'#B9A6F2','papel':'#F4F5F2'}
+UPM=2048
 
-def text_path(txt, weight, size, x, y, track=0.0):
-    data=open(F%weight,'rb').read()
-    face=hb.Face(data); font=hb.Font(face)
-    buf=hb.Buffer(); buf.add_str(txt); buf.guess_segment_properties()
-    hb.shape(font,buf,{"kern":True,"liga":True})
-    tt=TTFont(F%weight); gs=tt.getGlyphSet(); upm=tt['head'].unitsPerEm
-    order=tt.getGlyphOrder(); s=size/upm
-    pen=SVGPathPen(gs); cx=0
+def geom(txt,w='500',tr=-0.03):
+    g,wd,_=wm2.wordmark(txt,w,tr,True); return g
+def path_of(g,size,ox,oy): return wm2.to_path(g,size/UPM,ox,oy)
+
+def text_path(txt,weight,size,x,y,track=0.0):
+    F=wm2.FD%weight; data=open(F,'rb').read(); font=hb.Font(hb.Face(data))
+    buf=hb.Buffer(); buf.add_str(txt); buf.guess_segment_properties(); hb.shape(font,buf,{"kern":True})
+    tt=TTFont(F); gs=tt.getGlyphSet(); order=tt.getGlyphOrder(); s=size/UPM; pen=SVGPathPen(gs); cx=0
     for info,pos in zip(buf.glyph_infos,buf.glyph_positions):
-        name=order[info.codepoint]
-        tp=TransformPen(pen,(s,0,0,-s,x+(cx+pos.x_offset)*s,y-pos.y_offset*s))
-        gs[name].draw(tp)
-        cx+=pos.x_advance+track*upm
-    width=(cx-track*upm)*s
-    return pen.getCommands(), width
+        gs[order[info.codepoint]].draw(TransformPen(pen,(s,0,0,-s,x+(cx+pos.x_offset)*s,y))); cx+=pos.x_advance+track*UPM
+    return pen.getCommands(),(cx-track*UPM)*s
 
-def mark(ox,oy,sc,fill):
-    # T+A monogram on a 64 grid: the beam (T crossbar / balance beam) over an A
-    def p(pts): return 'M'+' L'.join('%.2f %.2f'%(ox+a*sc,oy+b*sc) for a,b in pts)+'Z'
-    beam=p([(6,8),(58,8),(58,14),(6,14)])
-    a=p([(28.5,14),(35.5,14),(53.5,57),(46,57),(32,23.5),(18,57),(10.5,57)])
-    bar=p([(21,40.5),(43,40.5),(43,46),(21,46)])
-    return '<path fill="%s" d="%s %s %s"/>'%(fill,beam,a,bar)
+def svg(w,h,body): return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %g %g" width="%g" height="%g">%s</svg>\n'%(w,h,w,h,body)
+def P(d,fill): return '<path fill="%s" d="%s"/>'%(fill,d)
 
-def svg(w,h,body,bg=None):
-    b='<rect width="%s" height="%s" fill="%s"/>'%(w,h,bg) if bg else ''
-    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %s %s" width="%s" height="%s">%s%s</svg>\n'%(w,h,w,h,b,body)
-
-def write(name,s): open(OUT+'/Logos/'+name,'w').write(s)
-
-# monogram
-for nm,fill,bg in [('ta-monograma-pino.svg',C['pino'],None),('ta-monograma-tinta.svg',C['tinta'],None),('ta-monograma-papel.svg',C['papel'],None)]:
-    write(nm,svg(64,64,mark(0,0,1,fill)))
-# app/avatar seals
+marks={}
+# one-line wordmark, tight box: cap height ~1462 units, descender of y ~ -492
+g=geom('Arroyo Guzmán'); b=g.bounds  # minx,miny,maxx,maxy in font units
+SZ=100; s=SZ/UPM; pad=0
+W=(b[2]-b[0])*s; H=(b[3]-b[1])*s
+d=path_of(g,SZ,-b[0]*s,b[3]*s)
+marks['wordmark']={'d':d,'w':round(W,2),'h':round(H,2)}
+for nm,fill in [('ag-logotipo-pino.svg',C['pino']),('ag-logotipo-tinta.svg',C['tinta']),('ag-logotipo-papel.svg',C['papel'])]:
+    open(OUT+'/'+nm,'w').write(svg(round(W,2),round(H,2),P(d,fill)))
+# with descriptor
+sub,ws=text_path('ABOGADA  ·  PROCESALISTA CIVIL','600',15,1,H+30,0.16)
+Hs=H+36
+for nm,a,bcol in [('ag-firma-pino.svg',C['tinta'],C['pino']),('ag-firma-papel.svg',C['papel'],C['lila'])]:
+    open(OUT+'/'+nm,'w').write(svg(round(max(W,ws)+2,2),round(Hs,2),P(d,a)+P(sub,bcol)))
+# stacked: Arroyo / Guzmán, left aligned
+g1=geom('Arroyo'); g2=geom('Guzmán')
+SZ2=100; s2=SZ2/UPM; cap=1462*s2; lead=SZ2*1.0
+b1=g1.bounds; b2=g2.bounds
+d1=path_of(g1,SZ2,-b1[0]*s2,b1[3]*s2)
+d2=path_of(g2,SZ2,-b2[0]*s2,b1[3]*s2+lead)
+Wst=max(b1[2]-b1[0],b2[2]-b2[0])*s2; Hst=b1[3]*s2+lead-b2[1]*s2
+marks['stacked']={'d':d1+' '+d2,'w':round(Wst,2),'h':round(Hst,2)}
+for nm,fill in [('ag-apilado-pino.svg',C['pino']),('ag-apilado-papel.svg',C['papel'])]:
+    open(OUT+'/'+nm,'w').write(svg(round(Wst,2),round(Hst,2),P(d1+' '+d2,fill)))
+# AG short mark (for avatar, favicon)
+ga=geom('AG','500',-0.02); ba=ga.bounds; sa=100/UPM
+da=path_of(ga,100,-ba[0]*sa,ba[3]*sa); Wa=(ba[2]-ba[0])*sa; Ha=(ba[3]-ba[1])*sa
+marks['ag']={'d':da,'w':round(Wa,2),'h':round(Ha,2)}
 def seal(nm,bg,fg,r):
-    body='<rect width="512" height="512" rx="%d" fill="%s"/>'%(r,bg)+mark(96,96+ -8,5,fg)
-    write(nm,svg(512,512,body))
-seal('ta-sello-pino.svg',C['pino'],C['lila'],112)
-seal('ta-sello-lila.svg',C['lila'],C['tinta'],112)
-seal('ta-avatar-circulo.svg',C['pino'],C['lila'],256)
-
-# horizontal lockup
-def horiz(nm,markc,namec,subc):
-    H=120
-    m=mark(0,4,1.75,markc)  # mark 112 tall (0..112)
-    n,wn=text_path('Tania Arroyo','600',50,132,62,-0.012)
-    s,ws=text_path('ABOGADA  ·  PROCESALISTA CIVIL','500',15.5,134,96,0.16)
-    W=int(132+max(wn,ws)+6)
-    write(nm,svg(W,H,m+'<path fill="%s" d="%s"/><path fill="%s" d="%s"/>'%(namec,n,subc,s)))
-    return W
-horiz('ta-horizontal-pino.svg',C['pino'],C['tinta'],C['pino'])
-horiz('ta-horizontal-papel.svg',C['lila'],C['papel'],C['lila'])
-# vertical lockup
-def vert(nm,markc,namec,subc):
-    n,wn=text_path('Tania Arroyo','600',56,0,0,-0.012)
-    s,ws=text_path('ABOGADA','500',17,0,0,0.22)
-    W=int(max(wn,ws,140)+40)
-    n,_=text_path('Tania Arroyo','600',56,(W-wn)/2,196,-0.012)
-    s,_=text_path('ABOGADA','500',17,(W-ws)/2,236,0.22)
-    m=mark((W-128)/2,0,2,markc)
-    write(nm,svg(W,250,m+'<path fill="%s" d="%s"/><path fill="%s" d="%s"/>'%(namec,n,subc,s)))
-vert('ta-vertical-pino.svg',C['pino'],C['tinta'],C['pino'])
-vert('ta-vertical-papel.svg',C['lila'],C['papel'],C['lila'])
-# wordmark only
-n,wn=text_path('Tania Arroyo','600',56,4,56,-0.012)
-write('ta-wordmark-tinta.svg',svg(int(wn+8),72,'<path fill="%s" d="%s"/>'%(C['tinta'],n)))
-print('ok',os.listdir(OUT+'/Logos'))
+    k=0.62*512/Wa; ox=(512-Wa*k)/2; oy=(512-Ha*k)/2
+    body='<rect width="512" height="512" rx="%d" fill="%s"/><g transform="translate(%.2f %.2f) scale(%.4f)">%s</g>'%(r,bg,ox,oy,k,P(da,fg))
+    open(OUT+'/'+nm,'w').write(svg(512,512,body))
+seal('ag-sello-pino.svg',C['pino'],C['lila'],112)
+seal('ag-sello-lila.svg',C['lila'],C['tinta'],112)
+seal('ag-avatar-circulo.svg',C['pino'],C['lila'],256)
+json.dump(marks,open(HERE+'/marks.json','w'))
+print(sorted(os.listdir(OUT)))

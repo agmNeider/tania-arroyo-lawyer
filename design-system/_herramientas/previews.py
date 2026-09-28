@@ -3,11 +3,24 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 P = HERE + '/..'
 IC = P + '/assets/Iconos/'
 
-MARK_D = ("M6 8 L58 8 L58 14 L6 14Z M28.5 14 L35.5 14 L53.5 57 L46 57 L32 23.5 L18 57 L10.5 57Z "
-          "M21 40.5 L43 40.5 L43 46 L21 46Z")
+import json
+MARKS = json.load(open(HERE + '/marks.json'))
+MARK_D = MARKS['ag']['d']
+
+def _svg(key, cls, label):
+    m = MARKS[key]
+    return '<svg class="%s" viewBox="0 0 %s %s" role="img" aria-label="%s"><path d="%s"/></svg>' % (cls, m['w'], m['h'], label, m['d'])
 
 def mark(cls='mk'):
-    return '<svg class="%s" viewBox="0 0 64 64" aria-hidden="true"><path d="%s"/></svg>' % (cls, MARK_D)
+    """AG short mark: avatar, favicon, corners."""
+    return _svg('ag', cls, 'AG')
+
+def wordmark(cls='wm'):
+    """One-line logotype Arroyo Guzmán with the joined rr."""
+    return _svg('wordmark', cls, 'Arroyo Guzmán')
+
+def stacked(cls='wm'):
+    return _svg('stacked', cls, 'Arroyo Guzmán')
 
 def icon(name, cls='ic'):
     s = open(IC + name + '.svg').read().strip()
@@ -19,7 +32,8 @@ BASE = """
   html,body{margin:0}
   body{background:var(--papel);color:var(--tinta);font-family:var(--font-sans);-webkit-font-smoothing:antialiased;padding:20px}
   *{box-sizing:border-box}
-  .mk path{fill:currentColor}
+  .mk path,.wm path{fill:currentColor}
+  .wm{display:block;height:auto}
   .ic{width:20px;height:20px;flex:none}
   .lbl{font-size:11px;line-height:14px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--tinta-suave);margin:0 0 8px}
   .row{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start}
@@ -51,57 +65,59 @@ def terminos(n, done, today=True, cls='tb'):
 
 # ---------------------------------------------------------------- Logo
 logo_css = """
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
-  .tile{border:1px solid var(--linea);border-radius:var(--radius-md);padding:24px 24px 40px;min-height:170px;display:flex;align-items:center;justify-content:center;position:relative}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+  .tile{border:1px solid var(--linea);border-radius:var(--radius-md);padding:28px 28px 44px;min-height:170px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;position:relative}
   .tile .lbl{position:absolute;left:12px;bottom:4px}
-  .t-papel{background:var(--marca-papel);color:var(--marca-pino)}
-  .t-pino{background:var(--marca-pino);color:var(--marca-lila);border-color:var(--marca-pino)}
+  .t-papel{background:var(--marca-papel);color:var(--marca-tinta)}
+  .t-pino{background:var(--marca-pino);color:var(--marca-papel);border-color:var(--marca-pino)}
   .t-lila{background:var(--marca-lila);color:var(--marca-tinta);border-color:var(--marca-lila)}
   .t-pino .lbl{color:var(--marca-papel)} .t-lila .lbl,.t-papel .lbl{color:var(--marca-gris)}
-  .lock{display:flex;align-items:center;gap:16px}
-  .lock .mk{width:56px;height:56px}
-  .nm{font-size:27px;line-height:28px;font-weight:600;letter-spacing:-.012em;margin:0}
-  .sub{font-size:9px;line-height:12px;font-weight:500;letter-spacing:.14em;white-space:nowrap;margin:6px 0 0;text-transform:uppercase}
-  .t-papel .nm{color:var(--marca-tinta)} .t-pino .nm{color:var(--marca-papel)} .t-lila .nm{color:var(--marca-tinta)}
-  .vert{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center}
-  .vert .mk{width:64px;height:64px}
-  .clear{position:relative;padding:18px;outline:1px dashed var(--marca-lila);outline-offset:0}
-  .sizes{display:flex;align-items:flex-end;gap:20px}
+  .sub{font-size:9px;line-height:12px;font-weight:600;letter-spacing:.16em;margin:10px 0 0 2px;text-transform:uppercase;white-space:nowrap}
+  .t-papel .sub{color:var(--marca-pino)} .t-pino .sub{color:var(--marca-lila)}
+  .zoom{display:flex;align-items:center;justify-content:center;width:100%}
+  .zoom svg{width:100%}
+  .ag{display:flex;gap:14px;align-items:center}
+  .seal{width:72px;height:72px;border-radius:22%;display:flex;align-items:center;justify-content:center}
+  .seal .mk{width:62%}
+  .seal.p{background:var(--marca-pino);color:var(--marca-lila)} .seal.l{background:var(--marca-lila);color:var(--marca-tinta)}
+  .seal.c{border-radius:50%}
+  .clear{outline:1px dashed var(--marca-lila);padding:14px}
 """
 logo_body = """
 <div class="grid">
-  <div class="tile t-papel"><div class="lock">%(m)s<div><p class="nm">Tania Arroyo</p><p class="sub">Abogada · Procesalista civil</p></div></div><p class="lbl">Horizontal · principal</p></div>
-  <div class="tile t-pino"><div class="lock">%(m)s<div><p class="nm">Tania Arroyo</p><p class="sub">Abogada · Procesalista civil</p></div></div><p class="lbl">Horizontal · sobre pino</p></div>
-  <div class="tile t-papel"><div class="vert">%(m)s<div><p class="nm">Tania Arroyo</p><p class="sub">Abogada</p></div></div><p class="lbl">Vertical</p></div>
-  <div class="tile t-lila"><div class="vert">%(m)s<p class="sub" style="margin:0">Abogada</p></div><p class="lbl">Monograma sobre lila</p></div>
-  <div class="tile t-papel"><div class="clear">%(m2)s</div><p class="lbl">Área de respeto = alto de la viga</p></div>
-  <div class="tile t-papel"><div class="sizes"><span style="width:48px;height:48px;display:block">%(m)s</span><span style="width:24px;height:24px;display:block">%(m)s</span><span style="width:16px;height:16px;display:block">%(m)s</span></div><p class="lbl">Tamaño mínimo 16 px · 6 mm</p></div>
+  <div class="tile t-papel">%(w1)s<p class="sub">Abogada · Procesalista civil</p><p class="lbl">Logotipo · principal</p></div>
+  <div class="tile t-pino">%(w2)s<p class="sub">Abogada · Procesalista civil</p><p class="lbl">Sobre pino</p></div>
+  <div class="tile t-papel">%(st)s<p class="lbl">Apilado</p></div>
+  <div class="tile t-papel"><div class="zoom">%(zoom)s</div><p class="lbl">Detalle: la rr enlazada</p></div>
+  <div class="tile t-papel"><div class="ag"><div class="seal p">%(m)s</div><div class="seal l">%(m)s</div><div class="seal p c">%(m)s</div></div><p class="lbl">Sello AG · avatar y favicon</p></div>
+  <div class="tile t-papel"><div class="clear">%(w3)s</div><p class="lbl">Área de respeto = alto de la o</p></div>
 </div>
-""" % {'m': mark().replace('class="mk"', 'class="mk" style="width:100%;height:100%"').replace('style="width:100%;height:100%"', ''), 'm2': mark().replace('class="mk"', 'class="mk" style="width:64px;height:64px;display:block"')}
-# sizes tiles need the svg to fill its span
-logo_body = logo_body.replace('<span style="width:48px;height:48px;display:block"><svg class="mk"', '<span style="width:48px;height:48px;display:block"><svg class="mk" style="width:48px;height:48px"')
-logo_body = logo_body.replace('<span style="width:24px;height:24px;display:block"><svg class="mk"', '<span style="width:24px;height:24px;display:block"><svg class="mk" style="width:24px;height:24px"')
-logo_body = logo_body.replace('<span style="width:16px;height:16px;display:block"><svg class="mk"', '<span style="width:16px;height:16px;display:block"><svg class="mk" style="width:16px;height:16px"')
-write('Logo', doc('<!-- @dsCard group="Marca" height=380 subtitle="Monograma TA: la viga de la balanza sobre la A" -->', 'Logo', logo_css, logo_body), """
+""" % {'w1': wordmark('wm').replace('class="wm"', 'class="wm" style="width:210px"'),
+       'w2': wordmark('wm').replace('class="wm"', 'class="wm" style="width:210px"'),
+       'st': stacked('wm').replace('class="wm"', 'class="wm" style="width:150px;color:var(--marca-pino)"'),
+       'zoom': '<svg class="wm" viewBox="0 0 %s %s" style="width:220px;color:var(--marca-tinta)" aria-hidden="true"><path d="%s"/></svg>' % (MARKS['wordmark']['w'] * 0.335, MARKS['wordmark']['h'], MARKS['wordmark']['d']),
+       'm': mark(),
+       'w3': wordmark('wm').replace('class="wm"', 'class="wm" style="width:170px;color:var(--marca-pino)"')}
+write('Logo', doc('<!-- @dsCard group="Marca" height=400 subtitle="Logotipo tipográfico en Open Sans con la rr enlazada" -->', 'Logo', logo_css, logo_body), """
 # Logo
 
-Monograma TA más nombre compuesto en Schibsted Grotesk 600: la barra de la T es también la viga de una balanza, y la A es el soporte que la sostiene.
+Logotipo tipográfico "Arroyo Guzmán" en Open Sans 500 con espaciado de -0,03 em. Su rasgo propio es la **rr enlazada**: el brazo de la primera r corre recto hasta el asta de la segunda, igual que la ff compartida del logotipo de Clifford Chance.
 
-**Qué entrega el consumidor:** nada; use los archivos del grupo de assets `Logos` (SVG con el texto convertido a curvas).
+**Qué entrega el consumidor:** nada; use los archivos del grupo de assets `Logos` (SVG con el texto en curvas y la ligadura ya dibujada). No lo reescriba con la fuente: la ligadura no existe en el teclado.
 
 ## Versiones
 
-- **Horizontal** (`ta-horizontal-pino.svg`): la principal. Sitio web, membrete, firma de correo, portadas.
-- **Horizontal sobre verde** (`ta-horizontal-papel.svg`): sobre `marca-pino` o `marca-bosque`; el monograma va en `marca-lila`.
-- **Vertical** (`ta-vertical-pino.svg`, `ta-vertical-papel.svg`): piezas cuadradas, dorso de la tarjeta, cierres de carrusel.
-- **Monograma** (`ta-monograma-*.svg`) y **sello** (`ta-sello-*.svg`, `ta-avatar-circulo.svg`): avatar de IG, favicon, ícono de app, sellos de agua.
+- **Logotipo** (`ag-logotipo-pino.svg`, `-tinta`, `-papel`): la principal, en una línea. Sitio web, membrete, portadas y esquina de las publicaciones.
+- **Con descriptor** (`ag-firma-pino.svg`, `ag-firma-papel.svg`): con "Abogada · Procesalista civil" debajo en 600 y mayúsculas espaciadas. Tarjeta, membrete y firma de correo.
+- **Apilado** (`ag-apilado-pino.svg`, `ag-apilado-papel.svg`): "Arroyo" sobre "Guzmán", alineado a la izquierda. Frente de la tarjeta, historias, formatos cuadrados.
+- **Sello AG** (`ag-sello-pino.svg`, `ag-sello-lila.svg`, `ag-avatar-circulo.svg`): solo donde el logotipo no cabe: avatar de redes, favicon, ícono de app.
 
 ## Reglas
 
-- Área de respeto: el alto de la viga del monograma, por los cuatro lados.
-- Tamaño mínimo: monograma 16 px en pantalla y 6 mm impreso; logotipo horizontal 140 px o 35 mm de ancho.
-- Combinaciones permitidas: `marca-pino` sobre `marca-papel`; `marca-lila` sobre `marca-pino` o `marca-bosque`; `marca-tinta` sobre `marca-lila`.
-- No: rotar, poner contorno, aplicar degradados o sombras, separar la viga de la A, poner el monograma lila sobre papel (no alcanza contraste).
+- Área de respeto: el alto de la "o" por los cuatro lados.
+- Tamaño mínimo del logotipo: 110 px o 30 mm de ancho. Por debajo de eso, use el sello AG (mínimo 16 px).
+- Combinaciones: `marca-tinta` o `marca-pino` sobre `marca-papel`; `marca-papel` sobre `marca-pino` o `marca-bosque`; `marca-tinta` sobre `marca-lila`. El descriptor puede ir en `marca-lila` sobre verde.
+- No: separar la rr, cambiar la fuente, poner el nombre en mayúsculas, en negrita o en itálica, estirarlo ni añadir sombras.
 """)
 
 # ---------------------------------------------------------------- Boton
@@ -202,23 +218,24 @@ Recurso gráfico propio de la marca: una fila de casillas, una por día hábil d
 ig_css = """
   .post{width:1080px;height:1350px;padding:var(--space-18);display:flex;flex-direction:column;font-family:var(--font-sans);position:relative}
   .post .mk{width:72px;height:72px}
-  .eye{font-size:24px;line-height:28px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;margin:0;display:flex;align-items:center;gap:14px}
+  .post .wm{width:300px}
+  .eye{font-size:22px;line-height:28px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;margin:0;display:flex;align-items:center;gap:14px}
   .eye .ic{width:36px;height:36px}
-  .h{font-size:84px;line-height:88px;font-weight:700;letter-spacing:-.025em;margin:0;text-wrap:balance}
+  .h{font-size:80px;line-height:88px;font-weight:600;letter-spacing:-.03em;margin:0;text-wrap:balance}
   .b{font-size:34px;line-height:46px;margin:0}
   .foot{margin-top:auto;display:flex;justify-content:space-between;align-items:flex-end;font-size:24px;line-height:30px}
   .hand{font-weight:500}
   .tbig{display:grid;grid-template-columns:repeat(10,64px);gap:16px;margin:56px 0 24px}
   .tbig i{display:block;height:64px;border-radius:8px;border:3px solid var(--marca-pino)}
   .tbig i.hecho{background:var(--marca-pino)} .tbig i.hoy{background:var(--marca-lila);border-color:var(--marca-lila)}
-  .v-tip{background:var(--marca-lila-suave);color:var(--marca-tinta)} .v-tip .mk,.v-tip .eye{color:var(--marca-pino)}
-  .v-cita{background:var(--marca-pino);color:var(--marca-papel)} .v-cita .mk{color:var(--marca-lila)}
+  .v-tip{background:var(--marca-lila-suave);color:var(--marca-tinta)} .v-tip .wm,.v-tip .eye{color:var(--marca-pino)}
+  .v-cita{background:var(--marca-pino);color:var(--marca-papel)} .v-cita .wm{color:var(--marca-papel)}
   .v-cita .q{font-size:76px;line-height:92px;font-style:italic;font-weight:400;letter-spacing:-.01em;margin:auto 0 0;text-wrap:balance}
   .v-cita .q em{font-style:italic;background:linear-gradient(transparent 62%,rgba(185,166,242,.55) 62%)}
-  .v-car{background:var(--marca-papel);color:var(--marca-tinta)} .v-car .mk{color:var(--marca-pino)}
-  .v-car .num{font-size:420px;line-height:340px;font-weight:700;letter-spacing:-.05em;color:var(--marca-pino);margin:auto 0 24px}
+  .v-car{background:var(--marca-papel);color:var(--marca-tinta)} .v-car .wm{color:var(--marca-pino)}
+  .v-car .num{font-size:420px;line-height:340px;font-weight:600;letter-spacing:-.05em;color:var(--marca-pino);margin:auto 0 24px}
   .v-car .pg{font-variant-numeric:tabular-nums}
-  .v-area{background:var(--marca-bosque);color:var(--marca-papel)} .v-area .mk{color:var(--marca-lila)}
+  .v-area{background:var(--marca-bosque);color:var(--marca-papel)} .v-area .wm{color:var(--marca-papel)}
   .v-area .eye{color:var(--marca-lila)}
   .v-area .list{margin:48px 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:0}
   .v-area .list li{font-size:34px;line-height:46px;padding:22px 0;border-top:2px solid rgba(244,245,242,.22)}
@@ -230,18 +247,18 @@ S = 0.25
 tip = """<div class="post v-tip"><div class="top">%s<p class="eye">%sProcesal civil · Dato útil</p></div>
 <p class="h">¿Le notificaron una demanda? Tiene 20 días hábiles para contestarla.</p>%s
 <p class="b">Cuente desde el día siguiente a la notificación. Sin contestación, el juez puede tener por ciertos los hechos.</p>
-<div class="foot"><span class="src">Código General del Proceso, arts. 97 y 369</span><span class="hand">@taniaarroyo.abogada</span></div></div>""" % (mark(), icon('terminos'), terminos(20, 13, cls='tbig'))
+<div class="foot"><span class="src">Código General del Proceso, arts. 97 y 369</span><span class="hand">@arroyoguzman.abogada</span></div></div>""" % (wordmark(), icon('terminos'), terminos(20, 13, cls='tbig'))
 cita = """<div class="post v-cita"><div class="top">%s<p class="eye" style="color:var(--marca-lila)">Cómo trabajo</p></div>
 <p class="q">“Un proceso bien llevado empieza por un <em>plazo bien contado.</em>”</p>
-<div class="foot" style="margin-top:72px"><span class="hand">Tania Arroyo · Abogada</span><span>Procesalista civil</span></div></div>""" % mark()
+<div class="foot" style="margin-top:72px"><span class="hand">Tania Arroyo Guzmán · Abogada</span><span>Procesalista civil</span></div></div>""" % wordmark()
 car = """<div class="post v-car"><div class="top">%s<p class="eye" style="color:var(--marca-pino)">Contratos · Arrendamiento</p></div>
 <p class="num">5</p><div class="rule"></div>
-<p class="h" style="font-size:72px;line-height:78px">cosas que debe revisar antes de firmar un contrato de arriendo</p>
-<div class="foot"><span class="hand">@taniaarroyo.abogada</span><span class="pg">1/6 · Deslice →</span></div></div>""" % mark()
+<p class="h" style="font-size:68px;line-height:76px">cosas que debe revisar antes de firmar un contrato de arriendo</p>
+<div class="foot"><span class="hand">@arroyoguzman.abogada</span><span class="pg">1/6 · Deslice →</span></div></div>""" % wordmark()
 area = """<div class="post v-area"><div class="top">%s<p class="eye">%sLaboral</p></div>
 <p class="h" style="margin-top:0">¿Terminaron su contrato sin justa causa?</p>
 <ul class="list"><li>Revisamos su liquidación y la indemnización.</li><li>Calculamos lo que le deben, con soporte.</li><li>Negociamos o demandamos, según su caso.</li></ul>
-<div class="foot"><span class="hand">Agende su consulta · link en la biografía</span></div></div>""" % (mark(), icon('laboral'))
+<div class="foot"><span class="hand">Agende su consulta · link en la biografía</span></div></div>""" % (wordmark(), icon('laboral'))
 ig_body = '<div class="row">' + ''.join(
     '<div><p class="lbl">%s</p>%s</div>' % (lab, ab(1080, 1350, S, x)) for lab, x in
     [('Dato útil · lila suave', tip), ('Frase · pino', cita), ('Portada de carrusel · papel', car), ('Área de práctica · bosque', area)]) + '</div>'
@@ -255,8 +272,8 @@ Cuatro plantillas de publicación para el feed de Instagram a 1080 × 1350 px (4
 ## Estructura fija
 
 - Margen de seguridad `space-18` (72 px) en los cuatro lados.
-- Arriba a la izquierda el monograma de 72 px; arriba a la derecha el antetítulo en `ig-etiqueta` con el ícono del área.
-- Titular en `ig-titular`, texto en `ig-cuerpo`, pie con el usuario `@taniaarroyo.abogada` o la norma en `norma` ampliado.
+- Arriba a la izquierda el logotipo de 300 px de ancho; arriba a la derecha el antetítulo en `ig-etiqueta` con el ícono del área.
+- Titular en `ig-titular`, texto en `ig-cuerpo`, pie con el usuario `@arroyoguzman.abogada` o la norma en `norma` ampliado.
 - Solo tokens `marca-*`: las piezas no cambian con el tema del teléfono.
 
 ## Cuándo usar cada fondo
@@ -282,7 +299,7 @@ Alterne claro y oscuro: en cada fila de tres publicaciones debe haber al menos u
 # ---------------------------------------------------------------- StoryIG + Destacados
 st_css = ig_css + """
   .story{width:1080px;height:1920px;padding:220px var(--space-18) 260px;display:flex;flex-direction:column;background:var(--marca-bosque);color:var(--marca-papel)}
-  .story .mk{width:96px;height:96px;color:var(--marca-lila)}
+  .story .wm{width:420px;color:var(--marca-papel)}
   .story .h{font-size:96px;line-height:100px;margin:auto 0 40px}
   .story .b{color:var(--marca-papel);opacity:.85}
   .cta{margin-top:72px;background:var(--marca-lila);color:var(--marca-tinta);border-radius:20px;padding:40px 48px;font-size:40px;line-height:48px;font-weight:600;display:flex;justify-content:space-between}
@@ -296,7 +313,7 @@ st_css = ig_css + """
 """
 story = """<div class="story">%s<p class="h">Una consulta a tiempo evita un proceso.</p>
 <p class="b">Primera consulta de 45 minutos, presencial o virtual. Le digo qué opciones tiene y cuánto tardaría cada una.</p>
-<div class="cta"><span>Agendar consulta</span><span>→</span></div></div>""" % mark()
+<div class="cta"><span>Agendar consulta</span><span>→</span></div></div>""" % stacked()
 hls = [('consulta', 'Consultas', 0), ('procesal', 'Procesos', 0), ('laboral', 'Laboral', 1), ('familia', 'Familia', 1),
        ('sucesiones', 'Sucesiones', 1), ('contratos', 'Contratos', 1), ('terminos', 'Plazos', 0)]
 hl = '<div class="hl">' + ''.join('<figure><div class="c%s">%s</div><figcaption>%s</figcaption></figure>' % (' alt' if a else '', icon(k), n) for k, n, a in hls) + '</div>'
@@ -309,7 +326,7 @@ Plantilla de historia de Instagram (1080 × 1920) y portadas circulares de desta
 **Qué entrega el consumidor:** una frase de máximo 8 palabras, un texto de apoyo corto y el llamado a la acción.
 
 - Deje libres 220 px arriba y 260 px abajo: ahí van la barra de progreso, el nombre de la cuenta y la caja de respuesta.
-- Fondo `marca-bosque`, monograma `marca-lila`, botón de llamado en `marca-lila` con texto `marca-tinta`.
+- Fondo `marca-bosque`, logotipo apilado en `marca-papel`, botón de llamado en `marca-lila` con texto `marca-tinta`.
 - Destacados: círculo `marca-pino` con ícono `marca-lila` para lo propio del despacho (Consultas, Procesos, Plazos); círculo `marca-lila-suave` con ícono `marca-pino` para las áreas.
 - Íconos del grupo `Iconos`, al 45 % del diámetro del círculo.
 """)
@@ -318,32 +335,33 @@ Plantilla de historia de Instagram (1080 × 1920) y portadas circulares de desta
 tp_css = """
   .card{width:1020px;height:660px;border-radius:24px;padding:72px;font-family:var(--font-sans);display:flex;flex-direction:column;position:relative;overflow:hidden}
   .fr{background:var(--marca-pino);color:var(--marca-papel)}
-  .fr .mk{width:150px;height:150px;color:var(--marca-lila)}
-  .fr .nm{font-size:64px;line-height:64px;font-weight:600;letter-spacing:-.015em;margin:auto 0 16px}
-  .fr .ro{font-size:22px;line-height:28px;letter-spacing:.16em;font-weight:500;text-transform:uppercase;margin:0;color:var(--marca-lila)}
-  .fr .tb2{position:absolute;right:72px;bottom:72px;display:grid;grid-template-columns:repeat(5,28px);gap:10px}
+  .fr .wm{width:520px;color:var(--marca-papel)}
+  .fr .nm{display:none}
+  .fr .ro{font-size:21px;line-height:28px;letter-spacing:.16em;font-weight:600;text-transform:uppercase;margin:28px 0 0 4px;color:var(--marca-lila)}
+  .fr .lg{margin-top:auto}
+  .fr .tb2{position:absolute;right:72px;top:72px;display:grid;grid-template-columns:repeat(5,28px);gap:10px}
   .fr .tb2 i{height:28px;border-radius:5px;border:2px solid var(--marca-lila)} .fr .tb2 i.hecho{background:var(--marca-lila)}
   .bk{background:var(--marca-papel);color:var(--marca-tinta)}
-  .bk .nm{font-size:48px;line-height:52px;font-weight:600;letter-spacing:-.012em;margin:0}
+  .bk .nm{font-size:44px;line-height:52px;font-weight:600;letter-spacing:-.025em;margin:0}
   .bk .ro{font-size:24px;line-height:32px;margin:8px 0 0;color:var(--marca-pino);font-weight:500}
   .bk .tp{font-size:20px;line-height:26px;color:var(--marca-gris);margin:6px 0 0}
   .bk .ct{margin-top:auto;display:grid;grid-template-columns:auto 1fr;gap:10px 28px;font-size:25px;line-height:34px}
   .bk .ct span:nth-child(odd){font-size:17px;letter-spacing:.16em;text-transform:uppercase;color:var(--marca-gris);font-weight:500;line-height:34px}
-  .bk .corner{position:absolute;right:72px;top:72px;width:80px;height:80px;color:var(--marca-pino)}
+  .bk .corner{position:absolute;right:72px;top:72px;width:300px;color:var(--marca-pino)}
   .bk .ar{position:absolute;right:72px;bottom:72px;display:flex;gap:14px;color:var(--marca-pino)}
   .bk .ar .ic{width:34px;height:34px}
   .shadow{box-shadow:var(--sombra-tarjeta);border-radius:6px}
 """
-front = '<div class="card fr">%s<p class="nm">Tania Arroyo</p><p class="ro">Abogada · Procesalista civil</p><div class="tb2">%s</div></div>' % (mark(), ''.join('<i class="hecho"></i>' if i < 4 else '<i></i>' for i in range(5)))
-back = ('<div class="card bk"><svg class="corner mk" viewBox="0 0 64 64" aria-hidden="true"><path d="%s"/></svg>'
-        '<p class="nm">Tania Arroyo</p><p class="ro">Abogada · Procesalista civil</p><p class="tp">T.P. 000.000 del C. S. de la J.</p>'
-        '<div class="ct"><span>Tel</span><span>+57 300 000 0000</span><span>Correo</span><span>hola@taniaarroyo.co</span><span>IG</span><span>@taniaarroyo.abogada</span></div>'
-        '<div class="ar">%s</div></div>') % (MARK_D, ''.join(icon(k) for k in ['procesal', 'laboral', 'familia', 'sucesiones', 'contratos']))
+front = '<div class="card fr"><div class="lg">%s</div><p class="ro">Abogada · Procesalista civil</p><div class="tb2">%s</div></div>' % (stacked(), ''.join('<i class="hecho"></i>' if i < 4 else '<i></i>' for i in range(5)))
+back = ('<div class="card bk">%s'
+        '<p class="nm" style="margin-top:110px">Tania Arroyo Guzmán</p><p class="ro">Abogada · Procesalista civil</p><p class="tp">T.P. 000.000 del C. S. de la J.</p>'
+        '<div class="ct"><span>Tel</span><span>+57 300 000 0000</span><span>Correo</span><span>hola@arroyoguzman.co</span><span>IG</span><span>@arroyoguzman.abogada</span></div>'
+        '<div class="ar">%s</div></div>') % (wordmark('wm corner'), ''.join(icon(k) for k in ['procesal', 'laboral', 'familia', 'sucesiones', 'contratos']))
 tp_body = '<div class="row"><div><p class="lbl">Frente · 85 × 55 mm</p><div class="shadow">%s</div></div><div><p class="lbl">Dorso</p><div class="shadow">%s</div></div></div><p class="lbl" style="margin-top:14px">Datos de ejemplo: reemplace T.P., teléfono y correo reales antes de imprimir.</p>' % (ab(1020, 660, 0.34, front, ';border-radius:8px'), ab(1020, 660, 0.34, back, ';border-radius:8px'))
 write('TarjetaProfesional', doc('<!-- @dsCard group="Aplicaciones" height=300 -->', 'Tarjeta profesional', tp_css, tp_body), """
 # TarjetaProfesional
 
-Tarjeta de presentación de 85 × 55 mm a dos caras: frente en `marca-pino` con el monograma, dorso en `marca-papel` con datos de contacto y número de tarjeta profesional.
+Tarjeta de presentación de 85 × 55 mm a dos caras: frente en `marca-pino` con el logotipo apilado, dorso en `marca-papel` con datos de contacto y número de tarjeta profesional.
 
 **Qué entrega el consumidor:** número de Tarjeta Profesional del Consejo Superior de la Judicatura, teléfono, correo y usuario de Instagram reales. Los de la vista previa son de ejemplo.
 
@@ -351,9 +369,9 @@ Tarjeta de presentación de 85 × 55 mm a dos caras: frente en `marca-pino` con 
 
 - Tamaño final 85 × 55 mm, 3 mm de sangrado, margen interno de 6 mm.
 - Papel: cartulina sin estucar de 350 g o más (tipo algodón o Conqueror), acabado mate.
-- Frente: fondo `marca-pino` (pida prueba de color impresa antes del tiraje) y monograma en `marca-lila`; si el presupuesto lo permite, monograma en *hot stamping* lila o en relieve seco.
+- Frente: fondo `marca-pino` (pida prueba de color impresa antes del tiraje) y logotipo apilado en `marca-papel`; si el presupuesto lo permite, logotipo en relieve seco o *hot stamping* blanco.
 - Dorso: tinta `marca-tinta` y `marca-pino` sobre papel natural blanco.
-- Tipografía: Schibsted Grotesk; nombre en 600, datos en 400 con números tabulares.
+- Tipografía: Open Sans; nombre en 600, datos en 400.
 - Las cinco casillas del frente son la barra de términos en miniatura: cuatro cumplidas y una por venir.
 """)
 
@@ -362,9 +380,9 @@ mb_css = """
   .page{width:816px;height:1056px;background:var(--marca-papel);color:var(--marca-tinta);padding:72px 88px;display:flex;flex-direction:column;font-family:var(--font-sans)}
   .hd{display:flex;justify-content:space-between;align-items:center;padding-bottom:22px;border-bottom:1px solid var(--marca-pino)}
   .hd .lk{display:flex;align-items:center;gap:14px}
-  .hd .mk{width:44px;height:44px;color:var(--marca-pino)}
-  .hd .nm{font-size:22px;line-height:24px;font-weight:600;margin:0}
-  .hd .sb{font-size:9px;letter-spacing:.16em;text-transform:uppercase;margin:4px 0 0;color:var(--marca-pino);font-weight:500}
+  .hd .wm{width:190px;color:var(--marca-tinta)}
+  .hd .nm{display:none}
+  .hd .sb{font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;margin:8px 0 0 1px;color:var(--marca-pino);font-weight:600}
   .hd .rf{font-size:11px;line-height:16px;text-align:right;color:var(--marca-gris);font-variant-numeric:tabular-nums}
   .bd{padding-top:44px;font-size:13.5px;line-height:21px}
   .bd p{margin:0 0 14px;max-width:62ch}
@@ -372,22 +390,23 @@ mb_css = """
   .bd .ln{height:9px;background:rgba(14,33,31,.08);border-radius:2px;margin:0 0 12px}
   .ft{margin-top:auto;display:flex;justify-content:space-between;font-size:10px;line-height:14px;color:var(--marca-gris);padding-top:14px;border-top:1px solid rgba(14,33,31,.15)}
   .sig{background:var(--superficie);border:1px solid var(--linea);border-radius:var(--radius-md);padding:20px 24px;display:flex;gap:16px;align-items:flex-start;max-width:440px}
-  .sig .mk{width:40px;height:40px;color:var(--pino);flex:none}
+  .sig .seal{width:44px;height:44px;border-radius:22%;background:var(--marca-pino);color:var(--marca-lila);display:flex;align-items:center;justify-content:center;flex:none}
+  .sig .seal .mk{width:62%}
   .sig p{margin:0;font-size:14px;line-height:20px}
   .sig .n{font-weight:600;font-size:16px}
   .sig .r{color:var(--pino);font-weight:500}
   .sig .d{color:var(--tinta-suave);margin-top:6px}
   .sig .x{margin-top:10px;font-size:11px;line-height:15px;color:var(--tinta-suave);border-top:1px solid var(--linea);padding-top:10px}
 """
-page = """<div class="page"><div class="hd"><div class="lk">%s<div><p class="nm">Tania Arroyo</p><p class="sb">Abogada · Procesalista civil</p></div></div>
+page = """<div class="page"><div class="hd"><div class="lk"><div>%s<p class="sb">Abogada · Procesalista civil</p></div></div>
 <div class="rf">Bogotá D. C., 28 de septiembre de 2026<br>Ref.: TA-2026-041</div></div>
 <div class="bd"><p>Señor<br><b>Juez Civil Municipal</b><br>E. S. D.</p>
 <p class="as">Asunto: Contestación de la demanda · Proceso verbal · Rad. 11001-40-03-000-2026-00000-00</p>
-<p>Tania Arroyo, identificada como aparece al pie de mi firma, en calidad de apoderada de la parte demandada, dentro del término de traslado, me permito contestar la demanda en los siguientes términos:</p>
+<p>Tania Arroyo Guzmán, identificada como aparece al pie de mi firma, en calidad de apoderada de la parte demandada, dentro del término de traslado, me permito contestar la demanda en los siguientes términos:</p>
 <div class="ln" style="width:92%%"></div><div class="ln" style="width:86%%"></div><div class="ln" style="width:90%%"></div><div class="ln" style="width:60%%"></div></div>
-<div class="ft"><span>+57 300 000 0000 · hola@taniaarroyo.co</span><span>T.P. 000.000 del C. S. de la J.</span></div></div>""" % mark()
-sig = """<div class="sig">%s<div><p class="n">Tania Arroyo</p><p class="r">Abogada · Procesalista civil</p>
-<p class="d">+57 300 000 0000<br>hola@taniaarroyo.co · @taniaarroyo.abogada</p>
+<div class="ft"><span>+57 300 000 0000 · hola@arroyoguzman.co</span><span>T.P. 000.000 del C. S. de la J.</span></div></div>""" % wordmark()
+sig = """<div class="sig"><div class="seal">%s</div><div><p class="n">Tania Arroyo Guzmán</p><p class="r">Abogada · Procesalista civil</p>
+<p class="d">+57 300 000 0000<br>hola@arroyoguzman.co · @arroyoguzman.abogada</p>
 <p class="x">Este mensaje y sus anexos son confidenciales y están amparados por el secreto profesional.</p></div></div>""" % mark()
 mb_body = '<div class="row"><div><p class="lbl">Membrete · carta</p>%s</div><div><p class="lbl">Firma de correo</p>%s</div></div>' % (ab(816, 1056, 0.36, page, ';box-shadow:var(--sombra-tarjeta)'), sig)
 write('Membrete', doc('<!-- @dsCard group="Aplicaciones" height=420 subtitle="Memoriales, cartas y firma de correo" -->', 'Membrete', mb_css, mb_body), """
@@ -399,14 +418,14 @@ Hoja membreteada tamaño carta para memoriales, cartas y cotizaciones, más la f
 
 ## Membrete
 
-- Carta (216 × 279 mm), márgenes de 25 mm laterales; logotipo horizontal de 45 mm arriba a la izquierda; fecha y referencia interna a la derecha.
+- Carta (216 × 279 mm), márgenes de 25 mm laterales; logotipo con descriptor de 50 mm arriba a la izquierda; fecha y referencia interna a la derecha.
 - Un filete de 1 px en `marca-pino` bajo el encabezado; pie con contacto y número de T.P. en `marca-gris`.
-- Cuerpo en Schibsted Grotesk 400 a 11–12 pt, interlineado 1,5. El asunto en 600 con el radicado completo de 23 dígitos.
+- Cuerpo en Open Sans 400 a 10,5–11 pt, interlineado 1,5. El asunto en 600 con el radicado completo de 23 dígitos.
 - Para radicar ante despachos que exigen formato plano, use la misma plantilla sin color: todo en `marca-tinta`.
 
 ## Firma de correo
 
-- Monograma de 40 px, nombre en 600, cargo en `pino`, contacto en `tinta-suave` con números tabulares.
+- Sello AG de 44 px, nombre completo en 600, cargo en `pino`, contacto en `tinta-suave` con números tabulares.
 - Cierre con la nota de confidencialidad en 11 px. Sin frases motivacionales ni íconos de redes en color.
 """)
 
@@ -424,8 +443,8 @@ cover_css = """
   .cel.hecha{fill:var(--menta)}
   .mkc{fill:var(--marca-lila)}
   .words{position:absolute;left:48px;bottom:40px;max-width:440px}
-  .name{margin:0;font-family:var(--font-sans);font-size:108px;line-height:.95;font-weight:600;letter-spacing:-.025em;color:var(--tinta)}
-  .tag{margin:12px 0 0 4px;font-size:14px;line-height:20px;color:var(--tinta-suave)}
+  .name{margin:0;font-size:100px;line-height:1;color:var(--tinta)}
+  .tag{margin:18px 0 0 4px;font-size:14px;line-height:20px;color:var(--tinta-suave)}
 """
 # grid of business-day cells on the pino slab: 5 columns (a work week) x 4 rows = 20 days, 13 done, today lila
 cells = []
@@ -444,13 +463,13 @@ cover_svg = """<svg viewBox="0 0 480 320" width="480" height="320">
 <rect class="pino blk" x="16" y="-16" width="216" height="312" rx="10"/>
 %s
 <rect class="tinta blk" x="248" y="136" width="160" height="160" rx="10"/>
-<g transform="translate(292 180) scale(1.125)"><path class="mkc" d="%s"/></g>
+<g transform="translate(%.2f %.2f) scale(%.4f)"><path class="mkc" d="%s"/></g>
 <rect class="lila blk" x="248" y="24" width="160" height="96" rx="10"/>
 <rect class="mmenta blk" x="424" y="240" width="112" height="56" rx="10"/>
-</svg>""" % (''.join(cells), MARK_D)
-cover_body = '<div class="cover"><div class="art" aria-hidden="true">%s</div><div class="words"><h1 class="name">Tania<br>Arroyo</h1><p class="tag">Abogada procesalista civil. Cada término, cumplido.</p></div></div>' % cover_svg
+</svg>""" % (''.join(cells), 248 + (160 - MARKS['ag']['w'] * 0.9) / 2, 136 + (160 - MARKS['ag']['h'] * 0.9) / 2, 0.9, MARK_D)
+cover_body = '<div class="cover"><div class="art" aria-hidden="true">%s</div><div class="words"><h1 class="name">%s</h1><p class="tag">Abogada procesalista civil. Cada término, cumplido.</p></div></div>' % (cover_svg, stacked('wm').replace('class="wm"', 'class="wm" style="width:360px"'))
 cover_body = cover_body.replace('<br>', ' <br>')
-open(P + '/components/Cover/preview.html', 'w').write(doc('<!-- @dsCard height=320 -->', 'Tania Arroyo', cover_css, cover_body)) if os.path.isdir(P + '/components/Cover') else None
+open(P + '/components/Cover/preview.html', 'w').write(doc('<!-- @dsCard height=320 -->', 'Arroyo Guzmán', cover_css, cover_body)) if os.path.isdir(P + '/components/Cover') else None
 os.makedirs(P + '/components/Cover', exist_ok=True)
-open(P + '/components/Cover/preview.html', 'w').write(doc('<!-- @dsCard height=320 -->', 'Tania Arroyo', cover_css, cover_body))
+open(P + '/components/Cover/preview.html', 'w').write(doc('<!-- @dsCard height=320 -->', 'Arroyo Guzmán', cover_css, cover_body))
 print('ok', sorted(os.listdir(P + '/components')))
