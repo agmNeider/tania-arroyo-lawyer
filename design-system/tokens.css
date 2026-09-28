@@ -1,0 +1,110 @@
+/* Generado por _herramientas/tokens_css.py desde tokens.json. No editar a mano. */
+@font-face { font-family: 'Open Sans'; src: url('fonts/OpenSans-400.ttf') format('truetype'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Open Sans'; src: url('fonts/OpenSans-500.ttf') format('truetype'); font-weight: 500; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Open Sans'; src: url('fonts/OpenSans-600.ttf') format('truetype'); font-weight: 600; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Open Sans'; src: url('fonts/OpenSans-700.ttf') format('truetype'); font-weight: 700; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Open Sans'; src: url('fonts/OpenSans-400-italic.ttf') format('truetype'); font-weight: 400; font-style: italic; font-display: swap; }
+:root {
+  --pino: #17433D;
+  --on-pino: #FFFFFF;
+  --lila: #B9A6F2;
+  --on-lila: #0E211F;
+  --lila-suave: #ECE6FC;
+  --menta: #DCEBE5;
+  --papel: #F4F5F2;
+  --superficie: #FFFFFF;
+  --linea: #D3DAD6;
+  --tinta: #0E211F;
+  --tinta-suave: #4F5E5A;
+  --plazo: #A94F17;
+  --cumplido: #1F5E4D;
+  --foco: #5B3FC4;
+  --marca-pino: #17433D;
+  --marca-bosque: #0F2E2A;
+  --marca-lila: #B9A6F2;
+  --marca-lila-suave: #ECE6FC;
+  --marca-menta: #DCEBE5;
+  --marca-papel: #F4F5F2;
+  --marca-tinta: #0E211F;
+  --marca-gris: #4F5E5A;
+  --sombra-tarjeta: 0 1px 2px rgba(14,33,31,0.08), 0 8px 24px rgba(14,33,31,0.08);
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-18: 72px;
+  --radius-sm: 4px;
+  --radius-md: 10px;
+  --radius-lg: 22%;
+  --radius-pill: 999px;
+  --font-sans: "Open Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+:root:not([data-theme="light"]) {
+  --pino: #7CC2B1;
+  --on-pino: #0D1917;
+  --lila: #C4B4F6;
+  --on-lila: #0E211F;
+  --lila-suave: #2A2442;
+  --menta: #1B332E;
+  --papel: #0D1917;
+  --superficie: #142421;
+  --linea: #2A3D39;
+  --tinta: #ECF1EE;
+  --tinta-suave: #A3B3AE;
+  --plazo: #F0A06B;
+  --cumplido: #8FD3BE;
+  --foco: #C4B4F6;
+  --marca-pino: #17433D;
+  --marca-bosque: #0F2E2A;
+  --marca-lila: #B9A6F2;
+  --marca-lila-suave: #ECE6FC;
+  --marca-menta: #DCEBE5;
+  --marca-papel: #F4F5F2;
+  --marca-tinta: #0E211F;
+  --marca-gris: #4F5E5A;
+  --sombra-tarjeta: 0 1px 2px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.35);
+  color-scheme: dark;
+}
+}
+:root[data-theme="dark"] {
+  --pino: #7CC2B1;
+  --on-pino: #0D1917;
+  --lila: #C4B4F6;
+  --on-lila: #0E211F;
+  --lila-suave: #2A2442;
+  --menta: #1B332E;
+  --papel: #0D1917;
+  --superficie: #142421;
+  --linea: #2A3D39;
+  --tinta: #ECF1EE;
+  --tinta-suave: #A3B3AE;
+  --plazo: #F0A06B;
+  --cumplido: #8FD3BE;
+  --foco: #C4B4F6;
+  --marca-pino: #17433D;
+  --marca-bosque: #0F2E2A;
+  --marca-lila: #B9A6F2;
+  --marca-lila-suave: #ECE6FC;
+  --marca-menta: #DCEBE5;
+  --marca-papel: #F4F5F2;
+  --marca-tinta: #0E211F;
+  --marca-gris: #4F5E5A;
+  --sombra-tarjeta: 0 1px 2px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.35);
+  color-scheme: dark;
+}
+.display { font-family: var(--font-sans); font-size: 60px; line-height: 64px; font-weight: 500; letter-spacing: -0.03em; }
+.titulo-1 { font-family: var(--font-sans); font-size: 38px; line-height: 44px; font-weight: 500; letter-spacing: -0.025em; }
+.titulo-2 { font-family: var(--font-sans); font-size: 27px; line-height: 34px; font-weight: 600; letter-spacing: -0.015em; }
+.titulo-3 { font-family: var(--font-sans); font-size: 20px; line-height: 28px; font-weight: 600; letter-spacing: -0.01em; }
+.cuerpo { font-family: var(--font-sans); font-size: 16px; line-height: 26px; font-weight: 400; }
+.cuerpo-sm { font-family: var(--font-sans); font-size: 14px; line-height: 21px; font-weight: 400; }
+.cita { font-family: var(--font-sans); font-size: 21px; line-height: 32px; font-weight: 400; letter-spacing: -0.01em; font-style: italic; }
+.etiqueta { font-family: var(--font-sans); font-size: 11px; line-height: 16px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; }
+.norma { font-family: var(--font-sans); font-size: 13px; line-height: 18px; font-weight: 400; letter-spacing: 0.01em; }
+.ig-titular { font-family: var(--font-sans); font-size: 80px; line-height: 88px; font-weight: 600; letter-spacing: -0.03em; }
+.ig-cuerpo { font-family: var(--font-sans); font-size: 32px; line-height: 46px; font-weight: 400; }
+.ig-etiqueta { font-family: var(--font-sans); font-size: 22px; line-height: 28px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; }
