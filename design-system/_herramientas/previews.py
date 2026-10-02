@@ -262,14 +262,14 @@ S = 0.25
 tip = """<div class="post v-tip"><div class="top">%s<p class="eye">%sProcesal civil · Dato útil</p></div>
 <p class="h">¿Le notificaron una demanda? Tiene 20 días hábiles para contestarla.</p>%s
 <p class="b">Cuente desde el día siguiente a la notificación. Sin contestación, el juez puede tener por ciertos los hechos.</p>
-<div class="foot"><span class="src">Código General del Proceso, arts. 97 y 369</span><span class="hand">@arroyoguzman.abogada</span></div></div>""" % (wordmark(), icon('terminos'), terminos(20, 13, cls='tbig'))
+<div class="foot"><span class="src">Código General del Proceso, arts. 97 y 369</span><span class="hand">@taniaarroyo_abogada</span></div></div>""" % (wordmark(), icon('terminos'), terminos(20, 13, cls='tbig'))
 cita = """<div class="post v-cita"><div class="top">%s<p class="eye" style="color:var(--marca-lila)">Cómo trabajo</p></div>
 <p class="q">“Un proceso bien llevado empieza por un <em>plazo bien contado.</em>”</p>
 <div class="foot" style="margin-top:72px"><span class="hand">Tania Arroyo Guzmán · Abogada</span><span>Procesalista civil</span></div></div>""" % wordmark()
 car = """<div class="post v-car"><div class="top">%s<p class="eye" style="color:var(--marca-pino)">Contratos · Arrendamiento</p></div>
 <p class="num">5</p><div class="rule"></div>
 <p class="h" style="font-size:68px;line-height:76px">cosas que debe revisar antes de firmar un contrato de arriendo</p>
-<div class="foot"><span class="hand">@arroyoguzman.abogada</span><span class="pg">1/6 · Deslice →</span></div></div>""" % wordmark()
+<div class="foot"><span class="hand">@taniaarroyo_abogada</span><span class="pg">1/6 · Deslice →</span></div></div>""" % wordmark()
 area = """<div class="post v-area"><div class="top">%s<p class="eye">%sLaboral</p></div>
 <p class="h" style="margin-top:0">¿Terminaron su contrato sin justa causa?</p>
 <ul class="list"><li>Revisamos su liquidación y la indemnización.</li><li>Calculamos lo que le deben, con soporte.</li><li>Negociamos o demandamos, según su caso.</li></ul>
@@ -288,7 +288,7 @@ Cuatro plantillas de publicación para el feed de Instagram a 1080 × 1350 px (4
 
 - Margen de seguridad `space-18` (72 px) en los cuatro lados.
 - Arriba a la izquierda el logotipo de 300 px de ancho; arriba a la derecha el antetítulo en `ig-etiqueta` con el ícono del área.
-- Titular en `ig-titular`, texto en `ig-cuerpo`, pie con el usuario `@arroyoguzman.abogada` o la norma en `norma` ampliado.
+- Titular en `ig-titular`, texto en `ig-cuerpo`, pie con el usuario `@taniaarroyo_abogada` o la norma en `norma` ampliado.
 - Solo tokens `marca-*`: las piezas no cambian con el tema del teléfono.
 
 ## Cuándo usar cada fondo
@@ -370,7 +370,7 @@ tp_css = """
 front = '<div class="card fr"><div class="lg">%s</div><p class="ro">Abogada · Procesalista civil</p><div class="tb2">%s</div></div>' % (stacked(), ''.join('<i class="hecho"></i>' if i < 4 else '<i></i>' for i in range(5)))
 back = ('<div class="card bk">%s'
         '<p class="nm" style="margin-top:20px">Tania Arroyo Guzmán</p><p class="ro">Abogada · Procesalista civil</p><p class="tp">T.P. 000.000 del C. S. de la J.</p>'
-        '<div class="ct"><span>Tel</span><span>+57 313 699 4178</span><span>Correo</span><span>arroyogtania@gmail.com</span><span>IG</span><span>@arroyoguzman.abogada</span></div>'
+        '<div class="ct"><span>Tel</span><span>+57 313 699 4178</span><span>Correo</span><span>arroyo752tania@gmail.com</span><span>IG</span><span>@taniaarroyo_abogada</span></div>'
         '<div class="ar">%s</div></div>') % (mark('mk corner'), ''.join(icon(k) for k in ['procesal', 'laboral', 'familia', 'sucesiones', 'contratos']))
 tp_body = '<div class="row"><div><p class="lbl">Frente · 85 × 55 mm</p><div class="shadow">%s</div></div><div><p class="lbl">Dorso</p><div class="shadow">%s</div></div></div><p class="lbl" style="margin-top:14px">Datos de ejemplo: reemplace T.P., teléfono y correo reales antes de imprimir.</p>' % (ab(1020, 660, 0.34, front, ';border-radius:8px'), ab(1020, 660, 0.34, back, ';border-radius:8px'))
 write('TarjetaProfesional', doc('<!-- @dsCard group="Aplicaciones" height=300 -->', 'Tarjeta profesional', tp_css, tp_body), """
@@ -420,9 +420,9 @@ page = """<div class="page"><div class="hd"><div class="lk"><div>%s<p class="sb"
 <p class="as">Asunto: Contestación de la demanda · Proceso verbal · Rad. 11001-40-03-000-2026-00000-00</p>
 <p>Tania Arroyo Guzmán, identificada como aparece al pie de mi firma, en calidad de apoderada de la parte demandada, dentro del término de traslado, me permito contestar la demanda en los siguientes términos:</p>
 <div class="ln" style="width:92%%"></div><div class="ln" style="width:86%%"></div><div class="ln" style="width:90%%"></div><div class="ln" style="width:60%%"></div></div>
-<div class="ft"><span>+57 313 699 4178 · arroyogtania@gmail.com</span><span>T.P. 000.000 del C. S. de la J.</span></div></div>""" % wordmark()
+<div class="ft"><span>+57 313 699 4178 · arroyo752tania@gmail.com</span><span>T.P. 000.000 del C. S. de la J.</span></div></div>""" % wordmark()
 sig = """<div class="sig"><div class="seal">%s</div><div><p class="n">Tania Arroyo Guzmán</p><p class="r">Abogada · Procesalista civil</p>
-<p class="d">+57 313 699 4178<br>arroyogtania@gmail.com · @arroyoguzman.abogada</p>
+<p class="d">+57 313 699 4178<br>arroyo752tania@gmail.com · @taniaarroyo_abogada</p>
 <p class="x">Este mensaje y sus anexos son confidenciales y están amparados por el secreto profesional.</p></div></div>""" % mark()
 mb_body = '<div class="row"><div><p class="lbl">Membrete · carta</p>%s</div><div><p class="lbl">Firma de correo</p>%s</div></div>' % (ab(816, 1056, 0.36, page, ';box-shadow:var(--sombra-tarjeta)'), sig)
 write('Membrete', doc('<!-- @dsCard group="Aplicaciones" height=420 subtitle="Memoriales, cartas y firma de correo" -->', 'Membrete', mb_css, mb_body), """

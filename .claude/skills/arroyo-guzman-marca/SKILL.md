@@ -33,7 +33,7 @@ Abogada joven e independiente, especialista en derecho procesal civil, que atien
 4. **Una sola tipografía:** Open Sans (400, 500, 600, 700, itálica 400). Los titulares siempre llevan espaciado negativo (-0,015 a -0,03 em).
 5. **Piezas fijas vs. interfaz:** Instagram, impresos, tarjeta, membrete, sello y avatar usan **solo tokens `marca-*`**, que no cambian con el modo oscuro. La web y las apps usan los tokens con tema (`pino`, `papel`, `tinta`…).
 6. **Contraste:** el texto cumple 4,5:1 en ambos temas. El `lila` nunca va como texto sobre `papel`.
-7. **Datos reales:** teléfono y WhatsApp **+57 313 699 4178** y correo **arroyogtania@gmail.com**. El T.P., la dirección y el usuario (`@arroyoguzman.abogada`) de las plantillas siguen siendo de ejemplo. Pide los reales antes de entregar algo para imprimir o publicar.
+7. **Datos reales:** teléfono y WhatsApp **+57 313 699 4178**, correo **arroyo752tania@gmail.com** e Instagram **@taniaarroyo_abogada**. El T.P. y la dirección de las plantillas siguen siendo de ejemplo: pídelos antes de entregar algo para imprimir.
 
 ## Color
 

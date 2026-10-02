@@ -2,7 +2,7 @@
 import type { NombreIcono } from './marca.generada';
 
 // ---------------------------------------------------------------- Datos de contacto
-// Teléfono, WhatsApp y correo son reales. Dirección, T.P. e Instagram siguen siendo DE EJEMPLO:
+// Teléfono, WhatsApp, correo e Instagram son reales. Dirección y T.P. siguen siendo DE EJEMPLO:
 // reemplácelos por los reales antes de publicar y cambie datosDeEjemplo a false.
 export const CONTACTO = {
   nombre: 'Tania Arroyo Guzmán',
@@ -10,10 +10,10 @@ export const CONTACTO = {
   tarjetaProfesional: 'T.P. 000.000 del C. S. de la J.',
   telefono: '+57 313 699 4178',
   whatsapp: process.env.NEXT_PUBLIC_WHATSAPP || '573136994178',
-  correo: 'arroyogtania@gmail.com',
+  correo: 'arroyo752tania@gmail.com',
   direccion: 'Calle 00 # 00-00, oficina 000',
   ciudad: 'Bogotá D. C.',
-  instagram: '@arroyoguzman.abogada',
+  instagram: '@taniaarroyo_abogada',
   horario: 'Lunes a viernes, 8:00 a. m. a 6:00 p. m.',
   datosDeEjemplo: true,
 };

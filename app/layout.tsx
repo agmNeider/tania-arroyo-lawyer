@@ -36,6 +36,7 @@ const datosEstructurados = {
   telephone: CONTACTO.telefono,
   address: { '@type': 'PostalAddress', streetAddress: CONTACTO.direccion, addressLocality: CONTACTO.ciudad, addressCountry: 'CO' },
   areaServed: 'CO',
+  sameAs: [`https://instagram.com/${CONTACTO.instagram.replace('@', '')}`],
   founder: { '@type': 'Person', name: CONTACTO.nombre, jobTitle: 'Abogada procesalista civil' },
   knowsAbout: ['Derecho procesal civil', 'Derecho civil', 'Derecho laboral', 'Derecho de familia', 'Sucesiones', 'Contratos'],
 };

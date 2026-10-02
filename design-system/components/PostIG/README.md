@@ -8,7 +8,7 @@ Cuatro plantillas de publicación para el feed de Instagram a 1080 × 1350 px (4
 
 - Margen de seguridad `space-18` (72 px) en los cuatro lados.
 - Arriba a la izquierda el logotipo de 300 px de ancho; arriba a la derecha el antetítulo en `ig-etiqueta` con el ícono del área.
-- Titular en `ig-titular`, texto en `ig-cuerpo`, pie con el usuario `@arroyoguzman.abogada` o la norma en `norma` ampliado.
+- Titular en `ig-titular`, texto en `ig-cuerpo`, pie con el usuario `@taniaarroyo_abogada` o la norma en `norma` ampliado.
 - Solo tokens `marca-*`: las piezas no cambian con el tema del teléfono.
 
 ## Cuándo usar cada fondo
