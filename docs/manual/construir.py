@@ -254,7 +254,7 @@ pagina(cab('11 · Sitio web', 'Una página que explica, orienta y agenda',
 pagina(cab('11 · Sitio web', 'Agenda de citas, móvil y tema oscuro') + '''
 <div class="pantalla">%s</div>
 <div class="sitio-fila" style="margin-top:6mm"><div class="pantalla movil">%s</div><div class="pantalla movil">%s</div>
-<div><h3>Cómo funciona la agenda</h3><ul class="si"><li>Muestra los próximos 10 días hábiles, sin fines de semana ni festivos de Colombia.</li><li>Valida los datos en el navegador y otra vez en el servidor.</li><li>Envía la solicitud a una hoja de cálculo o al correo mediante un webhook.</li><li>Ofrece enviar el resumen por WhatsApp.</li><li>Pide la autorización de datos de la Ley 1581 de 2012.</li></ul>
+<div><h3>Cómo funciona la agenda</h3><ul class="si"><li>El calendario de Cal.com va dentro del sitio, con los colores de la marca.</li><li>Solo muestra las horas libres del calendario de Tania.</li><li>Dos tipos de cita: presencial y virtual, de una hora.</li><li>Cal.com envía la confirmación, los recordatorios y el enlace de la videollamada.</li><li>Si no carga, el sitio ofrece el enlace directo y WhatsApp.</li></ul>
 <h3 style="margin-top:5mm">Tema oscuro</h3><div class="pantalla">%s</div></div></div>''' % (img('sitio-agenda.png', 'width:100%'), img('sitio-movil.png', 'width:100%'), img('sitio-movil-agenda.png', 'width:100%'),
                                                                                    img('sitio-portada-oscuro.png', 'width:100%')), seccion='Sitio web')
 

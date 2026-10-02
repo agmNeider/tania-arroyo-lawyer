@@ -327,7 +327,7 @@ st_css = ig_css + """
   .col{display:flex;flex-direction:column;gap:24px}
 """
 story = """<div class="story">%s<p class="h">Una consulta a tiempo evita un proceso.</p>
-<p class="b">Primera consulta de 45 minutos, presencial o virtual. Le digo qué opciones tiene y cuánto tardaría cada una.</p>
+<p class="b">Primera consulta de una hora, presencial o virtual. Le digo qué opciones tiene y cuánto tardaría cada una.</p>
 <div class="cta"><span>Agendar consulta</span><span>→</span></div></div>""" % stacked()
 hls = [('consulta', 'Consultas', 0), ('procesal', 'Procesos', 0), ('laboral', 'Laboral', 1), ('familia', 'Familia', 1),
        ('sucesiones', 'Sucesiones', 1), ('contratos', 'Contratos', 1), ('terminos', 'Plazos', 0)]

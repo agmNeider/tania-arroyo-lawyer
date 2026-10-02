@@ -28,15 +28,14 @@ npm run build && npm start   # producción
 
 | Carpeta | Qué hay |
 | --- | --- |
-| `app/` | `layout.tsx` (metadatos, datos estructurados, estilos), `page.tsx`, `globals.css`, `api/citas/route.ts`, ícono, `sitemap` y `robots` |
+| `app/` | `layout.tsx` (metadatos, datos estructurados, estilos), `page.tsx`, `globals.css`, ícono, `sitemap` y `robots` |
 | `components/` | Una pieza por sección: encabezado, portada, áreas, método, procesos, casos, guía, agenda, contacto y pie; `Marca.tsx` con el logotipo, el monograma, los íconos y la barra de términos |
 | `lib/contenido.ts` | **Todo el texto del sitio**, los datos de contacto y los casos. Se edita aquí. |
-| `lib/citas.ts` | Validación de citas (compartida por el formulario y la API), días hábiles con festivos de Colombia y el mensaje de WhatsApp |
 | `lib/marca.generada.ts` | Logotipo, monograma e íconos generados desde `design-system/` por `scripts/generar-marca.mjs` (se regenera antes de `dev` y `build`) |
 
-**Agenda de citas.** El formulario muestra los próximos 10 días hábiles (sin fines de semana ni festivos), valida los datos y los envía a `POST /api/citas`. La API los valida otra vez y los reenvía como JSON a `CITAS_WEBHOOK_URL` (por ejemplo, un webhook de Zapier, Make, n8n o Google Apps Script que los guarde en una hoja o los mande por correo). Sin esa variable, la solicitud solo queda en el log del servidor. Después, la persona puede enviar el resumen por WhatsApp.
+**Agenda de citas.** La sección "Agendar cita" inserta el calendario de Cal.com (`@calcom/embed-react`) con los colores de la marca. Hay dos tipos de cita, `cal.com/arroyotania/consulta-presencial` y `cal.com/arroyotania/consulta-virtual`, definidos en `TIPOS_CITA` de `lib/contenido.ts`. Cal.com muestra solo las horas libres del calendario de Tania, envía la confirmación y los recordatorios, y genera el enlace de la videollamada. La duración, el horario, los festivos bloqueados, la ubicación y las preguntas del formulario se cambian en Cal.com, no en el código. Si el calendario no carga, la sección ofrece el enlace directo y WhatsApp.
 
-**Variables de entorno** (ver `.env.example`): `NEXT_PUBLIC_WHATSAPP`, `CITAS_WEBHOOK_URL`, `NEXT_PUBLIC_SITIO_URL`.
+**Variables de entorno** (ver `.env.example`): `NEXT_PUBLIC_WHATSAPP` y `NEXT_PUBLIC_SITIO_URL`.
 
 **Publicar.** Vercel detecta Next.js sin configuración: importe el repositorio, agregue las variables de entorno y despliegue. También funciona en cualquier servidor con Node 20.9 o superior (`npm run build && npm start`).
 
@@ -44,7 +43,7 @@ npm run build && npm start   # producción
 
 1. Datos reales en `lib/contenido.ts` (`CONTACTO`) y `datosDeEjemplo: false`.
 2. Casos reales, anonimizados y autorizados por escrito en `CASOS`, y `CASOS_DE_EJEMPLO = false`.
-3. `CITAS_WEBHOOK_URL` configurada, para no perder solicitudes.
+3. En Cal.com: calendario de Gmail conectado, festivos bloqueados con *Date overrides*, ubicación real de la cita presencial y la duración que se quiera mostrar (el sitio dice "1 hora").
 4. Enlace a la política de tratamiento de datos personales (Ley 1581 de 2012) junto a la casilla de autorización.
 5. Verificación de las normas citadas.
 

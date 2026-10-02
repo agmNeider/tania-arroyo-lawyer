@@ -45,7 +45,7 @@ tokens={"name":"Arroyo Guzmán","version":1,
      st("titulo-3",20,"28px",600,"-0.01em","Encabezados menores y preguntas en listas de preguntas frecuentes.","¿Cuánto tarda un proceso ejecutivo?")]},
    {"name":"Texto","family":"sans","styles":[
      st("cuerpo",16,"26px",400,None,"Texto corrido en web y documentos. Máximo 65 caracteres por línea.","Le explico su caso en palabras claras y le digo qué sigue, con fechas."),
-     st("cuerpo-sm",14,"21px",400,None,"Texto de apoyo, formularios, firma de correo.","Consulta inicial de 45 minutos, presencial o virtual."),
+     st("cuerpo-sm",14,"21px",400,None,"Texto de apoyo, formularios, firma de correo.","Consulta inicial de una hora, presencial o virtual."),
      st("cita",21,"32px",400,"-0.01em","Frases y testimonios, en itálica.","Un proceso bien llevado empieza por un plazo bien contado.","italic"),
      st("etiqueta",11,"16px",600,"0.16em","Antetítulos y áreas de práctica, SIEMPRE en mayúsculas.","PROCESAL CIVIL · DATO ÚTIL"),
      st("norma",13,"18px",400,"0.01em","Citas normativas y letra de soporte (artículo, ley, radicado).","Código General del Proceso, art. 369")]},

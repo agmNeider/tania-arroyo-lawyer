@@ -31,7 +31,7 @@ export const AREAS: Area[] = [
 
 // ---------------------------------------------------------------- Cómo trabajo
 export const PASOS = [
-  { titulo: 'Consulta inicial', texto: 'Me cuenta qué pasó y revisamos juntos sus documentos. Le digo si tiene un caso y qué caminos existen.', cuando: '45 minutos, presencial o virtual' },
+  { titulo: 'Consulta inicial', texto: 'Me cuenta qué pasó y revisamos juntos sus documentos. Le digo si tiene un caso y qué caminos existen.', cuando: '1 hora, presencial o virtual' },
   { titulo: 'Diagnóstico por escrito', texto: 'Recibe un documento corto con las opciones, los plazos que corren, los riesgos y el costo de cada camino.', cuando: 'En los 3 días hábiles siguientes' },
   { titulo: 'Actuación', texto: 'Si decide seguir, preparo y radico lo necesario: acuerdo, demanda, contestación o recurso. Usted lo revisa antes.', cuando: 'Con fechas acordadas' },
   { titulo: 'Seguimiento', texto: 'Le envío cada novedad del proceso y le aviso con anticipación de audiencias y términos por vencer.', cuando: 'Hasta el final del proceso' },
@@ -113,7 +113,11 @@ export const PREGUNTAS = [
   { p: '¿Cómo sé en qué va mi caso?', r: 'Le envío cada novedad y un resumen con la siguiente fecha importante. Puede escribirme cuando quiera y le respondo en máximo un día hábil.' },
 ];
 
-// ---------------------------------------------------------------- Agenda
-export const TEMAS_CITA = ['Procesal civil (demanda o proceso en curso)', 'Civil', 'Laboral', 'Familia', 'Sucesiones', 'Contratos', 'No estoy seguro'];
-export const HORAS_CITA = ['8:00 a. m.', '9:00 a. m.', '10:00 a. m.', '11:00 a. m.', '2:00 p. m.', '3:00 p. m.', '4:00 p. m.', '5:00 p. m.'];
-export const DIAS_A_MOSTRAR = 10;
+// ---------------------------------------------------------------- Agenda (Cal.com)
+// Cada tipo de cita es un evento de Cal.com (https://cal.com/arroyotania). La disponibilidad,
+// los correos de confirmación, los recordatorios y el enlace de Google Meet los maneja Cal.com.
+export const CALCOM_USUARIO = 'arroyotania';
+export const TIPOS_CITA = [
+  { id: 'presencial', nombre: 'Presencial', detalle: 'En la oficina, con sus documentos en físico', icono: 'oficina', calLink: `${CALCOM_USUARIO}/consulta-presencial` },
+  { id: 'virtual', nombre: 'Virtual', detalle: 'Por videollamada; el enlace llega en el correo de confirmación', icono: 'videollamada', calLink: `${CALCOM_USUARIO}/consulta-virtual` },
+] as const;

@@ -281,3 +281,8 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--foco);outline-of
 @media (max-width:900px){.portada .envoltura{grid-template-columns:1fr}.seguimiento{max-width:520px}}
 .canal a.val{text-decoration:none}
 .canal a.val:hover{text-decoration:underline;text-decoration-color:var(--lila);text-underline-offset:4px}
+/* agenda con Cal.com */
+.cal-caja{min-height:640px;border:1px solid var(--linea);border-radius:12px;overflow:hidden;background:var(--superficie)}
+.cal-alterno{font-size:14px;line-height:20px;color:var(--tinta-suave)}
+.cal-alterno a{color:var(--pino);text-decoration:underline;text-decoration-color:var(--lila);text-decoration-thickness:2px;text-underline-offset:4px}
+@media (max-width:560px){.cal-caja{min-height:760px;border:0;border-radius:0}}
