@@ -370,7 +370,7 @@ tp_css = """
 front = '<div class="card fr"><div class="lg">%s</div><p class="ro">Abogada · Procesalista civil</p><div class="tb2">%s</div></div>' % (stacked(), ''.join('<i class="hecho"></i>' if i < 4 else '<i></i>' for i in range(5)))
 back = ('<div class="card bk">%s'
         '<p class="nm" style="margin-top:20px">Tania Arroyo Guzmán</p><p class="ro">Abogada · Procesalista civil</p><p class="tp">T.P. 000.000 del C. S. de la J.</p>'
-        '<div class="ct"><span>Tel</span><span>+57 313 699 4178</span><span>Correo</span><span>hola@arroyoguzman.co</span><span>IG</span><span>@arroyoguzman.abogada</span></div>'
+        '<div class="ct"><span>Tel</span><span>+57 313 699 4178</span><span>Correo</span><span>arroyogtania@gmail.com</span><span>IG</span><span>@arroyoguzman.abogada</span></div>'
         '<div class="ar">%s</div></div>') % (mark('mk corner'), ''.join(icon(k) for k in ['procesal', 'laboral', 'familia', 'sucesiones', 'contratos']))
 tp_body = '<div class="row"><div><p class="lbl">Frente · 85 × 55 mm</p><div class="shadow">%s</div></div><div><p class="lbl">Dorso</p><div class="shadow">%s</div></div></div><p class="lbl" style="margin-top:14px">Datos de ejemplo: reemplace T.P., teléfono y correo reales antes de imprimir.</p>' % (ab(1020, 660, 0.34, front, ';border-radius:8px'), ab(1020, 660, 0.34, back, ';border-radius:8px'))
 write('TarjetaProfesional', doc('<!-- @dsCard group="Aplicaciones" height=300 -->', 'Tarjeta profesional', tp_css, tp_body), """
@@ -420,9 +420,9 @@ page = """<div class="page"><div class="hd"><div class="lk"><div>%s<p class="sb"
 <p class="as">Asunto: Contestación de la demanda · Proceso verbal · Rad. 11001-40-03-000-2026-00000-00</p>
 <p>Tania Arroyo Guzmán, identificada como aparece al pie de mi firma, en calidad de apoderada de la parte demandada, dentro del término de traslado, me permito contestar la demanda en los siguientes términos:</p>
 <div class="ln" style="width:92%%"></div><div class="ln" style="width:86%%"></div><div class="ln" style="width:90%%"></div><div class="ln" style="width:60%%"></div></div>
-<div class="ft"><span>+57 313 699 4178 · hola@arroyoguzman.co</span><span>T.P. 000.000 del C. S. de la J.</span></div></div>""" % wordmark()
+<div class="ft"><span>+57 313 699 4178 · arroyogtania@gmail.com</span><span>T.P. 000.000 del C. S. de la J.</span></div></div>""" % wordmark()
 sig = """<div class="sig"><div class="seal">%s</div><div><p class="n">Tania Arroyo Guzmán</p><p class="r">Abogada · Procesalista civil</p>
-<p class="d">+57 313 699 4178<br>hola@arroyoguzman.co · @arroyoguzman.abogada</p>
+<p class="d">+57 313 699 4178<br>arroyogtania@gmail.com · @arroyoguzman.abogada</p>
 <p class="x">Este mensaje y sus anexos son confidenciales y están amparados por el secreto profesional.</p></div></div>""" % mark()
 mb_body = '<div class="row"><div><p class="lbl">Membrete · carta</p>%s</div><div><p class="lbl">Firma de correo</p>%s</div></div>' % (ab(816, 1056, 0.36, page, ';box-shadow:var(--sombra-tarjeta)'), sig)
 write('Membrete', doc('<!-- @dsCard group="Aplicaciones" height=420 subtitle="Memoriales, cartas y firma de correo" -->', 'Membrete', mb_css, mb_body), """
