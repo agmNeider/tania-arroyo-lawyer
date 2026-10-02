@@ -41,11 +41,9 @@ npm run build && npm start   # producción
 
 **Antes de salir a producción:**
 
-1. Datos reales en `lib/contenido.ts` (`CONTACTO`) y `datosDeEjemplo: false`.
-2. Casos reales, anonimizados y autorizados por escrito en `CASOS`, y `CASOS_DE_EJEMPLO = false`.
-3. En Cal.com: calendario de Gmail conectado, festivos bloqueados con *Date overrides*, ubicación real de la cita presencial y la duración que se quiera mostrar (el sitio dice "1 hora").
-4. Enlace a la política de tratamiento de datos personales (Ley 1581 de 2012) junto a la casilla de autorización.
-5. Verificación de las normas citadas.
+1. En Cal.com: calendario de Gmail conectado, festivos bloqueados con *Date overrides* y la duración que se quiera mostrar (el sitio dice "1 hora").
+2. Enlace a la política de tratamiento de datos personales (Ley 1581 de 2012) junto a la casilla de autorización.
+3. Verificación de las normas citadas.
 
 `sitio/` conserva la versión estática en un solo archivo HTML que se usó como prototipo (vista previa: https://claude.ai/artifact/Jk3s3XRUhyNANvpyRRNBiX). La versión oficial es la app de Next.js.
 

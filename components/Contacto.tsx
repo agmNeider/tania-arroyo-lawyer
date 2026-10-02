@@ -42,8 +42,8 @@ export function Contacto() {
           </div>
           <div className="canal">
             <p className="etq">Oficina</p>
-            <p className="val">{CONTACTO.direccion}</p>
-            <p className="sub">{CONTACTO.ciudad} · Solo con cita previa</p>
+            <p className="val">{CONTACTO.ciudad}, {CONTACTO.departamento}</p>
+            <p className="sub">Solo con cita previa</p>
           </div>
           <div className="canal">
             <p className="etq">Instagram</p>
@@ -51,7 +51,6 @@ export function Contacto() {
             <p className="sub">Datos útiles sobre sus derechos, cada semana</p>
           </div>
         </div>
-        {CONTACTO.datosDeEjemplo && <p className="nota-datos">Dirección de ejemplo: reemplácela por los reales antes de publicar.</p>}
       </div>
     </section>
   );

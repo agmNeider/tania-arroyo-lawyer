@@ -2,7 +2,7 @@
 
 Tarjeta de presentación de 85 × 55 mm a dos caras: frente en `marca-pino` con el logotipo apilado, dorso en `marca-papel` con datos de contacto y número de tarjeta profesional.
 
-**Qué entrega el consumidor:** número de Tarjeta Profesional del Consejo Superior de la Judicatura, teléfono, correo y usuario de Instagram reales. Los de la vista previa son de ejemplo.
+**Qué entrega el consumidor:** número de Tarjeta Profesional del Consejo Superior de la Judicatura, teléfono, correo y usuario de Instagram reales. La vista previa lleva la ciudad en lugar del número: cuando lo tenga, agréguelo en esa línea.
 
 ## Especificación de impresión
 

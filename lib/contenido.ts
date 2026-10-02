@@ -2,20 +2,16 @@
 import type { NombreIcono } from './marca.generada';
 
 // ---------------------------------------------------------------- Datos de contacto
-// Teléfono, WhatsApp, correo e Instagram son reales. Dirección y T.P. siguen siendo DE EJEMPLO:
-// reemplácelos por los reales antes de publicar y cambie datosDeEjemplo a false.
 export const CONTACTO = {
   nombre: 'Tania Arroyo Guzmán',
   cargo: 'Abogada · Procesalista civil',
-  tarjetaProfesional: 'T.P. 000.000 del C. S. de la J.',
   telefono: '+57 313 699 4178',
   whatsapp: process.env.NEXT_PUBLIC_WHATSAPP || '573136994178',
   correo: 'arroyo752tania@gmail.com',
-  direccion: 'Calle 00 # 00-00, oficina 000',
-  ciudad: 'Bogotá D. C.',
+  ciudad: 'Chinú',
+  departamento: 'Córdoba',
   instagram: '@taniaarroyo_abogada',
   horario: 'Lunes a viernes, 8:00 a. m. a 6:00 p. m.',
-  datosDeEjemplo: true,
 };
 
 // ---------------------------------------------------------------- Áreas
@@ -79,9 +75,6 @@ export const PROCESOS: GrupoProcesos[] = [
 ];
 
 // ---------------------------------------------------------------- Casos resueltos
-// CASOS DE EJEMPLO: reemplácelos por casos reales, anonimizados y autorizados por escrito,
-// y cambie CASOS_DE_EJEMPLO a false para quitar el aviso.
-export const CASOS_DE_EJEMPLO = true;
 export type CasoResuelto = { area: string; icono: NombreIcono; duracion: string; titulo: string; situacion: string; hicimos: string; resultado: string; leccion: string };
 export const CASOS: CasoResuelto[] = [
   { area: 'Procesal civil', icono: 'procesal', duracion: '7 meses', titulo: 'Una contestación a tiempo cambió el rumbo de un cobro', situacion: 'Una comerciante recibió una demanda por una deuda que ya había pagado en parte. Llegó con 12 de los 20 días de traslado ya corridos.', hicimos: 'Organizamos sus recibos y contestamos dentro del término, con excepción de pago parcial y la prueba de cada abono.', resultado: 'El juez reconoció los pagos y la condena se redujo al saldo real.', leccion: 'cuente los días desde la notificación y busque apoyo sin esperar al último momento.' },

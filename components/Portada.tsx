@@ -35,7 +35,7 @@ export function Portada() {
           </div>
         </div>
 
-        <article className="seguimiento" aria-label="Ejemplo de seguimiento de un caso">
+        <article className="seguimiento" aria-label="Seguimiento del avance de un caso">
           <div className="seg-cab">
             <div>
               <p className="etq">Su caso · Proceso verbal</p>
@@ -60,7 +60,7 @@ export function Portada() {
               </li>
             ))}
           </ul>
-          <p className="ejemplo">Así le muestro el avance de su proceso. Caso de ejemplo.</p>
+          <p className="ejemplo">Así le muestro el avance de su proceso.</p>
         </article>
       </div>
     </section>

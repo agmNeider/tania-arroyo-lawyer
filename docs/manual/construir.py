@@ -242,7 +242,7 @@ pagina(cab('11 · Sitio web', 'Una página que explica, orienta y agenda',
            'Sitio de una sola página hecho con Next.js y el sistema de diseño. Presenta a Tania, explica los procesos más comunes con su plazo y su norma, y permite agendar una cita presencial o virtual.') +
        '<div class="pantalla">%s</div>' % img('sitio-portada.png', 'width:100%') + '''
 <table class="tabla peq" style="margin-top:6mm"><tr><th style="width:28%%">Sección</th><th>Qué hace</th></tr>
-<tr><td><b>Portada</b></td><td>"Cada término, cumplido." y una tarjeta de ejemplo que muestra cómo sigue el cliente su caso.</td></tr>
+<tr><td><b>Portada</b></td><td>"Cada término, cumplido." y una tarjeta que muestra cómo sigue el cliente su caso.</td></tr>
 <tr><td><b>Áreas de práctica</b></td><td>La especialidad destacada y las cinco áreas con sus temas.</td></tr>
 <tr><td><b>Cómo trabajo</b></td><td>Cuatro pasos con tiempos: consulta, diagnóstico por escrito, actuación y seguimiento.</td></tr>
 <tr><td><b>Procesos típicos</b></td><td>15 situaciones por área: qué proceso aplica, qué hacer ahora, el plazo y la norma.</td></tr>

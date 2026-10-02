@@ -18,7 +18,7 @@ export function Pie() {
           <a href="#contacto">Contacto</a>
         </nav>
         <div className="legal">
-          <span>{CONTACTO.nombre} · Abogada · {CONTACTO.tarjetaProfesional}</span>
+          <span>{CONTACTO.nombre} · Abogada · {CONTACTO.ciudad}, {CONTACTO.departamento}</span>
           <span>La información de este sitio es general y no reemplaza la asesoría sobre su caso.</span>
         </div>
       </div>

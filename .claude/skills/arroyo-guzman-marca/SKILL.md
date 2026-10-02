@@ -33,7 +33,7 @@ Abogada joven e independiente, especialista en derecho procesal civil, que atien
 4. **Una sola tipografía:** Open Sans (400, 500, 600, 700, itálica 400). Los titulares siempre llevan espaciado negativo (-0,015 a -0,03 em).
 5. **Piezas fijas vs. interfaz:** Instagram, impresos, tarjeta, membrete, sello y avatar usan **solo tokens `marca-*`**, que no cambian con el modo oscuro. La web y las apps usan los tokens con tema (`pino`, `papel`, `tinta`…).
 6. **Contraste:** el texto cumple 4,5:1 en ambos temas. El `lila` nunca va como texto sobre `papel`.
-7. **Datos reales:** teléfono y WhatsApp **+57 313 699 4178**, correo **arroyo752tania@gmail.com** e Instagram **@taniaarroyo_abogada**. El T.P. y la dirección de las plantillas siguen siendo de ejemplo: pídelos antes de entregar algo para imprimir.
+7. **Datos reales:** teléfono y WhatsApp **+57 313 699 4178**, correo **arroyo752tania@gmail.com** Instagram **@taniaarroyo_abogada** y ciudad **Chinú, Córdoba** (sin dirección de calle). Aún no hay número de T.P.: no inventes uno ni dejes ceros de relleno; pídelo si una pieza lo exige. No dejes textos de relleno ni avisos de "ejemplo" en piezas publicadas.
 
 ## Color
 
@@ -131,4 +131,4 @@ Después de un cambio:
 - [ ] El texto tiene 4,5:1 de contraste; no hay lila como texto sobre papel.
 - [ ] Hay una idea por pieza, el titular tiene como máximo 12 palabras y cada dato cita su norma.
 - [ ] Trato de usted, primera persona y sin promesas de resultado.
-- [ ] Los datos de contacto y el T.P. son los reales, o se avisó que son de ejemplo.
+- [ ] Los datos de contacto son los reales y no queda ningún texto de relleno ni aviso de "ejemplo".

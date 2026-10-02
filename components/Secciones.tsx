@@ -1,4 +1,4 @@
-import { AREAS, CASOS, CASOS_DE_EJEMPLO, PASOS, PLAZOS, PREGUNTAS, QUE_TRAER } from '@/lib/contenido';
+import { AREAS, CASOS, PASOS, PLAZOS, PREGUNTAS, QUE_TRAER } from '@/lib/contenido';
 import { Icono } from './Marca';
 
 function Cabecera({ etiqueta, titulo, id, children }: { etiqueta: string; titulo: string; id: string; children: React.ReactNode }) {
@@ -73,11 +73,6 @@ export function Casos() {
           </div>
           <p>Cada caso se publica sin nombres ni datos que permitan identificar a las personas, y solo con la autorización del cliente.</p>
         </div>
-        {CASOS_DE_EJEMPLO && (
-          <p className="aviso">
-            <b>Casos de ejemplo.</b> Reemplácelos por casos reales, anonimizados y autorizados por escrito, antes de publicar el sitio.
-          </p>
-        )}
         <div className="resueltos">
           {CASOS.map((c) => (
             <article key={c.titulo} className="res">
