@@ -33,7 +33,7 @@ Abogada joven e independiente, especialista en derecho procesal civil, que atien
 4. **Una sola tipografía:** Open Sans (400, 500, 600, 700, itálica 400). Los titulares siempre llevan espaciado negativo (-0,015 a -0,03 em).
 5. **Piezas fijas vs. interfaz:** Instagram, impresos, tarjeta, membrete, sello y avatar usan **solo tokens `marca-*`**, que no cambian con el modo oscuro. La web y las apps usan los tokens con tema (`pino`, `papel`, `tinta`…).
 6. **Contraste:** el texto cumple 4,5:1 en ambos temas. El `lila` nunca va como texto sobre `papel`.
-7. **Datos reales:** el T.P., el teléfono, el correo (`hola@arroyoguzman.co`) y el usuario (`@arroyoguzman.abogada`) de las plantillas son de ejemplo. Pide los reales antes de entregar algo para imprimir o publicar.
+7. **Datos reales:** el teléfono y WhatsApp es **+57 313 699 4178** (real). El T.P., el correo (`hola@arroyoguzman.co`), la dirección y el usuario (`@arroyoguzman.abogada`) de las plantillas siguen siendo de ejemplo. Pide los reales antes de entregar algo para imprimir o publicar.
 
 ## Color
 

@@ -51,7 +51,7 @@ export function Contacto() {
             <p className="sub">Datos útiles sobre sus derechos, cada semana</p>
           </div>
         </div>
-        {CONTACTO.datosDeEjemplo && <p className="nota-datos">Datos de contacto de ejemplo: reemplácelos por los reales antes de publicar.</p>}
+        {CONTACTO.datosDeEjemplo && <p className="nota-datos">Correo, dirección e Instagram de ejemplo: reemplácelos por los reales antes de publicar.</p>}
       </div>
     </section>
   );

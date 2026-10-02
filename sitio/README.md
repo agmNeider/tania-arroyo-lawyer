@@ -21,7 +21,7 @@ Portada con seguimiento de un caso · Áreas de práctica · Cómo trabajo · Pr
 
 ## Antes de publicar
 
-1. **Datos reales:** reemplace teléfono, correo, dirección, T.P. e Instagram en `plantilla.html`, y el número de WhatsApp en la variable `WA` del script (formato `57` + celular).
+1. **Datos reales:** el teléfono y WhatsApp (+57 313 699 4178) ya son reales. Reemplace correo, dirección, T.P. e Instagram en `plantilla.html`.
 2. **Casos resueltos:** los cuatro casos son de ejemplo. Reemplácelos por casos reales, anonimizados y con autorización escrita del cliente, y quite el aviso de "Casos de ejemplo".
 3. **Agenda:** hoy la solicitud se arma en la página y se envía por WhatsApp; los horarios ocupados son de ejemplo. Para bloquear horas reales, conecte la agenda a un servicio de citas (Google Calendar, Calendly o Cal.com) o a un formulario con respaldo (Formspree, Netlify Forms).
 4. **Normas citadas:** verifique que sigan vigentes antes de publicar.
