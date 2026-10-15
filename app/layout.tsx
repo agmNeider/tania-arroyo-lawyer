@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   title: 'Arroyo Guzmán Abogados · Tania Arroyo Guzmán, procesalista civil',
   description: descripcion,
   alternates: { canonical: '/' },
-  openGraph: { title: 'Arroyo Guzmán · Cada término, cumplido.', description: descripcion, url, siteName: 'Arroyo Guzmán', locale: 'es_CO', type: 'website' },
+  openGraph: { title: 'Arroyo Guzmán · Asesoría legal clara y cercana', description: descripcion, url, siteName: 'Arroyo Guzmán', locale: 'es_CO', type: 'website' },
   robots: { index: true, follow: true },
 };
 

@@ -66,28 +66,15 @@ p{margin:0}
 .datos b{font-size:15px;line-height:22px;font-weight:600}
 .datos span{font-size:13px;line-height:18px;color:var(--tinta-suave)}
 
-/* tarjeta de seguimiento */
-.seguimiento{background:var(--superficie);border:1px solid var(--linea);border-radius:16px;padding:28px;box-shadow:var(--sombra-tarjeta);position:relative}
-.seguimiento::before{content:"";position:absolute;inset:-14px -14px auto auto;width:62%;height:70%;background:var(--menta);border-radius:20px;z-index:-1}
-.seg-cab{display:flex;flex-wrap:wrap-reverse;justify-content:space-between;align-items:flex-start;gap:12px}
-.seg-cab h3{font-size:19px;line-height:26px;font-weight:600;letter-spacing:-.01em;margin-top:6px}
-.estado{display:inline-flex;align-items:center;gap:6px;font-size:12px;line-height:16px;font-weight:600;padding:4px 10px;border-radius:var(--radius-pill);border:1px solid currentColor;white-space:nowrap}
-.estado.ok{color:var(--cumplido)} .estado.warn{color:var(--plazo)}
-.estado::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
-.cifra{font-size:44px;line-height:48px;font-weight:600;letter-spacing:-.03em;font-variant-numeric:tabular-nums;margin-top:22px}
-.cifra small{font-size:18px;font-weight:500;color:var(--tinta-suave);letter-spacing:0}
-.barra{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:8px;margin-top:14px;max-width:340px}
-.barra i{display:block;aspect-ratio:1;border-radius:var(--radius-sm);border:1.5px solid var(--pino)}
-.barra i.h{background:var(--pino)}
-.barra i.hoy{background:var(--lila);border-color:var(--lila)}
-.seg-pie{display:flex;justify-content:space-between;max-width:340px;margin-top:8px}
-.hitos{list-style:none;margin:22px 0 0;padding:18px 0 0;border-top:1px solid var(--linea);display:flex;flex-direction:column;gap:12px}
-.hitos li{display:grid;grid-template-columns:18px minmax(0,1fr) auto;gap:12px;align-items:start;font-size:14px;line-height:20px}
-.hitos .pto{width:10px;height:10px;border-radius:2px;margin-top:5px;border:1.5px solid var(--pino)}
-.hitos .pto.h{background:var(--pino)}
-.hitos .pto.hoy{background:var(--lila);border-color:var(--lila)}
-.hitos time{color:var(--tinta-suave);font-size:13px;font-variant-numeric:tabular-nums}
-.ejemplo{font-size:12px;line-height:16px;color:var(--tinta-suave);margin-top:14px}
+.servicios{background:var(--superficie);border:1px solid var(--linea);border-radius:16px;padding:32px;box-shadow:var(--sombra-tarjeta);position:relative}
+.servicios::before{content:"";position:absolute;inset:-14px -14px auto auto;width:62%;height:70%;background:var(--menta);border-radius:20px;z-index:-1}
+.servicios h2{font-size:24px;line-height:32px;font-weight:600;letter-spacing:-.015em;margin-top:6px}
+.servicios ul{list-style:none;margin:20px 0 0;padding:0;display:flex;flex-direction:column}
+.servicios li{display:grid;grid-template-columns:28px minmax(0,1fr);gap:14px;padding:14px 0;border-top:1px solid var(--linea)}
+.servicios .ic{width:24px;height:24px;color:var(--pino);margin-top:2px}
+.servicios h3{font-size:16px;line-height:22px;font-weight:600}
+.servicios li p{font-size:14px;line-height:21px;color:var(--tinta-suave);margin-top:2px}
+.srv-pie{font-size:13px;line-height:19px;color:var(--tinta-suave);padding-top:14px;border-top:1px solid var(--linea)}
 
 /* ---------- Secciones ---------- */
 .sec{padding-block:clamp(64px,9vw,112px);border-top:1px solid var(--linea)}
@@ -275,7 +262,7 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--foco);outline-of
 .pie nav a:hover{text-decoration:underline;text-decoration-color:var(--marca-lila)}
 @media (max-width:700px){.pie .envoltura{grid-template-columns:1fr}}
 
-@media (max-width:900px){.portada .envoltura{grid-template-columns:1fr}.seguimiento{max-width:520px}}
+@media (max-width:900px){.portada .envoltura{grid-template-columns:1fr}.servicios{max-width:560px}}
 .canal a.val{text-decoration:none}
 .canal a.val:hover{text-decoration:underline;text-decoration-color:var(--lila);text-underline-offset:4px}
 /* agenda con Cal.com */

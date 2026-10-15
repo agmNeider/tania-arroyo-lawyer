@@ -14,6 +14,16 @@ export const CONTACTO = {
   horario: 'Lunes a viernes, 8:00 a. m. a 6:00 p. m.',
 };
 
+// ---------------------------------------------------------------- Servicios (portada)
+export type Servicio = { icono: NombreIcono; nombre: string; texto: string };
+export const SERVICIOS: Servicio[] = [
+  { icono: 'consulta', nombre: 'Consulta y orientación', texto: 'Revisamos su situación y le explico sus opciones, los costos y los tiempos.' },
+  { icono: 'procesal', nombre: 'Representación judicial', texto: 'Demandas, contestaciones, audiencias y recursos ante jueces civiles, laborales y de familia.' },
+  { icono: 'civil', nombre: 'Conciliación y acuerdos', texto: 'Negocio con la otra parte para resolver sin juicio cuando es posible.' },
+  { icono: 'contratos', nombre: 'Contratos y documentos', texto: 'Redacto y reviso contratos, derechos de petición, tutelas y reclamaciones.' },
+  { icono: 'sucesiones', nombre: 'Trámites ante notaría', texto: 'Sucesiones y divorcios de mutuo acuerdo, sin pasar por un juzgado.' },
+];
+
 // ---------------------------------------------------------------- Áreas
 export type Area = { icono: NombreIcono; nombre: string; texto: string; temas: string[]; especialidad?: boolean };
 export const AREAS: Area[] = [

@@ -172,27 +172,22 @@ p{margin:0}
 .datos span{font-size:13px;line-height:18px;color:var(--tinta-suave)}
 
 /* tarjeta de seguimiento */
-.seguimiento{background:var(--superficie);border:1px solid var(--linea);border-radius:16px;padding:28px;box-shadow:var(--sombra-tarjeta);position:relative}
-.seguimiento::before{content:"";position:absolute;inset:-14px -14px auto auto;width:62%;height:70%;background:var(--menta);border-radius:20px;z-index:-1}
-.seg-cab{display:flex;flex-wrap:wrap-reverse;justify-content:space-between;align-items:flex-start;gap:12px}
-.seg-cab h3{font-size:19px;line-height:26px;font-weight:600;letter-spacing:-.01em;margin-top:6px}
 .estado{display:inline-flex;align-items:center;gap:6px;font-size:12px;line-height:16px;font-weight:600;padding:4px 10px;border-radius:var(--radius-pill);border:1px solid currentColor;white-space:nowrap}
 .estado.ok{color:var(--cumplido)} .estado.warn{color:var(--plazo)}
 .estado::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
-.cifra{font-size:44px;line-height:48px;font-weight:600;letter-spacing:-.03em;font-variant-numeric:tabular-nums;margin-top:22px}
-.cifra small{font-size:18px;font-weight:500;color:var(--tinta-suave);letter-spacing:0}
 .barra{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:8px;margin-top:14px;max-width:340px}
 .barra i{display:block;aspect-ratio:1;border-radius:var(--radius-sm);border:1.5px solid var(--pino)}
 .barra i.h{background:var(--pino)}
 .barra i.hoy{background:var(--lila);border-color:var(--lila)}
-.seg-pie{display:flex;justify-content:space-between;max-width:340px;margin-top:8px}
-.hitos{list-style:none;margin:22px 0 0;padding:18px 0 0;border-top:1px solid var(--linea);display:flex;flex-direction:column;gap:12px}
-.hitos li{display:grid;grid-template-columns:18px minmax(0,1fr) auto;gap:12px;align-items:start;font-size:14px;line-height:20px}
-.hitos .pto{width:10px;height:10px;border-radius:2px;margin-top:5px;border:1.5px solid var(--pino)}
-.hitos .pto.h{background:var(--pino)}
-.hitos .pto.hoy{background:var(--lila);border-color:var(--lila)}
-.hitos time{color:var(--tinta-suave);font-size:13px;font-variant-numeric:tabular-nums}
-.ejemplo{font-size:12px;line-height:16px;color:var(--tinta-suave);margin-top:14px}
+.servicios{background:var(--superficie);border:1px solid var(--linea);border-radius:16px;padding:32px;box-shadow:var(--sombra-tarjeta);position:relative}
+.servicios::before{content:"";position:absolute;inset:-14px -14px auto auto;width:62%;height:70%;background:var(--menta);border-radius:20px;z-index:-1}
+.servicios h2{font-size:24px;line-height:32px;font-weight:600;letter-spacing:-.015em;margin-top:6px}
+.servicios ul{list-style:none;margin:20px 0 0;padding:0;display:flex;flex-direction:column}
+.servicios li{display:grid;grid-template-columns:28px minmax(0,1fr);gap:14px;padding:14px 0;border-top:1px solid var(--linea)}
+.servicios .ic{width:24px;height:24px;color:var(--pino);margin-top:2px}
+.servicios h3{font-size:16px;line-height:22px;font-weight:600}
+.servicios li p{font-size:14px;line-height:21px;color:var(--tinta-suave);margin-top:2px}
+.srv-pie{font-size:13px;line-height:19px;color:var(--tinta-suave);padding-top:14px;border-top:1px solid var(--linea)}
 
 /* ---------- Secciones ---------- */
 .sec{padding-block:clamp(64px,9vw,112px);border-top:1px solid var(--linea)}
@@ -383,7 +378,7 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--foco);outline-of
 .pie nav a:hover{text-decoration:underline;text-decoration-color:var(--marca-lila)}
 @media (max-width:700px){.pie .envoltura{grid-template-columns:1fr}}
 
-@media (max-width:900px){.portada .envoltura{grid-template-columns:1fr}.seguimiento{max-width:520px}}
+@media (max-width:900px){.portada .envoltura{grid-template-columns:1fr}.servicios{max-width:560px}}
 </style>
 </head>
 <body>
@@ -409,37 +404,30 @@ input:focus,select:focus,textarea:focus{outline:2px solid var(--foco);outline-of
     <div class="envoltura">
       <div>
         <p class="etq pino">Abogada · Procesalista civil</p>
-        <h1 id="t-portada">Cada término, <em>cumplido.</em></h1>
-        <p class="intro">Soy <b>Tania Arroyo Guzmán</b>. Llevo procesos civiles, laborales, de familia, sucesiones y contratos. Le explico su caso en palabras claras, le digo qué sigue y le aviso antes de que venza cada plazo.</p>
+        <h1 id="t-portada">Asesoría legal <em>clara y cercana.</em></h1>
+        <p class="intro">Soy <b>Tania Arroyo Guzmán</b>. Asesoro y represento a personas, familias y pequeñas empresas en asuntos civiles, laborales, de familia, sucesiones y contratos. Le explico su caso en palabras sencillas y lo acompaño de principio a fin.</p>
         <div class="acciones">
           <a class="btn btn-p" href="#agendar">Agendar una cita <span class="flecha" aria-hidden="true">→</span></a>
-          <a class="btn btn-l" href="#procesos">Ver casos típicos</a>
+          <a class="btn btn-l" href="#areas">Ver áreas de práctica</a>
         </div>
         <div class="datos">
           <div><b>Presencial o virtual</b><span>Usted elige en cada cita</span></div>
           <div><b>Respuesta en 1 día hábil</b><span>A cada mensaje y solicitud</span></div>
-          <div><b>Por escrito</b><span>Opciones, plazos y costos</span></div>
+          <div><b>Honorarios por escrito</b><span>Antes de empezar</span></div>
         </div>
       </div>
 
-      <article class="seguimiento" aria-label="Seguimiento del avance de un caso">
-        <div class="seg-cab">
-          <div>
-            <p class="etq">Su caso · Proceso verbal</p>
-            <h3>Contestación de la demanda</h3>
-          </div>
-          <span class="estado warn">Vence en 6 días hábiles</span>
-        </div>
-        <p class="cifra">Día 14 <small>de 20</small></p>
-        <div class="barra" aria-hidden="true"><i class="h"></i><i class="h"></i><i class="h"></i><i class="h"></i><i class="h"></i><i class="h"></i><i class="h"></i><i class="h"></i><i class="h"></i><i class="h"></i><i class="h"></i><i class="h"></i><i class="h"></i><i class="hoy"></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-        <div class="seg-pie"><span class="norma">Notificación</span><span class="norma">CGP, art. 369</span></div>
-        <ul class="hitos">
-          <li><span class="pto h"></span><span>Revisión de la demanda y de las pruebas</span><time>Día 3</time></li>
-          <li><span class="pto h"></span><span>Reunión con usted: estrategia y excepciones</span><time>Día 8</time></li>
-          <li><span class="pto hoy"></span><span>Borrador de la contestación para su revisión</span><time>Hoy</time></li>
-          <li><span class="pto"></span><span>Radicación ante el juzgado</span><time>Día 18</time></li>
+      <article class="servicios" aria-labelledby="t-servicios">
+        <p class="etq">Servicios</p>
+        <h2 id="t-servicios">Cómo puedo ayudarle</h2>
+        <ul>
+          <li><svg class="ic" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="square" stroke-linejoin="miter"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/></svg><div><h3>Consulta y orientación</h3><p>Revisamos su situación y le explico sus opciones, los costos y los tiempos.</p></div></li>
+          <li><svg class="ic" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="square" stroke-linejoin="miter"><path d="M3 6h7l2 2h9v11H3z"/><path d="M7 12h10M7 15.5h6"/></svg><div><h3>Representación judicial</h3><p>Demandas, contestaciones, audiencias y recursos ante jueces civiles, laborales y de familia.</p></div></li>
+          <li><svg class="ic" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="square" stroke-linejoin="miter"><path d="M4 6h16M12 6v14M8 20h8"/><path d="M6 6l-3 7h6zM18 6l-3 7h6z"/></svg><div><h3>Conciliación y acuerdos</h3><p>Negocio con la otra parte para resolver sin juicio cuando es posible.</p></div></li>
+          <li><svg class="ic" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="square" stroke-linejoin="miter"><path d="M5 3h10l4 4v14H5z"/><path d="M15 3v4h4M8 11h8M8 14h8M8 18c1.5-1.5 2.5 1 4 0s2 0 3 0"/></svg><div><h3>Contratos y documentos</h3><p>Redacto y reviso contratos, derechos de petición, tutelas y reclamaciones.</p></div></li>
+          <li><svg class="ic" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="square" stroke-linejoin="miter"><circle cx="12" cy="4.5" r="2"/><circle cx="5" cy="19.5" r="2"/><circle cx="12" cy="19.5" r="2"/><circle cx="19" cy="19.5" r="2"/><path d="M12 6.5v11M5 17.5V12h14v5.5"/></svg><div><h3>Trámites ante notaría</h3><p>Sucesiones y divorcios de mutuo acuerdo, sin pasar por un juzgado.</p></div></li>
         </ul>
-        <p class="ejemplo">Así le muestro el avance de su proceso.</p>
+        <p class="srv-pie">Oficina en Chinú, Córdoba. Consultas virtuales por videollamada.</p>
       </article>
     </div>
   </section>

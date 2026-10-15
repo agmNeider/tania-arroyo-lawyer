@@ -188,7 +188,7 @@ pagina(cab('07 · Recursos gráficos', 'La barra de términos',
        '<div class="caja clara" style="padding:8mm">%s</div>' % img('barra-terminos.png', 'width:100%') + '''
 <div class="tres" style="margin-top:6mm"><div><h3>Cuándo</h3><p>Cuando una pieza habla de un plazo real: contestar una demanda, un recurso, una prescripción.</p></div>
 <div><h3>Cómo</h3><p>Filas de 10 casillas, cada una de 24 px con 8 px de separación y esquinas de 4 px. Cite la norma debajo.</p></div>
-<div><h3>Dónde</h3><p>Publicaciones de plazos, frente de la tarjeta (5 casillas), portada del sitio y el punto del monograma.</p></div></div>
+<div><h3>Dónde</h3><p>Publicaciones de plazos, frente de la tarjeta (5 casillas) y el punto del monograma.</p></div></div>
 <h3 style="margin-top:9mm">Íconos de áreas</h3><p>Juego propio: trazo de 1,75 px en grilla de 24, esquinas rectas y sin relleno. No se mezclan con íconos de otros juegos.</p>
 <div class="iconos">%s</div>''' % ''.join('<div>%s<span>%s</span></div>' % (icono(n, px=34), n.capitalize()) for n in iconos),
        seccion='Recursos gráficos')
@@ -242,7 +242,7 @@ pagina(cab('11 · Sitio web', 'Una página que explica, orienta y agenda',
            'Sitio de una sola página hecho con Next.js y el sistema de diseño. Presenta a Tania, explica los procesos más comunes con su plazo y su norma, y permite agendar una cita presencial o virtual.') +
        '<div class="pantalla">%s</div>' % img('sitio-portada.png', 'width:100%') + '''
 <table class="tabla peq" style="margin-top:6mm"><tr><th style="width:28%%">Sección</th><th>Qué hace</th></tr>
-<tr><td><b>Portada</b></td><td>"Cada término, cumplido." y una tarjeta que muestra cómo sigue el cliente su caso.</td></tr>
+<tr><td><b>Portada</b></td><td>Presentación de Tania y los cinco servicios: consulta, representación judicial, conciliación, contratos y trámites ante notaría.</td></tr>
 <tr><td><b>Áreas de práctica</b></td><td>La especialidad destacada y las cinco áreas con sus temas.</td></tr>
 <tr><td><b>Cómo trabajo</b></td><td>Cuatro pasos con tiempos: consulta, diagnóstico por escrito, actuación y seguimiento.</td></tr>
 <tr><td><b>Procesos típicos</b></td><td>15 situaciones por área: qué proceso aplica, qué hacer ahora, el plazo y la norma.</td></tr>
