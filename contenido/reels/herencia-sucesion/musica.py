@@ -1,11 +1,14 @@
 """Música original del reel, sincronizada con la animación (sin derechos de terceros).
 
-La partitura sale de reel.html: el script lee cada escena (data-desde) y cada
-elemento animado (data-fx, data-en) y le asigna un sonido. Si cambian los tiempos
+Video y música comparten una sola rejilla: 120 ppm, pulso de 0,5 s y compás
+de 2 s. Cada escena entra en un compás (data-golpe en reel.html) y sus elementos
+animados (data-fx, data-en) caen en pulsos o corcheas. El script lee esos
+tiempos y le asigna un sonido a cada uno. Si cambian los tiempos
 de la animación, la música los sigue al volver a generarla.
 
 - Cada escena es una sección con su propio ritmo, que arranca en el golpe del
-  número del paso. Antes de cada cambio hay un ascenso y un silencio corto.
+  número del paso. Antes de cada cambio hay un ascenso y la percusión calla
+  durante el pulso en que pasa la cortina.
 - Cada escena entra con su acorde en piano sobre el impacto. Las líneas del
   gancho suenan como notas del acorde, las casillas como un golpe de madera,
   los vistos como notas cortas de marimba, el tachón como un barrido
@@ -26,7 +29,7 @@ from scipy.signal import butter, fftconvolve, sosfilt
 
 SR = 48000
 PULSO = 0.5                 # 120 ppm
-GOLPE = 0.35                # el número del paso aparece 0,35 s después del inicio de la escena
+COMPAS = 4 * PULSO
 rng = np.random.default_rng(11)
 aqui = Path(__file__).parent
 
@@ -39,8 +42,8 @@ def leer_escenas():
     escenas = []
     for m in re.finditer(r'<section([^>]*)>(.*?)</section>', html, re.S):
         attrs, cuerpo = m.groups()
-        desde = float(re.search(r'data-desde="([\d.]+)"', attrs).group(1))
-        hasta = float(re.search(r'data-hasta="([\d.]+)"', attrs).group(1))
+        golpe = float(re.search(r'data-golpe="([\d.]+)"', attrs).group(1))
+        fin = float(re.search(r'data-fin="([\d.]+)"', attrs).group(1))
         paso = re.search(r'data-paso="(\d)"', attrs)
         eventos = []
         for e in re.finditer(r'<\w+([^>]*data-fx="([\w-]+)"[^>]*)>', cuerpo):
@@ -50,12 +53,12 @@ def leer_escenas():
                 continue
             clase = re.search(r'class="([^"]*)"', a)
             dur = re.search(r'data-dur="([\d.]+)"', a)
-            eventos.append(dict(t=desde + float(en.group(1)), fx=fx, clase=clase.group(1) if clase else '',
+            eventos.append(dict(t=golpe + float(en.group(1)), fx=fx, clase=clase.group(1) if clase else '',
                                 dur=float(dur.group(1)) if dur else None))
         if paso:  # la casilla del paso la agrega el script de la página
-            eventos.append(dict(t=desde + .25, fx='casilla-paso', clase='', dur=None))
+            eventos.append(dict(t=golpe, fx='casilla-paso', clase='', dur=None))
         eventos.sort(key=lambda e: e['t'])
-        escenas.append(dict(desde=desde, hasta=hasta, paso=int(paso.group(1)) if paso else None, eventos=eventos))
+        escenas.append(dict(golpe=golpe, fin=fin, paso=int(paso.group(1)) if paso else None, eventos=eventos))
     return duracion, escenas
 
 
@@ -220,17 +223,13 @@ AC = {  # raíz del bajo, voces
     'G': (43, [62, 66, 67, 71]), 'Em': (40, [62, 64, 67, 71]), 'F#': (42, [61, 66, 70, 73]),
     'Dfin': (38, [62, 66, 69, 73, 76]),
 }
-PROGRESION = [['Bm', 'G'], ['D', 'A', 'Bm', 'G'], ['D', 'A', 'Bm', 'G'], ['Bm', 'G', 'Em', 'F#'],
-              ['G', 'A', 'Bm', 'A'], ['Dfin']]
+PROGRESION = [['Bm', 'G', 'A'], ['D', 'A', 'Bm'], ['G', 'D', 'A'], ['Bm', 'G', 'F#'],
+              ['G', 'A', 'Bm', 'A'], ['Dfin']]   # un acorde por compás
 
 
 def acorde_en(i, t):
-    e = ESCENAS[i]
-    ini = e['desde'] + (GOLPE if i else 0)
     prog = PROGRESION[i]
-    if i == 0:
-        return AC[prog[0] if t < e['desde'] + 2.45 else prog[1]]
-    k = int(max(0, t - ini) // (PULSO * 4)) % len(prog)
+    k = int(max(0, t - ESCENAS[i]['golpe']) // COMPAS) % len(prog)
     return AC[prog[k]]
 
 
@@ -238,38 +237,32 @@ musica, ritmo, sfx, graves = Pista(), Pista(), Pista(), Pista()
 golpes_bombo = []
 
 for i, e in enumerate(ESCENAS):
-    ini = e['desde'] + (GOLPE if i else 0)
-    fin = ESCENAS[i + 1]['desde'] + GOLPE if i + 1 < len(ESCENAS) else DUR
-    corte = fin - GOLPE - .22 if i + 1 < len(ESCENAS) else DUR   # silencio corto antes del cambio
+    ini, fin = e['golpe'], e['fin']
+    ultima = i + 1 == len(ESCENAS)
+    corte = DUR if ultima else fin - PULSO                       # la percusión calla mientras pasa la cortina
 
-    # Colchón y bajo por acorde
-    if i == 0:
-        for (a, b), nombre in zip([(0, 2.45), (2.45, e['hasta'])], PROGRESION[0]):
-            raiz, voces = AC[nombre]
-            musica.poner(colchon(voces[:3], b - a + .3), a, .16)
-            for k in range(int((b - a) / (PULSO / 2))):           # pulso de corcheas que crece
-                tk = a + k * PULSO / 2
+    # Colchón y bajo, un acorde por compás
+    t = ini
+    while t < fin - .01:
+        raiz, voces = acorde_en(i, t + .01)
+        largo = DUR - t if ultima else COMPAS
+        musica.poner(colchon(voces[:3], largo + .25), t, .28 if ultima else .16 if i == 0 else .2)
+        if ultima:                                                # cierre: un solo acorde que se deja sonar
+            graves.poner(bajo(raiz, 4, .2), t, .3)
+            break
+        if i == 3:                                                # medio tiempo: notas largas
+            graves.poner(bajo(raiz, PULSO * 1.9, .3), t, .3)
+            if t + PULSO * 2 < corte:
+                graves.poner(bajo(raiz, PULSO * 1.8, .3), t + PULSO * 2, .24)
+        else:
+            for k in range(8):                                    # corcheas; en el gancho crecen poco a poco
+                tk = t + k * PULSO / 2
                 if tk < corte:
-                    graves.poner(bajo(raiz, PULSO / 2 * .9, abierto=tk / 5), tk, .1 + .15 * tk / 5)
-    else:
-        t = ini
-        while t < min(fin, DUR):
-            raiz, voces = acorde_en(i, t + .01)
-            largo = min(PULSO * 4, fin - t) if i < 5 else DUR - t
-            musica.poner(colchon(voces[:3], largo + .25), t, .2 if i < 5 else .28)
-            if i == 3:                                            # medio tiempo: notas largas
-                graves.poner(bajo(raiz, min(largo, PULSO * 2) * .95, .3), t, .3)
-                if t + PULSO * 2 < corte:
-                    graves.poner(bajo(raiz, PULSO * 1.8, .3), t + PULSO * 2, .24)
-            elif i < 5:
-                for k in range(8):
-                    tk = t + k * PULSO / 2
-                    if tk < corte:
+                    if i == 0:
+                        graves.poner(bajo(raiz, PULSO / 2 * .9, abierto=tk / 6), tk, .1 + .12 * tk / 6)
+                    else:
                         graves.poner(bajo(raiz + (12 if i == 4 and k % 2 else 0), PULSO / 2 * .85, .5 + .1 * i), tk, .22)
-            else:                                                 # cierre: un solo acorde que se deja sonar
-                graves.poner(bajo(raiz, 4, .2), t, .3)
-                break
-            t += PULSO * 4
+        t += COMPAS
 
     # Percusión por escena
     nb = int((min(fin, DUR) - ini) / (PULSO / 2)) + 1
@@ -280,7 +273,7 @@ for i, e in enumerate(ESCENAS):
         beat, medio = divmod(k, 2)
         b4 = beat % 4
         if i == 0:
-            if tk >= e['desde'] + 2.45 and not medio and b4 in (0, 2):
+            if tk >= ini + COMPAS and not medio and b4 in (0, 2):
                 ritmo.poner(bombo(.6), tk); golpes_bombo.append(tk)
         elif i == 1:
             if not medio and b4 in (0, 2): ritmo.poner(bombo(), tk); golpes_bombo.append(tk)
@@ -302,8 +295,8 @@ for i, e in enumerate(ESCENAS):
 
     # Transiciones: ascenso hacia el siguiente golpe e impacto
     if i + 1 < len(ESCENAS):
-        sig = ESCENAS[i + 1]['desde'] + GOLPE
-        largo = 1.6 if i + 1 < 5 else 2.2
+        sig = fin
+        largo = 3 * PULSO
         sfx.poner(ascenso(largo), sig - largo, .14)
         sfx.poner(impacto(), sig, .4)
         _, voces_sig = acorde_en(i + 1, sig + .01)
@@ -349,8 +342,8 @@ for i, e in enumerate(ESCENAS):
             sfx.poner(golpe_grave(), t, .45)
         elif fx == 'sube' and clase == 'tarjeta':
             sfx.poner(golpe_grave(), t, .4)
-            musica.poner(marimba(voces[0] if t < e['desde'] + 2.5 else voces[2]), t, .16)
-        elif fx == 'sube' and i == 5 and clase == '' and t < e['desde'] + 2:   # botón del cierre
+            musica.poner(marimba(voces[0] if t < ini + 3 else voces[2]), t, .16)
+        elif fx == 'sube' and i == 5 and clase == '' and t < ini + 2.5:   # botón del cierre
             musica.poner(marimba(voces[2]), t, .14)
 
 # Bombeo: el colchón y el bajo bajan con cada bombo
