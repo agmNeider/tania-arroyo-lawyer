@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Reel sucesión</title>
+<!--
+  Reel "¿Murió su papá o su mamá y dejó bienes?" (1080 × 1920, 38 s).
+  La animación es determinista: window.render(t) dibuja el cuadro del segundo t.
+  Abra el archivo en el navegador para verlo en bucle; renderizar.mjs lo exporta a MP4.
+-->
+<style>
+  @font-face { font-family: 'Open Sans'; src: url('../../../design-system/fonts/OpenSans-400.ttf'); font-weight: 400; }
+  @font-face { font-family: 'Open Sans'; src: url('../../../design-system/fonts/OpenSans-500.ttf'); font-weight: 500; }
+  @font-face { font-family: 'Open Sans'; src: url('../../../design-system/fonts/OpenSans-600.ttf'); font-weight: 600; }
+  @font-face { font-family: 'Open Sans'; src: url('../../../design-system/fonts/OpenSans-700.ttf'); font-weight: 700; }
+  @font-face { font-family: 'Open Sans'; src: url('../../../design-system/fonts/OpenSans-400-italic.ttf'); font-weight: 400; font-style: italic; }
+
+  :root {
+    --marca-pino: #17433D; --marca-bosque: #0F2E2A; --marca-lila: #B9A6F2; --marca-lila-suave: #ECE6FC;
+    --marca-menta: #DCEBE5; --marca-papel: #F4F5F2; --marca-tinta: #0E211F; --marca-gris: #4F5E5A;
+    --blanco: #FFFFFF; --linea: #D3DAD6;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: #000; }
+  body { font-family: 'Open Sans', 'Segoe UI', Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+  #lienzo { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: var(--marca-bosque); transform-origin: 0 0; }
+
+  .escena { position: absolute; inset: 0; overflow: hidden; }
+  .borde-cortina { position: absolute; left: 0; right: 0; height: 14px; background: var(--marca-lila); z-index: 50; }
+  .bosque { background: var(--marca-bosque); color: var(--marca-papel); }
+  .pino { background: var(--marca-pino); color: var(--marca-papel); }
+  .papel { background: var(--marca-papel); color: var(--marca-tinta); }
+  .lila-suave { background: var(--marca-lila-suave); color: var(--marca-tinta); }
+
+  /* Zona segura de Reels: libre arriba 250 px, abajo 420 px y 150 px a la derecha */
+  .contenido { position: absolute; left: 96px; right: 150px; top: 270px; bottom: 420px; }
+
+  .etiqueta { font-size: 26px; line-height: 32px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; }
+  .titular { font-size: 96px; line-height: 102px; font-weight: 600; letter-spacing: -.03em; }
+  .titular-m { font-size: 82px; line-height: 90px; font-weight: 600; letter-spacing: -.03em; }
+  .apoyo { font-size: 40px; line-height: 56px; font-weight: 400; }
+  .norma { font-size: 28px; line-height: 38px; font-weight: 400; font-style: italic; }
+
+  .linea { display: block; overflow: hidden; padding-bottom: .08em; margin-bottom: -.08em; }
+  .linea > span { display: inline-block; will-change: transform; }
+
+  .icono { display: inline-block; width: 44px; height: 44px; vertical-align: middle; }
+  .icono svg { width: 100%; height: 100%; display: block; }
+
+  /* Barra de pasos (barra de términos de 4 casillas) */
+  .pasos { display: flex; align-items: center; gap: 24px; }
+  .casillas { display: flex; gap: 12px; }
+  .casilla { width: 44px; height: 44px; border-radius: 4px; border: 3px solid currentColor; position: relative; }
+  .casilla i { position: absolute; inset: -3px; border-radius: 4px; transform: scale(0); }
+
+  .numeral { font-size: 300px; line-height: 250px; font-weight: 500; letter-spacing: -.06em; margin-left: -14px; }
+
+  /* Paso 1: documento */
+  .doc { position: absolute; left: 0; right: 0; top: 800px; height: 400px; background: var(--blanco); border: 2px solid var(--linea);
+         border-radius: 10px; padding: 44px 48px; box-shadow: 0 24px 60px rgba(14,33,31,.12); }
+  .doc .barra { height: 18px; border-radius: 4px; background: var(--marca-menta); margin-top: 26px; transform-origin: left center; }
+  .sello { position: absolute; right: 44px; bottom: 44px; width: 150px; height: 150px; border-radius: 10px; background: var(--marca-lila);
+           display: flex; align-items: center; justify-content: center; }
+
+  /* Paso 2: lista */
+  .lista { position: absolute; left: 0; right: 0; top: 740px; }
+  .item { display: flex; align-items: center; gap: 30px; padding: 26px 0; border-top: 2px solid rgba(23,67,61,.18); font-size: 42px; line-height: 52px; font-weight: 500; letter-spacing: -.01em; }
+  .item:last-child { border-bottom: 2px solid rgba(23,67,61,.18); }
+  .item .caja { flex: none; width: 56px; height: 56px; border-radius: 4px; border: 3px solid var(--marca-pino); position: relative; }
+  .item .caja b { position: absolute; inset: -3px; background: var(--marca-pino); border-radius: 4px; transform: scale(0); }
+  .item .caja svg { position: absolute; inset: 8px; width: 34px; height: 34px; }
+
+  /* Paso 3: de palabra */
+  .palabra { position: relative; display: inline-block; font-style: italic; font-weight: 400; }
+  .tachon { position: absolute; left: 0; right: 0; top: 54%; height: 14px; background: var(--marca-lila); transform-origin: left center; border-radius: 2px; }
+  .riesgo { display: flex; gap: 28px; align-items: flex-start; padding: 30px 0; border-top: 2px solid rgba(244,245,242,.2); }
+  .riesgo .marca { flex: none; width: 20px; height: 20px; background: var(--marca-lila); margin-top: 18px; border-radius: 2px; }
+
+  /* Paso 4: dos caminos */
+  .caminos { position: absolute; left: 0; right: 0; top: 860px; height: 620px; }
+  .tarjeta { position: absolute; top: 110px; width: 400px; height: 400px; border-radius: 10px; padding: 40px 36px; }
+  .tarjeta .icono { width: 64px; height: 64px; }
+  .tarjeta h3 { font-size: 56px; line-height: 62px; font-weight: 600; letter-spacing: -.025em; margin: 20px 0 14px; }
+  .tarjeta p { font-size: 32px; line-height: 44px; }
+
+  /* Cierre */
+  .boton { display: inline-flex; align-items: center; gap: 22px; background: var(--marca-lila); color: var(--marca-tinta); border-radius: 10px; padding: 30px 44px; }
+  .boton .icono { width: 54px; height: 54px; }
+  .tel { font-size: 64px; line-height: 70px; font-weight: 600; letter-spacing: -.01em; font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+<div id="lienzo">
+
+  <!-- 0. Gancho -->
+  <section class="escena bosque" data-desde="0" data-hasta="4.2">
+    <svg data-fx="deriva" style="position:absolute; right:-160px; top:760px; width:900px; height:900px; opacity:.07" viewBox="0 0 24 24" fill="none" stroke="#B9A6F2" stroke-width=".5" stroke-linecap="square"><circle cx="12" cy="4.5" r="2"/><circle cx="5" cy="19.5" r="2"/><circle cx="12" cy="19.5" r="2"/><circle cx="19" cy="19.5" r="2"/><path d="M12 6.5v11M5 17.5V12h14v5.5"/></svg>
+    <div class="contenido">
+      <div class="etiqueta" style="color:var(--marca-lila); display:flex; align-items:center; gap:18px" data-en=".15" data-fx="sube">
+        <span class="icono" data-icono="sucesiones" data-color="#B9A6F2"></span> Sucesiones
+      </div>
+      <h1 class="titular" style="margin-top:150px; font-size:112px; line-height:116px">
+        <span class="linea" data-en=".05" data-fx="mascara"><span>¿Murió su papá</span></span>
+        <span class="linea" data-en=".22" data-fx="mascara"><span>o su mamá</span></span>
+        <span class="linea" data-en=".39" data-fx="mascara"><span>y dejó bienes?</span></span>
+      </h1>
+      <div data-en="1.5" data-fx="crece" style="width:160px; height:12px; background:var(--marca-lila); margin:70px 0 60px; border-radius:2px"></div>
+      <p class="apoyo" style="font-size:52px; line-height:68px; font-weight:500; letter-spacing:-.01em">
+        <span class="linea" data-en="1.75" data-fx="mascara"><span>Esto es lo primero</span></span>
+        <span class="linea" data-en="1.9" data-fx="mascara"><span>que debe hacer.</span></span>
+      </p>
+      <div class="pasos" style="position:absolute; left:0; bottom:20px; color:var(--marca-papel)">
+        <div class="casillas">
+          <div class="casilla" data-en="2.6" data-fx="aparece"></div><div class="casilla" data-en="2.7" data-fx="aparece"></div><div class="casilla" data-en="2.8" data-fx="aparece"></div><div class="casilla" data-en="2.9" data-fx="aparece"></div>
+        </div>
+        <span class="etiqueta" data-en="3.0" data-fx="sube" style="color:var(--marca-papel)">4 pasos</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1. Registro civil de defunción -->
+  <section class="escena papel" data-desde="4.2" data-hasta="10.2" data-paso="1">
+    <div class="contenido">
+      <div class="pasos" style="color:var(--marca-pino)"></div>
+      <div class="numeral" style="color:var(--marca-pino); margin-top:70px" data-en=".35" data-fx="mascara-bloque"><span style="display:inline-block">1</span></div>
+      <h2 class="titular-m" style="margin-top:40px">
+        <span class="linea" data-en=".5" data-fx="mascara"><span>Saque el registro</span></span>
+        <span class="linea" data-en=".62" data-fx="mascara"><span>civil de defunción</span></span>
+      </h2>
+      <p class="apoyo" style="color:var(--marca-gris); margin-top:36px">
+        <span class="linea" data-en="1.1" data-fx="mascara"><span>Sin ese documento no se puede</span></span>
+        <span class="linea" data-en="1.2" data-fx="mascara"><span>iniciar ningún trámite.</span></span>
+      </p>
+      <div class="doc" data-en="1.6" data-fx="sube-lento">
+        <div class="etiqueta" style="color:var(--marca-pino); font-size:22px">Registro civil de defunción</div>
+        <div class="barra" style="width:72%" data-en="2.2" data-fx="crece"></div>
+        <div class="barra" style="width:58%" data-en="2.32" data-fx="crece"></div>
+        <div class="barra" style="width:64%" data-en="2.44" data-fx="crece"></div>
+        <div class="barra" style="width:40%" data-en="2.56" data-fx="crece"></div>
+        <div class="sello" data-en="2.9" data-fx="sello">
+          <svg viewBox="0 0 24 24" width="80" height="80" fill="none" stroke="#0E211F" stroke-width="2.2" stroke-linecap="square"><path d="M5 12.5l4.5 4.5L19 7.5" pathLength="1" data-en="3.15" data-fx="traza"/></svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Papeles de los bienes y de las deudas -->
+  <section class="escena lila-suave" data-desde="10.2" data-hasta="17.4" data-paso="2">
+    <div class="contenido">
+      <div class="pasos" style="color:var(--marca-pino)"></div>
+      <div class="numeral" style="color:var(--marca-pino); margin-top:70px" data-en=".35" data-fx="mascara-bloque"><span style="display:inline-block">2</span></div>
+      <h2 class="titular-m" style="margin-top:40px">
+        <span class="linea" data-en=".5" data-fx="mascara"><span>Reúna los papeles</span></span>
+        <span class="linea" data-en=".62" data-fx="mascara"><span>de los bienes</span></span>
+        <span class="linea" data-en=".74" data-fx="mascara"><span>y de las deudas</span></span>
+      </h2>
+      <div class="lista">
+        <div class="item" data-en="1.5" data-fx="sube"><span class="caja"><b data-en="2.3" data-fx="relleno"></b><svg viewBox="0 0 24 24" fill="none" stroke="#F4F5F2" stroke-width="3" stroke-linecap="square"><path d="M5 12.5l4.5 4.5L19 7.5" pathLength="1" data-en="2.4" data-fx="traza"/></svg></span>Escrituras</div>
+        <div class="item" data-en="1.65" data-fx="sube"><span class="caja"><b data-en="3.0" data-fx="relleno"></b><svg viewBox="0 0 24 24" fill="none" stroke="#F4F5F2" stroke-width="3" stroke-linecap="square"><path d="M5 12.5l4.5 4.5L19 7.5" pathLength="1" data-en="3.1" data-fx="traza"/></svg></span>Certificado de tradición y libertad</div>
+        <div class="item" data-en="1.8" data-fx="sube"><span class="caja"><b data-en="3.7" data-fx="relleno"></b><svg viewBox="0 0 24 24" fill="none" stroke="#F4F5F2" stroke-width="3" stroke-linecap="square"><path d="M5 12.5l4.5 4.5L19 7.5" pathLength="1" data-en="3.8" data-fx="traza"/></svg></span>Paz y salvo del predial</div>
+        <div class="item" data-en="1.95" data-fx="sube"><span class="caja"><b data-en="4.4" data-fx="relleno"></b><svg viewBox="0 0 24 24" fill="none" stroke="#F4F5F2" stroke-width="3" stroke-linecap="square"><path d="M5 12.5l4.5 4.5L19 7.5" pathLength="1" data-en="4.5" data-fx="traza"/></svg></span>Lista de las deudas</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. No reparta ni venda de palabra -->
+  <section class="escena bosque" data-desde="17.4" data-hasta="24.8" data-paso="3">
+    <div class="contenido">
+      <div class="pasos" style="color:var(--marca-papel)"></div>
+      <div class="numeral" style="color:var(--marca-lila); margin-top:70px" data-en=".35" data-fx="mascara-bloque"><span style="display:inline-block">3</span></div>
+      <h2 class="titular-m" style="margin-top:40px">
+        <span class="linea" data-en=".5" data-fx="mascara"><span>No reparta ni venda</span></span>
+        <span class="linea" data-en=".62" data-fx="mascara"><span>los bienes</span></span>
+        <span class="linea" data-en=".74" data-fx="mascara"><span><span class="palabra">“de palabra”<span class="tachon" data-en="1.5" data-fx="crece"></span></span></span></span>
+      </h2>
+      <p class="apoyo" style="margin-top:60px; color:var(--marca-lila)" data-en="2.2" data-fx="sube">Esos arreglos pueden dejarle:</p>
+      <div style="margin-top:28px">
+        <div class="riesgo" data-en="2.7" data-fx="sube"><span class="marca"></span><span class="apoyo" style="font-size:44px; line-height:58px; font-weight:500">Problemas para vender o escriturar después</span></div>
+        <div class="riesgo" data-en="3.5" data-fx="sube" style="border-bottom:2px solid rgba(244,245,242,.2)"><span class="marca"></span><span class="apoyo" style="font-size:44px; line-height:58px; font-weight:500">Peleas entre hermanos</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Haga la sucesión -->
+  <section class="escena papel" data-desde="24.8" data-hasta="32.8" data-paso="4">
+    <div class="contenido">
+      <div class="pasos" style="color:var(--marca-pino)"></div>
+      <div class="numeral" style="color:var(--marca-pino); margin-top:70px" data-en=".35" data-fx="mascara-bloque"><span style="display:inline-block">4</span></div>
+      <h2 class="titular-m" style="margin-top:40px">
+        <span class="linea" data-en=".5" data-fx="mascara"><span>Haga la sucesión</span></span>
+      </h2>
+      <p class="apoyo" style="color:var(--marca-gris); margin-top:24px">
+        <span class="linea" data-en=".8" data-fx="mascara"><span>Hay dos caminos:</span></span>
+      </p>
+      <div class="caminos" style="top:610px">
+        <svg style="position:absolute; left:0; top:0; width:834px; height:110px; overflow:visible" viewBox="0 0 834 110" fill="none" stroke="#17433D" stroke-width="4" stroke-linecap="square">
+          <path d="M417 0 V50 H200 V110" pathLength="1" data-en="1.2" data-fx="traza" data-dur="0.8"/>
+          <path d="M417 0 V50 H634 V110" pathLength="1" data-en="1.2" data-fx="traza" data-dur="0.8"/>
+        </svg>
+        <div class="tarjeta" style="left:0; background:var(--marca-pino); color:var(--marca-papel)" data-en="1.8" data-fx="sube">
+          <span class="icono" data-icono="contratos" data-color="#B9A6F2"></span>
+          <h3>Notaría</h3>
+          <p>Todos los herederos son mayores y están de acuerdo. Con abogado.</p>
+        </div>
+        <div class="tarjeta" style="right:0; background:var(--marca-lila); color:var(--marca-tinta)" data-en="3.0" data-fx="sube">
+          <span class="icono" data-icono="civil" data-color="#0E211F"></span>
+          <h3>Juzgado</h3>
+          <p>Hay herederos menores de edad o no hay acuerdo.</p>
+        </div>
+      </div>
+      <p class="norma" style="position:absolute; left:0; right:0; bottom:0; color:var(--marca-gris)" data-en="4.2" data-fx="sube">Sucesión en notaría: Decreto 902 de 1988 (hoy en el Decreto 1069 de 2015).</p>
+    </div>
+  </section>
+
+  <!-- 5. Cierre -->
+  <section class="escena pino" data-desde="32.8" data-hasta="38.5">
+    <div class="contenido" style="display:flex; flex-direction:column; align-items:flex-start">
+      <img src="../../../design-system/assets/Logos/ag-monograma-papel.svg" style="width:260px; height:auto" data-en=".3" data-fx="sello" alt="">
+      <h2 class="titular" style="margin-top:110px">
+        <span class="linea" data-en=".55" data-fx="mascara"><span>Cada herencia</span></span>
+        <span class="linea" data-en=".68" data-fx="mascara"><span>es distinta.</span></span>
+      </h2>
+      <p class="apoyo" style="margin-top:36px; font-size:44px; line-height:60px">
+        <span class="linea" data-en="1.1" data-fx="mascara"><span>Escríbame y le digo</span></span>
+        <span class="linea" data-en="1.2" data-fx="mascara"><span>por dónde empezar.</span></span>
+      </p>
+      <div style="margin-top:80px" data-en="1.7" data-fx="sube">
+        <div class="boton">
+          <span class="icono" data-icono="consulta" data-color="#0E211F"></span>
+          <span>
+            <span class="etiqueta" style="display:block; font-size:22px; line-height:28px">Agende su consulta por WhatsApp</span>
+            <span class="tel">313 699 4178</span>
+          </span>
+        </div>
+      </div>
+      <div style="margin-top:auto; display:flex; flex-direction:column; gap:22px" data-en="2.2" data-fx="sube">
+        <img src="../../../design-system/assets/Logos/ag-firma-papel.svg" style="width:560px; height:auto" alt="Arroyo Guzmán">
+        <span class="apoyo" style="font-size:32px; line-height:40px; opacity:.85">@taniaarroyo_abogada · Chinú, Córdoba</span>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  const ICONOS = {
+    sucesiones: '<circle cx="12" cy="4.5" r="2"/><circle cx="5" cy="19.5" r="2"/><circle cx="12" cy="19.5" r="2"/><circle cx="19" cy="19.5" r="2"/><path d="M12 6.5v11M5 17.5V12h14v5.5"/>',
+    contratos: '<path d="M5 3h10l4 4v14H5z"/><path d="M15 3v4h4M8 11h8M8 14h8M8 18c1.5-1.5 2.5 1 4 0s2 0 3 0"/>',
+    civil: '<path d="M4 6h16M12 6v14M8 20h8"/><path d="M6 6l-3 7h6zM18 6l-3 7h6z"/>',
+    consulta: '<path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/>'
+  };
+  document.querySelectorAll('[data-icono]').forEach(el => {
+    el.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="${el.dataset.color}" stroke-width="1.75" stroke-linecap="square" stroke-linejoin="miter">${ICONOS[el.dataset.icono]}</svg>`;
+  });
+
+  const DURACION = 38.5;
+  const escenas = [...document.querySelectorAll('.escena')];
+
+  // Barra de pasos: transcurridos en color de marca, el de hoy en lila, los que faltan solo con borde
+  escenas.filter(e => e.dataset.paso).forEach(e => {
+    const n = +e.dataset.paso, cont = e.querySelector('.pasos');
+    const oscuro = e.classList.contains('bosque');
+    const lleno = oscuro ? 'var(--marca-papel)' : 'var(--marca-pino)';
+    let html = '<div class="casillas">';
+    for (let i = 1; i <= 4; i++) {
+      const fondo = i < n ? lleno : i === n ? 'var(--marca-lila)' : 'transparent';
+      const anim = i === n ? ' data-en=".25" data-fx="relleno"' : '';
+      html += `<div class="casilla"><i style="background:${fondo}; ${i < n ? 'transform:scale(1)' : ''}"${anim}></i></div>`;
+    }
+    html += `</div><span class="etiqueta" data-en=".3" data-fx="sube">Paso ${n} de 4</span>`;
+    cont.innerHTML = html;
+  });
+
+  const lim = x => Math.min(1, Math.max(0, x));
+  const salida = x => 1 - Math.pow(1 - x, 4);
+  const suave = x => x < .5 ? 8 * x ** 4 : 1 - Math.pow(-2 * x + 2, 4) / 2;
+  const rebote = x => { const c = 1.6; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
+  const CORTINA = .75;
+
+  const animados = escenas.map(e => ({
+    e, desde: +e.dataset.desde, hasta: +e.dataset.hasta,
+    borde: Object.assign(document.createElement('div'), { className: 'borde-cortina' }),
+    els: [...e.querySelectorAll('[data-fx]')]
+  }));
+  animados.forEach(a => a.e.parentNode.appendChild(a.borde));
+
+  function aplicar(el, t0, t) {
+    const fx = el.dataset.fx, en = t0 + (+el.dataset.en || 0);
+    const dur = +el.dataset.dur || ({ mascara: .8, 'mascara-bloque': .9, sube: .8, 'sube-lento': 1.1, crece: .7, traza: .45, relleno: .35, sello: .6, aparece: .35 }[fx] || .7);
+    const p = lim((t - en) / dur), q = salida(p);
+    switch (fx) {
+      case 'mascara': el.firstElementChild.style.transform = `translateY(${(1 - q) * 110}%)`; break;
+      case 'mascara-bloque': el.style.overflow = 'hidden'; el.firstElementChild.style.transform = `translateY(${(1 - q) * 100}%)`; break;
+      case 'sube': el.style.opacity = q; el.style.transform = `translateY(${(1 - q) * 50}px)`; break;
+      case 'sube-lento': el.style.opacity = lim(p * 2); el.style.transform = `translateY(${(1 - q) * 160}px) rotate(${(1 - q) * -3}deg)`; break;
+      case 'crece': el.style.transform = `scaleX(${q})`; el.style.transformOrigin = 'left center'; break;
+      case 'traza': el.style.strokeDasharray = '1'; el.style.strokeDashoffset = 1 - q; break;
+      case 'relleno': el.style.transform = `scale(${p === 0 ? 0 : rebote(p)})`; break;
+      case 'sello': el.style.opacity = lim(p * 3); el.style.transform = `scale(${p === 0 ? .4 : .4 + .6 * rebote(p)})`; break;
+      case 'aparece': el.style.opacity = q; el.style.transform = `scale(${.5 + .5 * rebote(p)})`; break;
+      case 'deriva': el.style.transform = `translate(${-t * 14}px, ${-t * 22}px) rotate(${t * 1.5}deg)`; break;
+    }
+  }
+
+  window.render = function (t) {
+    animados.forEach((a, i) => {
+      const visible = t >= a.desde - .001 && t < a.hasta + CORTINA + .3;
+      a.e.style.display = visible ? '' : 'none';
+      a.borde.style.display = 'none';
+      if (!visible) return;
+      // Entrada: cortina que sube desde abajo, con el filo en lila
+      const p = i === 0 ? 1 : suave(lim((t - a.desde) / CORTINA));
+      a.e.style.clipPath = p >= 1 ? 'none' : `inset(${(1 - p) * 100}% 0 0 0)`;
+      a.e.style.zIndex = i + 1;
+      if (p > 0 && p < 1) { a.borde.style.display = ''; a.borde.style.top = `${(1 - p) * 1920 - 14}px`; a.borde.style.zIndex = 40 + i; }
+      // Salida: la escena sube un poco mientras la siguiente la cubre (paralaje)
+      const s = suave(lim((t - a.hasta) / CORTINA));
+      [...a.e.children].forEach(c => c.style.translate = `0 ${-s * 220}px`);
+      a.els.forEach(el => aplicar(el, a.desde, t));
+    });
+  };
+  window.DURACION = DURACION;
+
+  // Vista en el navegador: reproduce en bucle y escala al alto de la ventana
+  if (!new URLSearchParams(location.search).has('render')) {
+    const lienzo = document.getElementById('lienzo');
+    const ajustar = () => { const k = Math.min(innerHeight / 1920, innerWidth / 1080); lienzo.style.transform = `scale(${k})`; };
+    ajustar(); addEventListener('resize', ajustar);
+    let t0 = null;
+    document.fonts.ready.then(() => requestAnimationFrame(function bucle(ms) {
+      if (t0 === null) t0 = ms;
+      render(((ms - t0) / 1000) % DURACION);
+      requestAnimationFrame(bucle);
+    }));
+  } else {
+    render(0);
+  }
+</script>
+</body>
+</html>
