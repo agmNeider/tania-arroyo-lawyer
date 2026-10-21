@@ -1,11 +1,11 @@
 """Música original del reel (sintetizada aquí, sin derechos de terceros).
 
 Piano, colchón armónico, bajo y percusión suave a 95 ppm, con la progresión
-A sus4 · D maj9 · Bm7 · G maj7. El compás 13 cae justo en el cierre (32,8 s) y
+A sus4 · D maj9 · Bm7 · G maj7. El compás 13 cae justo en el cierre (33,8 s) y
 resuelve en D. Los efectos (barridos, marcas y sellos) van sincronizados con
 las animaciones de reel.html.
 
-Uso: python3 musica.py  ->  musica.wav (estéreo, 48 kHz, 38,5 s)
+Uso: python3 musica.py  ->  musica.wav (estéreo, 48 kHz, 39,5 s)
 Requiere numpy y scipy.
 """
 import wave
@@ -15,16 +15,16 @@ import numpy as np
 from scipy.signal import butter, fftconvolve, sosfilt
 
 SR = 48000
-DUR = 38.5
-COMPAS = 32.8 / 13          # el compás 13 empieza con la escena de cierre
+DUR = 39.5
+COMPAS = 33.8 / 13          # el compás 13 empieza con la escena de cierre
 PULSO = COMPAS / 4
 N = int(SR * DUR)
 rng = np.random.default_rng(7)
 
 # Cambios de escena y momentos de la animación (segundos), tomados de reel.html
-ESCENAS = [4.2, 10.2, 17.4, 24.8, 32.8]
-MARCAS = [10.2 + 2.4, 10.2 + 3.1, 10.2 + 3.8, 10.2 + 4.5]   # vistos de la lista del paso 2
-SELLOS = [4.2 + 2.9, 32.8 + 0.3]                            # sello del documento y monograma
+ESCENAS = [5.2, 11.2, 18.4, 25.8, 33.8]
+MARCAS = [11.2 + 2.4, 11.2 + 3.1, 11.2 + 3.8, 11.2 + 4.5]   # vistos de la lista del paso 2
+SELLOS = [5.2 + 2.9, 33.8 + 0.3]                            # sello del documento y monograma
 CASILLAS = [e + .25 for e in ESCENAS[:4]]                    # casilla del paso que se llena
 
 

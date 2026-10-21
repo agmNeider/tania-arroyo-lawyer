@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <title>Reel sucesión</title>
 <!--
-  Reel "¿Murió su papá o su mamá y dejó bienes?" (1080 × 1920, 38 s).
+  Reel "¿Murió su papá o su mamá y dejó bienes?" (1080 × 1920, 39,5 s).
   La animación es determinista: window.render(t) dibuja el cuadro del segundo t.
   Abra el archivo en el navegador para verlo en bucle; renderizar.mjs lo exporta a MP4.
 -->
@@ -93,33 +93,30 @@
 <div id="lienzo">
 
   <!-- 0. Gancho -->
-  <section class="escena bosque" data-desde="0" data-hasta="4.2">
+  <section class="escena bosque" data-desde="0" data-hasta="5.2">
     <svg data-fx="deriva" style="position:absolute; right:-160px; top:760px; width:900px; height:900px; opacity:.07" viewBox="0 0 24 24" fill="none" stroke="#B9A6F2" stroke-width=".5" stroke-linecap="square"><circle cx="12" cy="4.5" r="2"/><circle cx="5" cy="19.5" r="2"/><circle cx="12" cy="19.5" r="2"/><circle cx="19" cy="19.5" r="2"/><path d="M12 6.5v11M5 17.5V12h14v5.5"/></svg>
     <div class="contenido">
       <div class="etiqueta" style="color:var(--marca-lila); display:flex; align-items:center; gap:18px" data-en=".15" data-fx="sube">
         <span class="icono" data-icono="sucesiones" data-color="#B9A6F2"></span> Sucesiones
       </div>
-      <h1 class="titular" style="margin-top:150px; font-size:112px; line-height:116px">
-        <span class="linea" data-en=".05" data-fx="mascara"><span>¿Murió su papá</span></span>
-        <span class="linea" data-en=".22" data-fx="mascara"><span>o su mamá</span></span>
-        <span class="linea" data-en=".39" data-fx="mascara"><span>y dejó bienes?</span></span>
+      <h1 class="titular" style="margin-top:130px">
+        <span class="linea" data-en=".05" data-fx="mascara"><span>Hay una herencia</span></span>
+        <span class="linea" data-en=".2" data-fx="mascara"><span>en su familia</span></span>
+        <span class="linea" data-en=".35" data-fx="mascara"><span>y nadie sabe por</span></span>
+        <span class="linea" data-en=".5" data-fx="mascara"><span>dónde empezar.</span></span>
       </h1>
-      <div data-en="1.5" data-fx="crece" style="width:160px; height:12px; background:var(--marca-lila); margin:70px 0 60px; border-radius:2px"></div>
-      <p class="apoyo" style="font-size:52px; line-height:68px; font-weight:500; letter-spacing:-.01em">
-        <span class="linea" data-en="1.75" data-fx="mascara"><span>Esto es lo primero</span></span>
-        <span class="linea" data-en="1.9" data-fx="mascara"><span>que debe hacer.</span></span>
+      <div data-en="2.2" data-fx="crece" style="width:160px; height:12px; background:var(--marca-lila); margin:70px 0 56px; border-radius:2px"></div>
+      <p class="apoyo" style="font-size:60px; line-height:72px; font-weight:600; letter-spacing:-.02em; color:var(--marca-lila)">
+        <span class="linea" data-en="2.45" data-fx="mascara"><span>Son cuatro pasos.</span></span>
       </p>
-      <div class="pasos" style="position:absolute; left:0; bottom:20px; color:var(--marca-papel)">
-        <div class="casillas">
-          <div class="casilla" data-en="2.6" data-fx="aparece"></div><div class="casilla" data-en="2.7" data-fx="aparece"></div><div class="casilla" data-en="2.8" data-fx="aparece"></div><div class="casilla" data-en="2.9" data-fx="aparece"></div>
-        </div>
-        <span class="etiqueta" data-en="3.0" data-fx="sube" style="color:var(--marca-papel)">4 pasos</span>
+      <div class="casillas" style="margin-top:40px; color:var(--marca-papel)">
+        <div class="casilla" data-en="3.0" data-fx="aparece"></div><div class="casilla" data-en="3.12" data-fx="aparece"></div><div class="casilla" data-en="3.24" data-fx="aparece"></div><div class="casilla" data-en="3.36" data-fx="aparece"></div>
       </div>
     </div>
   </section>
 
   <!-- 1. Registro civil de defunción -->
-  <section class="escena papel" data-desde="4.2" data-hasta="10.2" data-paso="1">
+  <section class="escena papel" data-desde="5.2" data-hasta="11.2" data-paso="1">
     <div class="contenido">
       <div class="pasos" style="color:var(--marca-pino)"></div>
       <div class="numeral" style="color:var(--marca-pino); margin-top:70px" data-en=".35" data-fx="mascara-bloque"><span style="display:inline-block">1</span></div>
@@ -145,7 +142,7 @@
   </section>
 
   <!-- 2. Papeles de los bienes y de las deudas -->
-  <section class="escena lila-suave" data-desde="10.2" data-hasta="17.4" data-paso="2">
+  <section class="escena lila-suave" data-desde="11.2" data-hasta="18.4" data-paso="2">
     <div class="contenido">
       <div class="pasos" style="color:var(--marca-pino)"></div>
       <div class="numeral" style="color:var(--marca-pino); margin-top:70px" data-en=".35" data-fx="mascara-bloque"><span style="display:inline-block">2</span></div>
@@ -164,7 +161,7 @@
   </section>
 
   <!-- 3. No reparta ni venda de palabra -->
-  <section class="escena bosque" data-desde="17.4" data-hasta="24.8" data-paso="3">
+  <section class="escena bosque" data-desde="18.4" data-hasta="25.8" data-paso="3">
     <div class="contenido">
       <div class="pasos" style="color:var(--marca-papel)"></div>
       <div class="numeral" style="color:var(--marca-lila); margin-top:70px" data-en=".35" data-fx="mascara-bloque"><span style="display:inline-block">3</span></div>
@@ -182,7 +179,7 @@
   </section>
 
   <!-- 4. Haga la sucesión -->
-  <section class="escena papel" data-desde="24.8" data-hasta="32.8" data-paso="4">
+  <section class="escena papel" data-desde="25.8" data-hasta="33.8" data-paso="4">
     <div class="contenido">
       <div class="pasos" style="color:var(--marca-pino)"></div>
       <div class="numeral" style="color:var(--marca-pino); margin-top:70px" data-en=".35" data-fx="mascara-bloque"><span style="display:inline-block">4</span></div>
@@ -213,7 +210,7 @@
   </section>
 
   <!-- 5. Cierre -->
-  <section class="escena pino" data-desde="32.8" data-hasta="38.5">
+  <section class="escena pino" data-desde="33.8" data-hasta="39.5">
     <div class="contenido" style="display:flex; flex-direction:column; align-items:flex-start">
       <img src="../../../design-system/assets/Logos/ag-monograma-papel.svg" style="width:260px; height:auto" data-en=".3" data-fx="sello" alt="">
       <h2 class="titular" style="margin-top:110px">
@@ -253,7 +250,7 @@
     el.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="${el.dataset.color}" stroke-width="1.75" stroke-linecap="square" stroke-linejoin="miter">${ICONOS[el.dataset.icono]}</svg>`;
   });
 
-  const DURACION = 38.5;
+  const DURACION = 39.5;
   const escenas = [...document.querySelectorAll('.escena')];
 
   // Barra de pasos: transcurridos en color de marca, el de hoy en lila, los que faltan solo con borde
