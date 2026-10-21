@@ -6,10 +6,11 @@ de la animación, la música los sigue al volver a generarla.
 
 - Cada escena es una sección con su propio ritmo, que arranca en el golpe del
   número del paso. Antes de cada cambio hay un ascenso y un silencio corto.
-- Las líneas de texto suenan como notas del acorde, las casillas como señales
-  que suben de tono paso a paso, los vistos como campanas, el tachón como un
-  barrido descendente, las tarjetas y riesgos como golpes, y el trazo de los
-  dos caminos como un arpegio.
+- Cada escena entra con su acorde en piano sobre el impacto. Las líneas del
+  gancho suenan como notas del acorde, las casillas como un golpe de madera,
+  los vistos como notas cortas de marimba, el tachón como un barrido
+  descendente, las tarjetas y riesgos como golpes graves, y el trazo de los dos
+  caminos como un arpegio suave. Nada en registro agudo.
 - Progresión en re mayor; el paso 3 (la advertencia) va en si menor y a medio
   tiempo; el paso 4 termina en la dominante y el cierre resuelve en re.
 
@@ -99,21 +100,22 @@ def piano(midi, largo=1.6, brillo=1.0):
     s = sum(a * np.sin(2 * np.pi * f * k * (1 + .0004 * k * k) * t) * np.exp(-t * (1.6 + 1.1 * k / brillo) * (f / 400) ** .3)
             for k, a in enumerate([1, .5, .25, .12, .06], start=1))
     s = s * np.minimum(1, t / .003) + rng.standard_normal(len(t)) * np.exp(-t * 400) * .04
-    return filtro(s, 6500) * np.minimum(1, (largo - t) / .1)
+    return filtro(s, 3800) * np.minimum(1, (largo - t) / .1)
 
 
-def campana(midi, largo=1.4):
+def marimba(midi, largo=.9):
+    """Nota corta y redonda, sin agudos: para vistos y acentos."""
     t = tiempo(largo)
     f = hz(midi)
-    s = np.sin(2 * np.pi * f * t) * np.exp(-t * 3) + .4 * np.sin(2 * np.pi * f * 2.76 * t) * np.exp(-t * 7) \
-        + .2 * np.sin(2 * np.pi * f * 5.4 * t) * np.exp(-t * 12)
-    return s * np.minimum(1, t / .002)
+    s = np.sin(2 * np.pi * f * t) * np.exp(-t * 5) + .15 * np.sin(2 * np.pi * f * 4 * t) * np.exp(-t * 18)
+    return filtro(s * np.minimum(1, t / .004), 2500)
 
 
-def señal_casilla(midi):
-    t = tiempo(.35)
-    f = hz(midi) * (1 + .03 * np.exp(-t * 60))
-    return (np.sin(2 * np.pi * np.cumsum(f) / SR) + .3 * np.sin(4 * np.pi * np.cumsum(f) / SR)) * np.exp(-t * 14)
+def madera():
+    """Golpe seco y grave para las casillas."""
+    t = tiempo(.12)
+    f = 420 * (1 + .2 * np.exp(-t * 80))
+    return filtro(np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-t * 45), 1800)
 
 
 def colchon(notas, largo):
@@ -161,18 +163,17 @@ def impacto():
 
 
 def ascenso(largo):
-    """Ruido que se abre hacia el cambio de escena, con un tono que sube."""
+    """Ruido que se abre hacia el cambio de escena (sin tono, sin agudos)."""
     t = tiempo(largo)
     r = rng.standard_normal(len(t))
     trozos = 24
     s = np.zeros_like(t)
     for k in range(trozos):
         a, b = k * len(t) // trozos, (k + 1) * len(t) // trozos
-        fc = 500 * (12 ** (k / trozos))
-        s[a:b] = filtro(r, [fc * .6, min(fc * 1.6, 20000)], 'band')[a:b]
+        fc = 300 * (8 ** (k / trozos))
+        s[a:b] = filtro(r, [fc * .6, fc * 1.5], 'band')[a:b]
     x = t / largo
-    tono = np.sin(2 * np.pi * np.cumsum(220 * 4 ** x) / SR) * .15
-    return (s + tono) * x ** 2.2
+    return s * x ** 2.2
 
 
 def barrido_abajo(largo=.45):
@@ -221,8 +222,6 @@ AC = {  # raíz del bajo, voces
 }
 PROGRESION = [['Bm', 'G'], ['D', 'A', 'Bm', 'G'], ['D', 'A', 'Bm', 'G'], ['Bm', 'G', 'Em', 'F#'],
               ['G', 'A', 'Bm', 'A'], ['Dfin']]
-CASILLA_NOTAS = [74, 76, 78, 81]
-CAMPANAS = [78, 81, 83, 86]
 
 
 def acorde_en(i, t):
@@ -305,8 +304,11 @@ for i, e in enumerate(ESCENAS):
     if i + 1 < len(ESCENAS):
         sig = ESCENAS[i + 1]['desde'] + GOLPE
         largo = 1.6 if i + 1 < 5 else 2.2
-        sfx.poner(ascenso(largo), sig - largo, .22)
+        sfx.poner(ascenso(largo), sig - largo, .14)
         sfx.poner(impacto(), sig, .4)
+        _, voces_sig = acorde_en(i + 1, sig + .01)
+        for k, m in enumerate(voces_sig):
+            musica.poner(piano(m, 2.4), sig + k * .02, .17, pan=-.3 + .2 * k)
         golpes_bombo.append(sig)
 
     # Eventos de la animación
@@ -314,58 +316,42 @@ for i, e in enumerate(ESCENAS):
     for ev in e['eventos']:
         t, fx, clase = ev['t'], ev['fx'], ev['clase']
         raiz, voces = acorde_en(i, t)
-        if fx == 'mascara':                                   # líneas de texto: notas del acorde que suben
-            m = voces[linea % len(voces)] + 12 + 12 * (linea // len(voces))
-            musica.poner(piano(m, 1.4), t, .2, pan=(-1) ** linea * .3)
+        if fx == 'mascara' and i == 0:                        # gancho: una nota del acorde por línea
+            m = voces[linea % len(voces)]
+            musica.poner(piano(m, 1.6), t, .16, pan=(-1) ** linea * .25)
             linea += 1
-        elif fx == 'aparece':                                 # casillas del inicio
-            k = sum(1 for x in e['eventos'] if x['fx'] == 'aparece' and x['t'] < t)
-            sfx.poner(señal_casilla(CASILLA_NOTAS[k]), t, .16, pan=-.3 + .2 * k)
-        elif fx == 'casilla-paso':
-            sfx.poner(señal_casilla(CASILLA_NOTAS[e['paso'] - 1]), t, .2, .2)
+        elif fx in ('aparece', 'casilla-paso'):               # casillas: golpe de madera, sin tono agudo
+            sfx.poner(madera(), t, .22, pan=-.2)
         elif fx == 'relleno':                                 # vistos de la lista
             k = sum(1 for x in e['eventos'] if x['fx'] == 'relleno' and x['t'] < t)
-            sfx.poner(campana(CAMPANAS[k % 4]), t, .12, pan=.25)
-            sfx.poner(tic(), t, .25)
-        elif fx == 'traza' and (ev['dur'] or 0) >= .6:        # los dos caminos: arpegio que sigue el trazo
+            musica.poner(marimba(voces[k % len(voces)] - 12 * (k % 2)), t, .16, pan=.2)
+            sfx.poner(tic(), t, .12)
+        elif fx == 'traza' and (ev['dur'] or 0) >= .6:        # los dos caminos: arpegio suave que sigue el trazo
             if t in arpegios:                                 # los dos trazos arrancan juntos: un solo arpegio
                 continue
             arpegios.add(t)
-            for k, m in enumerate([voces[0], voces[1], voces[2], voces[3], voces[0] + 12, voces[1] + 12]):
-                musica.poner(piano(m + 12, 1.0, 1.4), t + k * ev['dur'] / 6, .14, pan=-.5 + .2 * k)
-        elif fx == 'traza' and i == 1:                        # visto del sello
-            sfx.poner(campana(86), t, .12)
+            for k, m in enumerate([raiz + 12, voces[0], voces[1], voces[2]]):
+                musica.poner(piano(m, 1.4), t + k * ev['dur'] / 4, .13, pan=-.3 + .2 * k)
         elif fx == 'sello':
-            sfx.poner(golpe_grave(), t, .5)
-            for k, m in enumerate([81, 86, 90]):
-                sfx.poner(campana(m, 2.0), t + .02 + k * .03, .07, pan=-.2 + .2 * k)
-        elif fx == 'sube-lento':
-            sfx.poner(soplo(.9), t, .2)
-        elif fx == 'crece' and clase == 'tachon':
-            sfx.poner(barrido_abajo(.5), t, .45)
-            sfx.poner(golpe_grave(), t + .35, .55)
-            musica.poner(piano(raiz - 12 + 1, 1.2), t + .35, .14)   # nota disonante, baja
-            musica.poner(piano(raiz - 12, 1.2), t + .35, .14)
-        elif fx == 'crece' and clase == 'barra':
-            sfx.poner(tic(), t, .3, pan=.4)
-        elif fx == 'crece':
-            sfx.poner(barrido_abajo(.35)[::-1], t, .2)
-        elif fx == 'sube' and clase == 'item':
-            k = sum(1 for x in e['eventos'] if x['clase'] == 'item' and x['t'] < t)
-            musica.poner(piano(voces[k % 4] + 12, .9), t, .14, pan=.3)
-            sfx.poner(tic(), t, .15)
-        elif fx == 'sube' and clase == 'riesgo':
-            sfx.poner(golpe_grave(), t, .5)
-            musica.poner(piano(voces[0], 1.6), t, .2)
-        elif fx == 'sube' and clase == 'tarjeta':
             sfx.poner(golpe_grave(), t, .45)
-            for k, m in enumerate(voces):
-                musica.poner(piano(m + 12, 1.8), t + k * .015, .12, pan=-.3 + .2 * k)
-        elif fx == 'sube' and i == 5 and clase == '':          # botón y logotipo del cierre
-            for k, m in enumerate([74, 78, 81, 85] if t < e['desde'] + 2 else [86, 90, 93]):
-                sfx.poner(campana(m, 2.2), t + k * .05, .07, pan=-.3 + .2 * k)
-        elif fx == 'sube':
-            sfx.poner(tic(), t, .08)
+        elif fx == 'sube-lento':
+            sfx.poner(soplo(.9), t, .15)
+        elif fx == 'crece' and clase == 'tachon':
+            sfx.poner(barrido_abajo(.5), t, .3)
+            sfx.poner(golpe_grave(), t + .35, .5)
+            musica.poner(piano(raiz - 12 + 1, 1.2), t + .35, .12)   # nota disonante, baja
+            musica.poner(piano(raiz - 12, 1.2), t + .35, .12)
+        elif fx == 'crece' and clase == 'barra':
+            sfx.poner(tic(), t, .18, pan=.4)
+        elif fx == 'sube' and clase == 'item':
+            sfx.poner(tic(), t, .1)
+        elif fx == 'sube' and clase == 'riesgo':
+            sfx.poner(golpe_grave(), t, .45)
+        elif fx == 'sube' and clase == 'tarjeta':
+            sfx.poner(golpe_grave(), t, .4)
+            musica.poner(marimba(voces[0] if t < e['desde'] + 2.5 else voces[2]), t, .16)
+        elif fx == 'sube' and i == 5 and clase == '' and t < e['desde'] + 2:   # botón del cierre
+            musica.poner(marimba(voces[2]), t, .14)
 
 # Bombeo: el colchón y el bajo bajan con cada bombo
 t = np.arange(N) / SR
