@@ -1,13 +1,22 @@
-"""Música original del reel (sintetizada aquí, sin derechos de terceros).
+"""Música original del reel, sincronizada con la animación (sin derechos de terceros).
 
-Piano, colchón armónico, bajo y percusión suave a 95 ppm, con la progresión
-A sus4 · D maj9 · Bm7 · G maj7. El compás 13 cae justo en el cierre (33,8 s) y
-resuelve en D. Los efectos (barridos, marcas y sellos) van sincronizados con
-las animaciones de reel.html.
+La partitura sale de reel.html: el script lee cada escena (data-desde) y cada
+elemento animado (data-fx, data-en) y le asigna un sonido. Si cambian los tiempos
+de la animación, la música los sigue al volver a generarla.
 
-Uso: python3 musica.py  ->  musica.wav (estéreo, 48 kHz, 39,5 s)
+- Cada escena es una sección con su propio ritmo, que arranca en el golpe del
+  número del paso. Antes de cada cambio hay un ascenso y un silencio corto.
+- Las líneas de texto suenan como notas del acorde, las casillas como señales
+  que suben de tono paso a paso, los vistos como campanas, el tachón como un
+  barrido descendente, las tarjetas y riesgos como golpes, y el trazo de los
+  dos caminos como un arpegio.
+- Progresión en re mayor; el paso 3 (la advertencia) va en si menor y a medio
+  tiempo; el paso 4 termina en la dominante y el cierre resuelve en re.
+
+Uso: python3 musica.py  ->  musica.wav (estéreo, 48 kHz)
 Requiere numpy y scipy.
 """
+import re
 import wave
 from pathlib import Path
 
@@ -15,205 +24,368 @@ import numpy as np
 from scipy.signal import butter, fftconvolve, sosfilt
 
 SR = 48000
-DUR = 39.5
-COMPAS = 33.8 / 13          # el compás 13 empieza con la escena de cierre
-PULSO = COMPAS / 4
+PULSO = 0.5                 # 120 ppm
+GOLPE = 0.35                # el número del paso aparece 0,35 s después del inicio de la escena
+rng = np.random.default_rng(11)
+aqui = Path(__file__).parent
+
+
+# --- Lectura de la animación -------------------------------------------------
+
+def leer_escenas():
+    html = (aqui / 'reel.html').read_text(encoding='utf-8')
+    duracion = float(re.search(r'const DURACION = ([\d.]+)', html).group(1))
+    escenas = []
+    for m in re.finditer(r'<section([^>]*)>(.*?)</section>', html, re.S):
+        attrs, cuerpo = m.groups()
+        desde = float(re.search(r'data-desde="([\d.]+)"', attrs).group(1))
+        hasta = float(re.search(r'data-hasta="([\d.]+)"', attrs).group(1))
+        paso = re.search(r'data-paso="(\d)"', attrs)
+        eventos = []
+        for e in re.finditer(r'<\w+([^>]*data-fx="([\w-]+)"[^>]*)>', cuerpo):
+            a, fx = e.groups()
+            en = re.search(r'data-en="([\d.]+)"', a)
+            if not en:
+                continue
+            clase = re.search(r'class="([^"]*)"', a)
+            dur = re.search(r'data-dur="([\d.]+)"', a)
+            eventos.append(dict(t=desde + float(en.group(1)), fx=fx, clase=clase.group(1) if clase else '',
+                                dur=float(dur.group(1)) if dur else None))
+        if paso:  # la casilla del paso la agrega el script de la página
+            eventos.append(dict(t=desde + .25, fx='casilla-paso', clase='', dur=None))
+        eventos.sort(key=lambda e: e['t'])
+        escenas.append(dict(desde=desde, hasta=hasta, paso=int(paso.group(1)) if paso else None, eventos=eventos))
+    return duracion, escenas
+
+
+DUR, ESCENAS = leer_escenas()
 N = int(SR * DUR)
-rng = np.random.default_rng(7)
 
-# Cambios de escena y momentos de la animación (segundos), tomados de reel.html
-ESCENAS = [5.2, 11.2, 18.4, 25.8, 33.8]
-MARCAS = [11.2 + 2.4, 11.2 + 3.1, 11.2 + 3.8, 11.2 + 4.5]   # vistos de la lista del paso 2
-SELLOS = [5.2 + 2.9, 33.8 + 0.3]                            # sello del documento y monograma
-CASILLAS = [e + .25 for e in ESCENAS[:4]]                    # casilla del paso que se llena
 
+# --- Utilidades ---------------------------------------------------------------
 
 def hz(midi):
     return 440.0 * 2 ** ((midi - 69) / 12)
 
 
-def lp(x, f, orden=2):
-    return sosfilt(butter(orden, f, 'low', fs=SR, output='sos'), x)
+def filtro(x, f, tipo='low', orden=2):
+    return sosfilt(butter(orden, f, tipo, fs=SR, output='sos'), x)
 
 
-def hp(x, f, orden=2):
-    return sosfilt(butter(orden, f, 'high', fs=SR, output='sos'), x)
+def tiempo(largo):
+    return np.arange(int(SR * largo)) / SR
 
 
-def bp(x, f1, f2):
-    return sosfilt(butter(2, [f1, f2], 'band', fs=SR, output='sos'), x)
+class Pista:
+    def __init__(self):
+        self.a = np.zeros((2, N))
+
+    def poner(self, señal, t, g=1.0, pan=0.0):
+        i = int(round(t * SR))
+        if i < 0:
+            señal, i = señal[-i:], 0
+        if i >= N:
+            return
+        s = señal[: N - i] * g
+        self.a[0, i:i + len(s)] += s * np.sqrt((1 - pan) / 2)
+        self.a[1, i:i + len(s)] += s * np.sqrt((1 + pan) / 2)
 
 
-def poner(pista, señal, t, ganancia=1.0, pan=0.0):
-    i = int(t * SR)
-    if i >= N:
-        return
-    if i < 0:
-        señal, i = señal[-i:], 0
-    s = señal[: N - i] * ganancia
-    pista[0, i:i + len(s)] += s * np.sqrt((1 - pan) / 2)
-    pista[1, i:i + len(s)] += s * np.sqrt((1 + pan) / 2)
+# --- Instrumentos ------------------------------------------------------------
 
-
-def piano(midi, largo=2.5, vel=1.0):
-    t = np.arange(int(SR * largo)) / SR
+def piano(midi, largo=1.6, brillo=1.0):
+    t = tiempo(largo)
     f = hz(midi)
-    s = np.zeros_like(t)
-    for k, a in enumerate([1, .45, .22, .12, .06, .03], start=1):
-        fk = f * k * (1 + .0004 * k * k)
-        s += a * np.sin(2 * np.pi * fk * t) * np.exp(-t * (1.4 + .9 * k) * (f / 400) ** .3)
-    ataque = np.minimum(1, t / .004)
-    martillo = rng.standard_normal(len(t)) * np.exp(-t * 300) * .05
-    s = (s * ataque + martillo) * vel
-    cola = np.minimum(1, (largo - t) / .15)
-    return lp(s, 5200) * cola
+    s = sum(a * np.sin(2 * np.pi * f * k * (1 + .0004 * k * k) * t) * np.exp(-t * (1.6 + 1.1 * k / brillo) * (f / 400) ** .3)
+            for k, a in enumerate([1, .5, .25, .12, .06], start=1))
+    s = s * np.minimum(1, t / .003) + rng.standard_normal(len(t)) * np.exp(-t * 400) * .04
+    return filtro(s, 6500) * np.minimum(1, (largo - t) / .1)
+
+
+def campana(midi, largo=1.4):
+    t = tiempo(largo)
+    f = hz(midi)
+    s = np.sin(2 * np.pi * f * t) * np.exp(-t * 3) + .4 * np.sin(2 * np.pi * f * 2.76 * t) * np.exp(-t * 7) \
+        + .2 * np.sin(2 * np.pi * f * 5.4 * t) * np.exp(-t * 12)
+    return s * np.minimum(1, t / .002)
+
+
+def señal_casilla(midi):
+    t = tiempo(.35)
+    f = hz(midi) * (1 + .03 * np.exp(-t * 60))
+    return (np.sin(2 * np.pi * np.cumsum(f) / SR) + .3 * np.sin(4 * np.pi * np.cumsum(f) / SR)) * np.exp(-t * 14)
 
 
 def colchon(notas, largo):
-    t = np.arange(int(SR * largo)) / SR
+    t = tiempo(largo)
     s = np.zeros_like(t)
     for m in notas:
-        for d in (-.07, 0, .06):
-            fase = rng.uniform(0, 1)
-            s += 2 * ((hz(m) * (1 + d / 100) * t + fase) % 1) - 1
-    s = lp(lp(s, 1100), 1500)
-    env = np.minimum(1, t / .9) * np.minimum(1, (largo - t) / .9)
-    return s * env / len(notas) * (1 + .08 * np.sin(2 * np.pi * .25 * t))
+        for d in (-.08, 0, .07):
+            s += 2 * ((hz(m) * (1 + d / 100) * t + rng.uniform()) % 1) - 1
+    s = filtro(filtro(s, 1400), 1800)
+    return s * np.minimum(1, t / .25) * np.minimum(1, (largo - t) / .3) / len(notas)
 
 
-def bajo(midi, largo):
-    t = np.arange(int(SR * largo)) / SR
+def bajo(midi, largo, abierto=1.0):
+    t = tiempo(largo)
     f = hz(midi)
-    s = np.sin(2 * np.pi * f * t) + .25 * np.sin(4 * np.pi * f * t)
-    return lp(s * np.minimum(1, t / .01) * np.exp(-t * 1.3) * np.minimum(1, (largo - t) / .05), 900)
+    sierra = 2 * ((f * t) % 1) - 1
+    s = filtro(sierra, 260 + 600 * abierto, orden=2) * .6 + np.sin(2 * np.pi * f / 2 * t) * .8
+    return s * np.minimum(1, t / .004) * np.exp(-t * 2.2) * np.minimum(1, (largo - t) / .02)
 
 
-def bombo():
-    t = np.arange(int(SR * .45)) / SR
-    f = 46 + 70 * np.exp(-t * 28)
-    return np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-t * 9)
+def bombo(g=1.0):
+    t = tiempo(.5)
+    f = 44 + 110 * np.exp(-t * 32)
+    return (np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-t * 7) + rng.standard_normal(len(t)) * np.exp(-t * 600) * .15) * g
 
 
-def platillo(largo=.06):
-    t = np.arange(int(SR * largo)) / SR
-    return hp(rng.standard_normal(len(t)), 7000) * np.exp(-t * 70)
-
-
-def chasquido():
-    t = np.arange(int(SR * .18)) / SR
-    return bp(rng.standard_normal(len(t)), 1200, 4500) * np.exp(-t * 32)
-
-
-def barrido(largo=1.1, pico=.75):
-    """Ruido que sube hacia el cambio de escena."""
-    t = np.arange(int(SR * largo)) / SR
+def palmas():
+    t = tiempo(.25)
     r = rng.standard_normal(len(t))
-    bajo_, alto = lp(r, 900), bp(r, 1500, 7000)
+    env = sum(np.exp(-np.maximum(0, t - d) * 40) * (t >= d) for d in (0, .011, .022))
+    return filtro(r, [900, 5000], 'band') * env * .7
+
+
+def hat(abierto=False):
+    t = tiempo(.25 if abierto else .05)
+    return filtro(rng.standard_normal(len(t)), 7500, 'high') * np.exp(-t * (14 if abierto else 80))
+
+
+def impacto():
+    t = tiempo(2.5)
+    f = 38 + 60 * np.exp(-t * 12)
+    sub = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-t * 2.2)
+    ruido = filtro(rng.standard_normal(len(t)), 3000) * np.exp(-t * 5) * .5
+    return sub + ruido + np.pad(bombo(.8), (0, len(t) - int(SR * .5)))
+
+
+def ascenso(largo):
+    """Ruido que se abre hacia el cambio de escena, con un tono que sube."""
+    t = tiempo(largo)
+    r = rng.standard_normal(len(t))
+    trozos = 24
+    s = np.zeros_like(t)
+    for k in range(trozos):
+        a, b = k * len(t) // trozos, (k + 1) * len(t) // trozos
+        fc = 500 * (12 ** (k / trozos))
+        s[a:b] = filtro(r, [fc * .6, min(fc * 1.6, 20000)], 'band')[a:b]
     x = t / largo
-    env = np.where(x < pico, (x / pico) ** 2.5, np.exp(-(x - pico) * 14))
-    return (bajo_ * (1 - x) + alto * x * .6) * env
+    tono = np.sin(2 * np.pi * np.cumsum(220 * 4 ** x) / SR) * .15
+    return (s + tono) * x ** 2.2
 
 
-def marca():
-    t = np.arange(int(SR * .25)) / SR
-    return (np.sin(2 * np.pi * 1760 * t) * .6 + np.sin(2 * np.pi * 2637 * t) * .3) * np.exp(-t * 22)
+def barrido_abajo(largo=.45):
+    t = tiempo(largo)
+    r = rng.standard_normal(len(t))
+    s = np.zeros_like(t)
+    for k in range(12):
+        a, b = k * len(t) // 12, (k + 1) * len(t) // 12
+        fc = 6000 * (.08 ** (k / 12))
+        s[a:b] = filtro(r, [fc * .6, fc * 1.5], 'band')[a:b]
+    return s * np.sin(np.pi * t / largo) ** .7
 
 
-def sello():
-    t = np.arange(int(SR * .6)) / SR
-    f = 220 + 300 * np.exp(-t * 30)
-    golpe = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-t * 12)
-    brillo = sum(np.sin(2 * np.pi * hz(m) * t) * np.exp(-t * 4) for m in (86, 90, 93)) * .12
-    return golpe * .7 + brillo
+def soplo(largo=.6):
+    t = tiempo(largo)
+    return filtro(rng.standard_normal(len(t)), [300, 2500], 'band') * np.sin(np.pi * t / largo) ** 2
 
 
-def reverb(x, segundos=2.6, mezcla=.28):
-    t = np.arange(int(SR * segundos)) / SR
+def tic():
+    t = tiempo(.04)
+    return filtro(rng.standard_normal(len(t)), 3000, 'high') * np.exp(-t * 150)
+
+
+def golpe_grave():
+    t = tiempo(.6)
+    f = 70 + 80 * np.exp(-t * 25)
+    return np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-t * 6)
+
+
+def reverb(x, segundos=2.2, mezcla=.25):
+    t = tiempo(segundos)
     salida = np.zeros_like(x)
     for c in range(2):
-        ir = rng.standard_normal(len(t)) * np.exp(-t * 6.9 / segundos)
-        ir = lp(ir, 6000)
+        ir = filtro(rng.standard_normal(len(t)) * np.exp(-t * 6.9 / segundos), 7000)
         ir /= np.sqrt(np.sum(ir ** 2))
         salida[c] = fftconvolve(x[c], ir)[: x.shape[1]]
     return x * (1 - mezcla) + salida * mezcla * 1.4
 
 
-# Acordes: (bajo, voces)
-ACORDES = [
-    (45, [64, 69, 74, 76]),   # A sus4
-    (50, [66, 69, 73, 76]),   # D maj9
-    (47, [66, 69, 71, 74]),   # Bm7
-    (43, [66, 71, 74, 78]),   # G maj7
-]
-FINAL = (50, [62, 66, 69, 74, 76])
+# --- Armonía por escena -------------------------------------------------------
 
-pianos = np.zeros((2, N))
-pads = np.zeros((2, N))
-graves = np.zeros((2, N))
-ritmo = np.zeros((2, N))
-efectos = np.zeros((2, N))
+AC = {  # raíz del bajo, voces
+    'D': (38, [62, 66, 69, 73]), 'A': (45, [61, 64, 69, 71]), 'Bm': (47, [59, 62, 66, 69]),
+    'G': (43, [62, 66, 67, 71]), 'Em': (40, [62, 64, 67, 71]), 'F#': (42, [61, 66, 70, 73]),
+    'Dfin': (38, [62, 66, 69, 73, 76]),
+}
+PROGRESION = [['Bm', 'G'], ['D', 'A', 'Bm', 'G'], ['D', 'A', 'Bm', 'G'], ['Bm', 'G', 'Em', 'F#'],
+              ['G', 'A', 'Bm', 'A'], ['Dfin']]
+CASILLA_NOTAS = [74, 76, 78, 81]
+CAMPANAS = [78, 81, 83, 86]
 
-for c in range(13):
-    t0 = c * COMPAS
-    raiz, voces = ACORDES[c % 4]
-    if c % 4 == 0 and c > 0:
-        voces = [64, 69, 73, 76]                 # A sus4 se abre a A en la segunda vuelta
-    poner(pads, colchon(voces[:3], COMPAS + .9), t0 - .2, .22)
-    # Piano: acorde en el tiempo 1 y arpegio en corcheas
-    for k, m in enumerate(voces):
-        poner(pianos, piano(m, 3.0, .32), t0 + k * .012, pan=-.3 + .2 * k)
-    densidad = 4 if c < 2 else 8
-    orden = voces + voces[::-1][1:3] + [voces[0] + 12]
-    for k in range(densidad):
-        tk = t0 + (k + 1) * COMPAS / (densidad + 1) if c < 2 else t0 + k * PULSO / 2
-        if c >= 2 and k == 0:
-            continue
-        m = orden[k % len(orden)] + (12 if c >= 6 and k % 4 == 3 else 0)
-        poner(pianos, piano(m, 1.8, .18 + .05 * (k % 2 == 0)), tk, pan=(-1) ** k * .35)
-    if c >= 2:
-        poner(graves, bajo(raiz, PULSO * 2), t0, .3)
-        poner(graves, bajo(raiz, PULSO * 1.5), t0 + PULSO * 2.5, .2)
-        for b in range(4):
-            if b in (0, 2):
-                poner(ritmo, bombo(), t0 + b * PULSO, .35)
-            if c >= 6 and b in (1, 3):
-                poner(ritmo, chasquido(), t0 + b * PULSO, .16, pan=.15)
-            for o in (0, .5):
-                poner(ritmo, platillo(), t0 + (b + o) * PULSO, .05 if o else .025, pan=-.4)
 
-# Cierre: resuelve en D y se deja sonar
-t0 = 13 * COMPAS
-largo_final = DUR - t0
-poner(pads, colchon(FINAL[1][1:4], largo_final + .5), t0 - .1, .26)
-poner(graves, bajo(FINAL[0], 3.5), t0, .3)
-for k, m in enumerate(FINAL[1]):
-    poner(pianos, piano(m, largo_final, .34), t0 + k * .03, pan=-.3 + .15 * k)
-for k, m in enumerate([81, 78, 74, 76]):
-    poner(pianos, piano(m, 3.0, .14), t0 + 1.3 + k * PULSO, pan=.3)
+def acorde_en(i, t):
+    e = ESCENAS[i]
+    ini = e['desde'] + (GOLPE if i else 0)
+    prog = PROGRESION[i]
+    if i == 0:
+        return AC[prog[0] if t < e['desde'] + 2.45 else prog[1]]
+    k = int(max(0, t - ini) // (PULSO * 4)) % len(prog)
+    return AC[prog[k]]
 
-# Efectos sincronizados con la animación
-for e in ESCENAS:
-    poner(efectos, barrido(), e - .8, .12, pan=0)
-for t in MARCAS:
-    poner(efectos, marca(), t + .05, .07, pan=.2)
-for t in SELLOS:
-    poner(efectos, sello(), t + .05, .2)
-for t in CASILLAS:
-    poner(efectos, marca(), t, .045, pan=-.2)
 
-mezcla = reverb(pianos * 1.0 + pads * .8 + efectos * .6, mezcla=.3) + graves + ritmo * .9 + efectos * .4
-# Entrada sin clic y salida en desvanecido
+musica, ritmo, sfx, graves = Pista(), Pista(), Pista(), Pista()
+golpes_bombo = []
+
+for i, e in enumerate(ESCENAS):
+    ini = e['desde'] + (GOLPE if i else 0)
+    fin = ESCENAS[i + 1]['desde'] + GOLPE if i + 1 < len(ESCENAS) else DUR
+    corte = fin - GOLPE - .22 if i + 1 < len(ESCENAS) else DUR   # silencio corto antes del cambio
+
+    # Colchón y bajo por acorde
+    if i == 0:
+        for (a, b), nombre in zip([(0, 2.45), (2.45, e['hasta'])], PROGRESION[0]):
+            raiz, voces = AC[nombre]
+            musica.poner(colchon(voces[:3], b - a + .3), a, .16)
+            for k in range(int((b - a) / (PULSO / 2))):           # pulso de corcheas que crece
+                tk = a + k * PULSO / 2
+                if tk < corte:
+                    graves.poner(bajo(raiz, PULSO / 2 * .9, abierto=tk / 5), tk, .1 + .15 * tk / 5)
+    else:
+        t = ini
+        while t < min(fin, DUR):
+            raiz, voces = acorde_en(i, t + .01)
+            largo = min(PULSO * 4, fin - t) if i < 5 else DUR - t
+            musica.poner(colchon(voces[:3], largo + .25), t, .2 if i < 5 else .28)
+            if i == 3:                                            # medio tiempo: notas largas
+                graves.poner(bajo(raiz, min(largo, PULSO * 2) * .95, .3), t, .3)
+                if t + PULSO * 2 < corte:
+                    graves.poner(bajo(raiz, PULSO * 1.8, .3), t + PULSO * 2, .24)
+            elif i < 5:
+                for k in range(8):
+                    tk = t + k * PULSO / 2
+                    if tk < corte:
+                        graves.poner(bajo(raiz + (12 if i == 4 and k % 2 else 0), PULSO / 2 * .85, .5 + .1 * i), tk, .22)
+            else:                                                 # cierre: un solo acorde que se deja sonar
+                graves.poner(bajo(raiz, 4, .2), t, .3)
+                break
+            t += PULSO * 4
+
+    # Percusión por escena
+    nb = int((min(fin, DUR) - ini) / (PULSO / 2)) + 1
+    for k in range(nb):
+        tk = ini + k * PULSO / 2
+        if tk >= corte:
+            break
+        beat, medio = divmod(k, 2)
+        b4 = beat % 4
+        if i == 0:
+            if tk >= e['desde'] + 2.45 and not medio and b4 in (0, 2):
+                ritmo.poner(bombo(.6), tk); golpes_bombo.append(tk)
+        elif i == 1:
+            if not medio and b4 in (0, 2): ritmo.poner(bombo(), tk); golpes_bombo.append(tk)
+            ritmo.poner(hat(), tk, .1 if medio else .05, -.3)
+        elif i == 2:
+            if not medio and b4 in (0, 2): ritmo.poner(bombo(), tk); golpes_bombo.append(tk)
+            if not medio and b4 in (1, 3): ritmo.poner(palmas(), tk, .5, .1)
+            ritmo.poner(hat(), tk, .12 if medio else .06, -.3)
+            ritmo.poner(hat(), tk + PULSO / 4, .04, .3)
+        elif i == 3:
+            if (not medio and b4 == 0) or (medio and b4 == 1): ritmo.poner(bombo(.9), tk); golpes_bombo.append(tk)
+            if not medio and b4 == 2: ritmo.poner(palmas(), tk, .6)
+            ritmo.poner(hat(), tk, .07 if medio else .03, -.3)
+            ritmo.poner(hat(), tk + PULSO / 4, .025, .3)
+        elif i == 4:
+            if not medio: ritmo.poner(bombo(), tk); golpes_bombo.append(tk)
+            if not medio and b4 in (1, 3): ritmo.poner(palmas(), tk, .55, .1)
+            ritmo.poner(hat(abierto=bool(medio)), tk, .07 if medio else .05, -.3)
+
+    # Transiciones: ascenso hacia el siguiente golpe e impacto
+    if i + 1 < len(ESCENAS):
+        sig = ESCENAS[i + 1]['desde'] + GOLPE
+        largo = 1.6 if i + 1 < 5 else 2.2
+        sfx.poner(ascenso(largo), sig - largo, .22)
+        sfx.poner(impacto(), sig, .4)
+        golpes_bombo.append(sig)
+
+    # Eventos de la animación
+    linea, arpegios = 0, set()
+    for ev in e['eventos']:
+        t, fx, clase = ev['t'], ev['fx'], ev['clase']
+        raiz, voces = acorde_en(i, t)
+        if fx == 'mascara':                                   # líneas de texto: notas del acorde que suben
+            m = voces[linea % len(voces)] + 12 + 12 * (linea // len(voces))
+            musica.poner(piano(m, 1.4), t, .2, pan=(-1) ** linea * .3)
+            linea += 1
+        elif fx == 'aparece':                                 # casillas del inicio
+            k = sum(1 for x in e['eventos'] if x['fx'] == 'aparece' and x['t'] < t)
+            sfx.poner(señal_casilla(CASILLA_NOTAS[k]), t, .16, pan=-.3 + .2 * k)
+        elif fx == 'casilla-paso':
+            sfx.poner(señal_casilla(CASILLA_NOTAS[e['paso'] - 1]), t, .2, .2)
+        elif fx == 'relleno':                                 # vistos de la lista
+            k = sum(1 for x in e['eventos'] if x['fx'] == 'relleno' and x['t'] < t)
+            sfx.poner(campana(CAMPANAS[k % 4]), t, .12, pan=.25)
+            sfx.poner(tic(), t, .25)
+        elif fx == 'traza' and (ev['dur'] or 0) >= .6:        # los dos caminos: arpegio que sigue el trazo
+            if t in arpegios:                                 # los dos trazos arrancan juntos: un solo arpegio
+                continue
+            arpegios.add(t)
+            for k, m in enumerate([voces[0], voces[1], voces[2], voces[3], voces[0] + 12, voces[1] + 12]):
+                musica.poner(piano(m + 12, 1.0, 1.4), t + k * ev['dur'] / 6, .14, pan=-.5 + .2 * k)
+        elif fx == 'traza' and i == 1:                        # visto del sello
+            sfx.poner(campana(86), t, .12)
+        elif fx == 'sello':
+            sfx.poner(golpe_grave(), t, .5)
+            for k, m in enumerate([81, 86, 90]):
+                sfx.poner(campana(m, 2.0), t + .02 + k * .03, .07, pan=-.2 + .2 * k)
+        elif fx == 'sube-lento':
+            sfx.poner(soplo(.9), t, .2)
+        elif fx == 'crece' and clase == 'tachon':
+            sfx.poner(barrido_abajo(.5), t, .45)
+            sfx.poner(golpe_grave(), t + .35, .55)
+            musica.poner(piano(raiz - 12 + 1, 1.2), t + .35, .14)   # nota disonante, baja
+            musica.poner(piano(raiz - 12, 1.2), t + .35, .14)
+        elif fx == 'crece' and clase == 'barra':
+            sfx.poner(tic(), t, .3, pan=.4)
+        elif fx == 'crece':
+            sfx.poner(barrido_abajo(.35)[::-1], t, .2)
+        elif fx == 'sube' and clase == 'item':
+            k = sum(1 for x in e['eventos'] if x['clase'] == 'item' and x['t'] < t)
+            musica.poner(piano(voces[k % 4] + 12, .9), t, .14, pan=.3)
+            sfx.poner(tic(), t, .15)
+        elif fx == 'sube' and clase == 'riesgo':
+            sfx.poner(golpe_grave(), t, .5)
+            musica.poner(piano(voces[0], 1.6), t, .2)
+        elif fx == 'sube' and clase == 'tarjeta':
+            sfx.poner(golpe_grave(), t, .45)
+            for k, m in enumerate(voces):
+                musica.poner(piano(m + 12, 1.8), t + k * .015, .12, pan=-.3 + .2 * k)
+        elif fx == 'sube' and i == 5 and clase == '':          # botón y logotipo del cierre
+            for k, m in enumerate([74, 78, 81, 85] if t < e['desde'] + 2 else [86, 90, 93]):
+                sfx.poner(campana(m, 2.2), t + k * .05, .07, pan=-.3 + .2 * k)
+        elif fx == 'sube':
+            sfx.poner(tic(), t, .08)
+
+# Bombeo: el colchón y el bajo bajan con cada bombo
 t = np.arange(N) / SR
-mezcla *= np.minimum(1, (DUR - t) / 2.2) ** 1.5 * np.minimum(1, t / .05)
-mezcla = hp(mezcla, 35)
-mezcla = np.tanh(mezcla * 1.6) / 1.6
+bombeo = np.ones(N)
+for tk in golpes_bombo:
+    i0 = int(tk * SR)
+    seg = t[i0:i0 + int(SR * .4)] - tk
+    bombeo[i0:i0 + len(seg)] = np.minimum(bombeo[i0:i0 + len(seg)], 1 - .55 * np.exp(-seg / .09))
+
+mezcla = reverb(musica.a * bombeo + sfx.a * .9, mezcla=.28) + graves.a * bombeo + ritmo.a * .85 + sfx.a * .25
+mezcla = filtro(mezcla, 30, 'high')
+mezcla *= np.minimum(1, (DUR - t) / 1.5) ** 1.5 * np.minimum(1, t / .02)
+mezcla /= np.percentile(np.abs(mezcla), 99.9)
+mezcla = np.tanh(mezcla * 1.2)
 mezcla *= .89 / np.max(np.abs(mezcla))
 
-datos = (mezcla.T * 32767).astype('<i2')
-destino = Path(__file__).with_name('musica.wav')
+destino = aqui / 'musica.wav'
 with wave.open(str(destino), 'wb') as w:
     w.setnchannels(2)
     w.setsampwidth(2)
     w.setframerate(SR)
-    w.writeframes(datos.tobytes())
-print(destino)
+    w.writeframes((np.clip(mezcla, -1, 1).T * 32767).astype('<i2').tobytes())
+print(destino, f'{DUR} s, {sum(len(e["eventos"]) for e in ESCENAS)} eventos')
